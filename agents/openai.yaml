@@ -1,0 +1,4 @@
+interface:
+  display_name: "VR 3D"
+  short_description: "Build immersive VR and real-time 3D experiences"
+  default_prompt: "Use $vr-3d-skill to build and validate an immersive WebXR scene with comfortable interaction and a desktop fallback."

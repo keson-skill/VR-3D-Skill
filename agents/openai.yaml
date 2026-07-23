@@ -1,4 +1,4 @@
 interface:
-  display_name: "VR 3D"
-  short_description: "Build immersive VR and real-time 3D experiences"
-  default_prompt: "Use $vr-3d-skill to build and validate an immersive WebXR scene with comfortable interaction and a desktop fallback."
+  display_name: "AI VR Interior Design"
+  short_description: "Turn floor plans and room inputs into validated VR designs"
+  default_prompt: "Use $vr-3d-skill to turn my floor plan, photos, and renovation requirements into a validated Spatial JSON and a comfortable WebXR interior walkthrough."

@@ -9,10 +9,11 @@ Use this workflow for CAD, floor-plan, room-photo, or text-to-interior requests.
 - [Stage 2: spatial understanding](#stage-2-spatial-understanding)
 - [Stage 3: validation](#stage-3-validation)
 - [Stage 4: design generation](#stage-4-design-generation)
-- [Stage 5: assets](#stage-5-assets)
-- [Stage 6: engineering generation](#stage-6-engineering-generation)
-- [Stage 7: rendering and VR](#stage-7-rendering-and-vr)
-- [Stage 8: incremental revision](#stage-8-incremental-revision)
+- [Stage 5: visual preview](#stage-5-visual-preview)
+- [Stage 6: assets](#stage-6-assets)
+- [Stage 7: engineering generation](#stage-7-engineering-generation)
+- [Stage 8: rendering and VR](#stage-8-rendering-and-vr)
+- [Stage 9: incremental revision](#stage-9-incremental-revision)
 - [Failure handling](#failure-handling)
 
 ## Architecture
@@ -96,7 +97,13 @@ Generate at least one feasible layout before aesthetic variants. For every propo
 
 Output: design objects and constraints added to the spatial contract. Keep recommendations explainable and editable.
 
-## Stage 5: assets
+## Stage 5: visual preview
+
+After the spatial contract and design proposal pass validation, generate optional customer-facing preview images from the approved revision. Pass locked geometry, furniture placement, circulation, materials, lighting intent, camera intent, and only approved reference images. Record the design revision, model, request ID, prompt provenance, and output hash.
+
+Use the preview to compare visual direction and collect human feedback. Never treat it as a geometry, dimension, collision, or construction source. Apply accepted feedback as an explicit design patch, revalidate it, and generate a new preview from the new revision.
+
+## Stage 6: assets
 
 Resolve each design object in this order:
 
@@ -109,7 +116,7 @@ Provide requested dimensions, style, material zones, target polygon budget, and 
 
 Output: an asset manifest and optimized runtime assets, normally GLB for the web.
 
-## Stage 6: engineering generation
+## Stage 7: engineering generation
 
 The engineering model consumes only approved spatial data, design constraints, asset manifests, and engine conventions. It may generate:
 
@@ -121,13 +128,13 @@ The engineering model consumes only approved spatial data, design constraints, a
 
 Generated scripts must be deterministic, idempotent where practical, and reviewed like source code. Do not accept hidden geometry edits introduced by generation.
 
-## Stage 7: rendering and VR
+## Stage 8: rendering and VR
 
 Use desktop mode to inspect scale, clipping, materials, navigation, and changes before immersive testing. Then validate WebXR or native VR lifecycle, comfort, reach, teleportation, interaction, and target-device performance. Choose Blender, Unreal, or Twinmotion for high-fidelity presentation when requested, while retaining the same validated source data.
 
 Output: runnable scene, review path, device notes, performance evidence, and known limitations.
 
-## Stage 8: incremental revision
+## Stage 9: incremental revision
 
 Translate requests such as “change to warm cream,” “replace the sofa,” or “widen the route to the balcony” into explicit operations:
 

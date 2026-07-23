@@ -28,11 +28,12 @@ Turn architectural inputs into a traceable spatial model, then derive design, as
 
 ## Route model responsibilities
 
-Read [model-routing.md](references/model-routing.md) before adding provider calls. Keep deployment values in `.env`, based on `.env-example`.
+Read [model-routing.md](references/model-routing.md) before adding provider calls. When routing GPT-5.6 Sol and GPT Image 2 through RealmRouter, read [realmrouter-integration.md](references/realmrouter-integration.md) and use `scripts/realmrouter-openai.mjs`. When using a Kimi Code membership for engineering generation, also read [kimi-code-integration.md](references/kimi-code-integration.md) and call `scripts/kimi-code-engineer.mjs`. Keep deployment values in an ignored `.env`, based on `.env-example`.
 
 | Role | Responsibility | Must not own |
 |---|---|---|
 | Spatial reasoning model | Interpret drawings, photos, scale cues, room semantics, constraints, and user intent; produce structured spatial facts | Final code, unvalidated construction dimensions, or decorative mesh generation |
+| Visual preview model | Generate and edit customer-facing images from an approved design revision | Spatial JSON, construction geometry, collision, circulation, or dimensional truth |
 | Engineering model | Convert approved scene data into Three.js, Blender Python, scene configuration, interactions, and tests | Changing room topology or design constraints without an explicit patch |
 | 3D asset model | Generate furniture and decor assets with requested dimensions and style | Walls, openings, circulation planning, or whole-room design decisions |
 | Runtime or renderer | Display, interact with, profile, export, or render the approved scene | Reinterpreting design intent |
@@ -45,10 +46,11 @@ Read [interior-design-workflow.md](references/interior-design-workflow.md) for s
 2. **Understand space.** Detect walls, openings, rooms, fixed equipment, usable zones, circulation, and scale anchors. Emit `Spatial JSON`.
 3. **Validate before designing.** Check wall topology, opening placement, room closure, dimensional consistency, accessible paths, and unresolved low-confidence facts.
 4. **Propose design.** Add functional zoning, furniture footprints, ergonomic clearances, materials, lighting, and style intent without overwriting measured geometry.
-5. **Generate assets.** Reuse catalog assets first. Generate only missing furniture or decor, request real dimensions, normalize pivots and scale, and export GLB when targeting the web.
-6. **Generate engineering artifacts.** Produce deterministic scene code or Blender scripts from the approved `Spatial JSON` and asset manifest. Keep generated code reviewable and reproducible.
-7. **Render and interact.** Provide desktop inspection first, then WebXR or native VR. Use Unreal or Twinmotion when high-fidelity offline output is required.
-8. **Apply revisions incrementally.** Convert user changes into explicit JSON Patch-like operations, re-run affected validations, and preserve revision history.
+5. **Preview visually.** After design approval, use GPT Image 2 for visual comparison and human review. Bind every image to a design revision and never feed inferred image geometry back into the spatial contract.
+6. **Generate assets.** Reuse catalog assets first. Generate only missing furniture or decor, request real dimensions, normalize pivots and scale, and export GLB when targeting the web.
+7. **Generate engineering artifacts.** Produce deterministic scene code or Blender scripts from the approved `Spatial JSON` and asset manifest. Use Kimi Code only as a coding specialist through the documented adapter, review its output before applying it, and keep generated code reproducible.
+8. **Render and interact.** Provide desktop inspection first, then WebXR or native VR. Use Unreal or Twinmotion when high-fidelity offline output is required.
+9. **Apply revisions incrementally.** Convert user changes into explicit JSON Patch-like operations, re-run affected validations, and preserve revision history.
 
 Use the contract in [spatial-json-contract.md](references/spatial-json-contract.md). Validate the contract before any downstream generation. If geometry conflicts with source measurements, stop and surface the conflict rather than choosing silently.
 

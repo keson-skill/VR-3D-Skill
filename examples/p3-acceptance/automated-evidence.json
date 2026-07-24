@@ -17,7 +17,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "a12b8ed49d9d36ac50d35f2a35cab7abb4b07f3c3c722633b82c40fe4fd2a090",
+      "scene_sha256": "89e1195191cab63d521d4312b449741354c68b8f72c15a9eb59cb9a16ce2555a",
       "primitives_sha256": "cca84d492d0443954eb5a66d8a4ad444b8c407a8e295c795898697ff49680f89",
       "primitive_count": 6,
       "glb": {
@@ -66,7 +66,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "abf9d76d35b6d220f1c836e5b5960ba38c1be04271204f72a9f9591c168fe48d",
+      "scene_sha256": "b0a7cafaea53f69521adf7881a0b6a3a22ecfa2a714d84a0b03a1ecc6d453ab6",
       "primitives_sha256": "3e32cd9200bb22fcf2d2f9c6e78366dbf38228e606c85f14742cb9def2840e71",
       "primitive_count": 9,
       "glb": {
@@ -115,7 +115,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "3a0e73454871219af1f8155af185c068c84e1ce2543883aaa50596e2f4c9d414",
+      "scene_sha256": "000e7ba536f664a9aaae490d27018cdb2cee2c7280677100a615802d1d2a5435",
       "primitives_sha256": "c58721b9a6dc231ed90536fba56ab2951342d949a9d0573ad88b2368916b045e",
       "primitive_count": 10,
       "glb": {
@@ -164,7 +164,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "ff3f87efc8a03e0b1922ea27a6a7e1b65b659e569314ba6137a4f206f0f3b8e6",
+      "scene_sha256": "94dd47b2e3d66663493bdd51932431be038241ce1c702ab7495d0abfb2066797",
       "primitives_sha256": "3bfba6897e32be86d1aaf368a6c3ae3955a1a9ce31e3703568e5018aad6295f3",
       "primitive_count": 8,
       "glb": {
@@ -213,7 +213,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "85385cc02b19aff607cbc282c062b67d03ac5ec8955e7c2b5a3a48d25e19b787",
+      "scene_sha256": "61d3acea21dc50e7a7af4882b1ef82c9593beeeff314e2ad360e10dbfa58d324",
       "primitives_sha256": "39d452824400f0075653b48769b23174d81fbf9d20195d9e4b8508bd09b6e6b8",
       "primitive_count": 10,
       "glb": {
@@ -262,7 +262,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "31b11204b93eafee118d665d0793906ad10129849c457c6a65c0eace191220b9",
+      "scene_sha256": "bda7fa616c7e536781a2b41f4d4fd92a66d8831223099e727f164de67005ebfc",
       "primitives_sha256": "6bb8e6ae577e90e88adb2903d80c19fc8b22c4b9d52850daaf6a3e4944631c05",
       "primitive_count": 11,
       "glb": {
@@ -311,7 +311,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "a566d84206a677af82f065e0c45ba19e24a71860b552e3df19ce7052e5103a82",
+      "scene_sha256": "66b23f07958c261f438358e1960a5b48b0db5b554aa1d649a4abb33291b6c44a",
       "primitives_sha256": "b0aa65a01b31baa36ce0011fb97dd2db4432a0e4393554a32ca10331ad97122e",
       "primitive_count": 11,
       "glb": {
@@ -360,7 +360,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "9f0ca7d62416ab39e8038a7c66830c89f954d86faad392ba3494a6b7c38aa78b",
+      "scene_sha256": "e622210d637c899510b019081d4c4fab0cd4d4bc620635367529326eee885a16",
       "primitives_sha256": "6743421184def1f375feb32de046ccd139aff992b4364476f5f7cd3ed572b187",
       "primitive_count": 17,
       "glb": {
@@ -409,7 +409,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "2c2b5fbbf8a7e19d031a4d60e4fe1df1e0b674b9ecdea302758befe19362bd5f",
+      "scene_sha256": "2f962f06d4dc618d639a8e5e84722845729a1f5366f7310e12adbc2145748678",
       "primitives_sha256": "244294432a2439a70fdb9b2cfb35a029b30f9b668475541b669712afa13a49df",
       "primitive_count": 20,
       "glb": {
@@ -458,7 +458,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "5f987244c577d79e5282f86354f2d03d7d6ba630aeb526a0f65cd865db1cc2c5",
+      "scene_sha256": "d9866c8d8f7e8bb51153865abf873631d80d54d0c76e071186849d903aa37cf1",
       "primitives_sha256": "7bd719e1add14333019f14bcab80683ccc77e7ad7d14ad670f40fc4b5cf1d8d5",
       "primitive_count": 12,
       "glb": {
@@ -507,7 +507,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "7ea78d9414f1b82c5f07c05c7d6cd70a613ef06589ab728765a3265a2a1ac346",
+      "scene_sha256": "9caaa70fdc1bd236678ba1b5baa4f684aeff445454ee56b221e1f1c46f2c85d0",
       "primitives_sha256": "47995908fb94db7ca05fa230e841b5fdabf8087ae97c753ac6d6a3dbae2d4ee2",
       "primitive_count": 7,
       "glb": {
@@ -556,7 +556,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "d930dcf3b92ea8f36a0d9627fac754536b4436c204e7c20ba745389dcad67be7",
+      "scene_sha256": "914ab24f3392d056d5aa92d219bedca06acb0a5568a7958f7a9a8ca9304f6be2",
       "primitives_sha256": "0b6a3f2732e358d81dcbb1d48352f029eeaab06b44f3489e00e93406d1104c4c",
       "primitive_count": 11,
       "glb": {
@@ -605,7 +605,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "d5ae2a43d183de577a7bdb3983294dbdc98c0d3c3d98acc0ea642b38672d2617",
+      "scene_sha256": "769cad4d43faf54289e47532c0b95e3e32a256f43e017cf7391414730e9dc0cc",
       "primitives_sha256": "ed0a8a9a770e52092b71bd196d513a7443b5780f542189fa976ebf876b696aa4",
       "primitive_count": 7,
       "glb": {
@@ -654,7 +654,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "913851aef932f6d0a84df934939ed9fcd249ffc949ad6c651f902d74a309be90",
+      "scene_sha256": "4d4dd79ce710b00f39adb6bd467997d652547841c2c23d3744130bbb439a80f3",
       "primitives_sha256": "8b213b9563b56cfc3795ec09083c3bd05404e37857f49802dc5b9f4ce4c18c11",
       "primitive_count": 7,
       "glb": {
@@ -703,7 +703,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "0ee7e482501debaff9a475be86dc2c61697de87690e73583596a14b3a6215d0a",
+      "scene_sha256": "1db7acf8dd9ca8c96f96db2ee7662d6d50d0e371d3a8f1b31f5a78eb320fe37f",
       "primitives_sha256": "18c93265b1789a83f9006fc5cde7f56e4fe6905a7d6fd301c1a1cf6a1fa4f8b6",
       "primitive_count": 12,
       "glb": {
@@ -752,7 +752,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "9c033afbd17b74fc7d29982a4798a528434dc9dcb8a7b445cde08c7a3b67a1bb",
+      "scene_sha256": "bde34fab9fd122c9b9146e4077424c6e605d95c2a7cf1fd836ebb797fcfaab36",
       "primitives_sha256": "2766b4fc1a81a59939b493d4375686b89388d7806199e36218e8f4c79e9f82f1",
       "primitive_count": 13,
       "glb": {
@@ -801,7 +801,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "0502ec28b89520c55223199f92562b7e5645268adab42457f86dc62fb58e5c90",
+      "scene_sha256": "edd8e3c58314230fda41731b9f121e8e878ae48b2ebcc893b766b9c32dbf5351",
       "primitives_sha256": "98c16d910d271b6740b465a47380f898d5a2a03040ea05291e0e8e9aefd26885",
       "primitive_count": 14,
       "glb": {
@@ -850,7 +850,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "d6d2fa898614ad7679a98757451586d8fa561e3e4161a556b2878ab02aed839c",
+      "scene_sha256": "739dd804c4af5612ba43493a11ebe08757880cdfe1f3ccc7828c505c3b2adf20",
       "primitives_sha256": "6953abd64fd79296a43a22bfa4220abcbef6084967a0f5b41eb4c1e4525fd884",
       "primitive_count": 7,
       "glb": {
@@ -899,7 +899,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "d02bdaa947d2eb187dd0e84f566b9d1c621465733657b409ad38b4905c56ff93",
+      "scene_sha256": "fe73bf9aecc46fac1d14f821c23dec1f16c1445cc737625d2364712d32068412",
       "primitives_sha256": "b1db5f89709b28ebac0e2dc2d6b50ef404c4ccf993c7edb93a0d187644c344dd",
       "primitive_count": 17,
       "glb": {
@@ -948,7 +948,7 @@
       "spatial_valid": true,
       "glb_valid": true,
       "expected_counts_valid": true,
-      "scene_sha256": "bc61590f9b11346f6cc7feabdb5025250659c72b5702fadf5e89ce382d66a7e2",
+      "scene_sha256": "4bb6e742711dec2f88c665f915aeea3461ba373736c1e3c53578b818d8115397",
       "primitives_sha256": "b6b113aa4885db70a2be05c7a1ad1ce920670ade887d091debfd7d46db8ec25d",
       "primitive_count": 27,
       "glb": {

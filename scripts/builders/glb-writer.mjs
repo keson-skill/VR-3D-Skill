@@ -121,7 +121,9 @@ function triangulate(points) {
 function polygonGeometry(primitive) {
   const normalY = primitive.normal_y ?? 1;
   const indices = triangulate(primitive.polygon);
-  if (normalY < 0) {
+  // Spatial polygons use X/Z winding. In glTF's Y-up coordinates, a
+  // counter-clockwise X/Z polygon faces -Y, so reverse only upward faces.
+  if (normalY > 0) {
     for (let index = 0; index < indices.length; index += 3) {
       [indices[index + 1], indices[index + 2]] = [
         indices[index + 2],

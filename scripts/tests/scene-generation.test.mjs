@@ -24,6 +24,28 @@ async function loadExample() {
   );
 }
 
+function triangleNormalY(glb, meshName) {
+  const jsonLength = glb.readUInt32LE(12);
+  const gltf = JSON.parse(glb.toString("utf8", 20, 20 + jsonLength).trim());
+  const binaryOffset = 20 + jsonLength + 8;
+  const meshIndex = gltf.meshes.findIndex((mesh) => mesh.name === meshName);
+  const primitive = gltf.meshes[meshIndex].primitives[0];
+  const position = gltf.accessors[primitive.attributes.POSITION];
+  const indices = gltf.accessors[primitive.indices];
+  const positionView = gltf.bufferViews[position.bufferView];
+  const indexView = gltf.bufferViews[indices.bufferView];
+  const readPosition = (index) => {
+    const offset = binaryOffset + positionView.byteOffset + index * 12;
+    return [glb.readFloatLE(offset), glb.readFloatLE(offset + 4), glb.readFloatLE(offset + 8)];
+  };
+  const readIndex = (index) =>
+    glb.readUInt32LE(binaryOffset + indexView.byteOffset + index * 4);
+  const [first, second, third] = [readPosition(readIndex(0)), readPosition(readIndex(1)), readPosition(readIndex(2))];
+  const a = [second[0] - first[0], second[1] - first[1], second[2] - first[2]];
+  const b = [third[0] - first[0], third[1] - first[1], third[2] - first[2]];
+  return a[2] * b[0] - a[0] * b[2];
+}
+
 test("builds a deterministic GLB and self-contained Web viewer", async () => {
   const directory = await mkdtemp(join(tmpdir(), "vr-3d-scene-"));
   try {
@@ -127,6 +149,13 @@ test("compiles ceilings, elevation changes, columns, beams, and stairs into a va
   });
   assert.equal(report.valid, true, JSON.stringify(report.errors));
   assert.ok(report.summary.triangles > 0);
+});
+
+test("writes upward-facing floors and downward-facing ceilings", async () => {
+  const document = await loadExample();
+  const glb = buildGlb(document, compileScenePrimitives(document));
+  assert.ok(triangleNormalY(glb, "room-living-floor") > 0);
+  assert.ok(triangleNormalY(glb, "room-living-ceiling") < 0);
 });
 
 test("shell mode omits furniture proxies", async () => {

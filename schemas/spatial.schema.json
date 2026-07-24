@@ -71,6 +71,10 @@
         "openings": {
           "type": "array",
           "items": { "$ref": "#/$defs/opening" }
+        },
+        "architectural_elements": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/architecturalElement" }
         }
       }
     },
@@ -419,9 +423,49 @@
           "items": { "$ref": "#/$defs/stableId" }
         },
         "area": { "type": "number", "exclusiveMinimum": 0 },
+        "floor_elevation": { "type": "number" },
+        "ceiling_elevation": { "type": "number" },
         "floor_material_id": { "$ref": "#/$defs/stableId" },
+        "ceiling_material_id": { "$ref": "#/$defs/stableId" },
         "provenance": { "$ref": "#/$defs/provenance" }
       }
+    },
+    "architecturalElement": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "kind", "dimensions", "transform"],
+      "properties": {
+        "id": { "$ref": "#/$defs/stableId" },
+        "kind": { "enum": ["column", "beam", "stair"] },
+        "room_id": { "$ref": "#/$defs/stableId" },
+        "material_id": { "$ref": "#/$defs/stableId" },
+        "dimensions": { "$ref": "#/$defs/positiveVector3" },
+        "step_count": { "type": "integer", "minimum": 2 },
+        "transform": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["position"],
+          "properties": {
+            "position": { "$ref": "#/$defs/vector3" },
+            "rotation_euler_degrees": { "$ref": "#/$defs/vector3" }
+          }
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "kind": { "const": "stair" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "step_count": { "type": "integer", "minimum": 2 }
+            },
+            "required": ["step_count"]
+          }
+        }
+      ]
     },
     "circulationPath": {
       "type": "object",

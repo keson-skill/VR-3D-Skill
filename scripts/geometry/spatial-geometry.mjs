@@ -321,6 +321,72 @@ export function buildWallPrimitives(wall, openings, floorElevation = 0) {
   return primitives;
 }
 
+function roomElevations(document, room) {
+  const floor = room.floor_elevation ?? document.envelope?.floor_elevation ?? 0;
+  const ceiling =
+    room.ceiling_elevation ??
+    floor + (document.envelope?.ceiling_height ?? 2.8);
+  return { floor, ceiling };
+}
+
+function rotateLocalXZ([x, z], radians) {
+  return [
+    x * Math.cos(radians) + z * Math.sin(radians),
+    -x * Math.sin(radians) + z * Math.cos(radians),
+  ];
+}
+
+export function buildArchitecturalPrimitives(elements = []) {
+  const primitives = [];
+  for (const element of elements) {
+    const rotation =
+      -((element.transform?.rotation_euler_degrees?.[1] || 0) * Math.PI) /
+      180;
+    const position = element.transform?.position || [0, 0, 0];
+    const materialId = element.material_id || "wall_default";
+    if (element.kind !== "stair") {
+      primitives.push({
+        shape: "box",
+        name: element.id,
+        category: "shell",
+        kind: element.kind,
+        source_id: element.id,
+        translation: position,
+        rotation_y_radians: rotation,
+        scale: element.dimensions,
+        material_id: materialId,
+      });
+      continue;
+    }
+
+    const [width, totalHeight, totalRun] = element.dimensions;
+    const stepCount = element.step_count;
+    const tread = totalRun / stepCount;
+    const rise = totalHeight / stepCount;
+    for (let index = 0; index < stepCount; index += 1) {
+      const stepHeight = rise * (index + 1);
+      const local = [0, -totalRun / 2 + tread * (index + 0.5)];
+      const [offsetX, offsetZ] = rotateLocalXZ(local, rotation);
+      primitives.push({
+        shape: "box",
+        name: `${element.id}-step-${index + 1}`,
+        category: "shell",
+        kind: "stair_tread",
+        source_id: element.id,
+        translation: [
+          position[0] + offsetX,
+          position[1] + stepHeight / 2,
+          position[2] + offsetZ,
+        ],
+        rotation_y_radians: rotation,
+        scale: [width, stepHeight, tread],
+        material_id: materialId,
+      });
+    }
+  }
+  return primitives;
+}
+
 export function compileScenePrimitives(document) {
   const floorElevation = document.envelope?.floor_elevation || 0;
   const wallMap = new Map(
@@ -341,6 +407,7 @@ export function compileScenePrimitives(document) {
       room.boundary_wall_ids.map((id) => wallMap.get(id)).filter(Boolean),
     );
     if (ordered.valid) {
+      const elevations = roomElevations(document, room);
       primitives.push({
         shape: "polygon",
         name: `${room.id}-floor`,
@@ -348,11 +415,26 @@ export function compileScenePrimitives(document) {
         kind: "floor",
         source_id: room.id,
         polygon: ordered.polygon,
-        elevation: floorElevation + 0.002,
+        elevation: elevations.floor + 0.002,
+        normal_y: 1,
         material_id: room.floor_material_id || "floor_default",
+      });
+      primitives.push({
+        shape: "polygon",
+        name: `${room.id}-ceiling`,
+        category: "shell",
+        kind: "ceiling",
+        source_id: room.id,
+        polygon: ordered.polygon,
+        elevation: elevations.ceiling - 0.002,
+        normal_y: -1,
+        material_id: room.ceiling_material_id || "wall_default",
       });
     }
   }
+  primitives.push(
+    ...buildArchitecturalPrimitives(document.envelope?.architectural_elements),
+  );
   for (const object of document.design_objects || []) {
     const position = object.transform.position;
     primitives.push({

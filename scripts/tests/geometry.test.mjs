@@ -78,3 +78,26 @@ test("validates opening height and furniture collisions", async () => {
     report.errors.some((error) => error.code === "design_object.collision"),
   );
 });
+
+test("validates P3 room elevations and stair descriptors", async () => {
+  const document = await example();
+  document.rooms[0].floor_elevation = 0.2;
+  document.rooms[0].ceiling_elevation = 3.1;
+  document.envelope.architectural_elements = [
+    {
+      id: "stair-test",
+      kind: "stair",
+      dimensions: [1.1, 1.2, 1.8],
+      step_count: 6,
+      transform: { position: [3.5, 0.2, 1.8] },
+    },
+  ];
+  let report = validateSpatialJson(document);
+  assert.equal(report.valid, true, JSON.stringify(report.errors));
+
+  document.envelope.architectural_elements[0].step_count = 1;
+  report = validateSpatialJson(document);
+  assert.ok(
+    report.errors.some((error) => error.path.includes("step_count")),
+  );
+});

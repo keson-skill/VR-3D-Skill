@@ -7,6 +7,7 @@ Use this contract as the authoritative, renderer-neutral representation of the i
 - [Required principles](#required-principles)
 - [Minimal shape](#minimal-shape)
 - [Provenance](#provenance)
+- [P3 shell geometry extensions](#p3-shell-geometry-extensions)
 - [Validation order](#validation-order)
 - [Revision contract](#revision-contract)
 
@@ -231,6 +232,12 @@ Use this contract as the authoritative, renderer-neutral representation of the i
 ```
 
 The example shows one internally connected room, not a complete building model. A validator must still reject incomplete geometry, dangling references, unknown structural roles presented as facts, or constraints that target missing IDs rather than filling them silently.
+
+## P3 shell geometry extensions
+
+Use `room.floor_elevation` and `room.ceiling_elevation` only when a room differs from the envelope defaults; both are absolute Y coordinates in meters and the ceiling must be higher than the floor. The compiler emits one floor and one inward-facing ceiling polygon for every valid room.
+
+Use `envelope.architectural_elements` for measured structural or fixed shell geometry. Each element has a stable `id`, `kind` (`column`, `beam`, or `stair`), meter `dimensions` in `[x, y, z]`, and a `transform.position`. A stair additionally has `step_count`; its position is the center of the full stair footprint at the lower floor elevation, and its `dimensions` are `[width, total_rise, total_run]`. Keep every element source-bound; do not encode P4 finishes, P5 furniture, or renderer-only meshes here.
 
 ## Provenance
 

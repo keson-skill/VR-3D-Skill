@@ -40,7 +40,7 @@ Keep provider names inside `adapters/`; name task directories after stable roles
 | Engineering generation | `scripts/tasks/engineering-generation/generate-engineering.mjs` | approved Spatial JSON, task, optional asset manifest | reviewable generated text/code plus metadata |
 | Asset generation preparation | `scripts/tasks/asset-generation/create-asset-brief.mjs` | approved Spatial JSON and design-object ID | provider-neutral asset brief |
 | Human spatial approval | `scripts/approval/approve-spatial-json.mjs` | exact source manifest, approved Spatial JSON, passing validation report, reviewer private key/key ID | hash-bound and Ed25519-signed approval sidecar |
-| Viewable scene | `scripts/tasks/scene-generation/build-viewable-scene.mjs` | approved Spatial JSON, source manifest, validation report, approval sidecar, and reviewer trust store | deterministic GLB, static Three.js/WebXR viewer, approval verification |
+| Viewable scene | `scripts/tasks/scene-generation/build-viewable-scene.mjs` | approved Spatial JSON, source manifest, validation report, approval sidecar, and reviewer trust store | deterministic GLB, static Three.js/WebXR viewer, approval verification, GLB structural report |
 
 External-provider tasks require `--allow-provider`. Treat the flag as confirmation that the user approved the named provider and the exact data selected for that command. Do not add it automatically or call the adapter directly to avoid the check.
 
@@ -146,7 +146,7 @@ node scripts/serve-viewer.mjs \
   --directory runs/project-001
 ```
 
-`validate-spatial-json.mjs` first executes the Draft 2020-12 schema, then checks connected non-self-intersecting room loops, opening bounds, furniture room containment, and proxy collisions. With `--require-approved`, it additionally requires the three bound sidecars and rejects stale hashes, test fixtures, unknown scale, conflicts, unresolved questions, low-confidence topology, or missing provenance. It does not claim structural engineering, building-code compliance, a production navmesh, exact door-swing clearance, or headset performance. Preserve those limitations in reports.
+`validate-spatial-json.mjs` first executes the Draft 2020-12 schema, then checks connected non-self-intersecting room loops, opening bounds, furniture room containment, proxy collisions, room elevation validity, and P3 column/beam/stair descriptors. With `--require-approved`, it additionally requires the three bound sidecars and rejects stale hashes, test fixtures, unknown scale, conflicts, unresolved questions, low-confidence topology, or missing provenance. The scene compiler validates every emitted GLB header, chunks, buffer views, accessors, normals, UVs, materials, node transforms, and coordinate-system metadata before it writes the deliverable. Neither check claims structural engineering, building-code compliance, a production navmesh, exact door-swing clearance, or headset performance. Preserve those limitations in reports.
 
 For a single raster plan, write `validation.approved_scope: "visualization_only"` and carry that warning into the renderer. Require an independent source-alignment review before using `construction_ready`; model catalog visibility, a concept preview, or a successful scene render do not prove source-image fidelity.
 

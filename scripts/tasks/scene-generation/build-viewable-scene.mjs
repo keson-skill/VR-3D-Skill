@@ -14,6 +14,7 @@ import {
   writeJson,
 } from "../../lib/cli.mjs";
 import { validateSpatialJson } from "../../validation/validate-spatial-json.mjs";
+import { validateGlbBytes } from "../../validation/validate-glb.mjs";
 
 const MODES = new Map([
   ["shell", "毛坯房"],
@@ -82,6 +83,16 @@ export async function buildViewableScene(
   }
   await writeGlb(sceneFile, spatialJson, primitives);
   const sceneBytes = await readFile(sceneFile);
+  const glbValidation = validateGlbBytes(sceneBytes, {
+    expectedProject: spatialJson.project,
+  });
+  if (!glbValidation.valid) {
+    throw new Error(
+      `Generated GLB failed structural validation: ${glbValidation.errors
+        .map((error) => `${error.code} ${error.path || ""}`)
+        .join("; ")}`,
+    );
+  }
   const manifest = {
     schema_version: "1.0",
     project: {
@@ -107,9 +118,12 @@ export async function buildViewableScene(
     counts: {
       primitives: primitives.length,
       rooms: spatialJson.rooms.length,
+      structural_elements: (spatialJson.envelope?.architectural_elements || [])
+        .length,
       design_objects: primitives.filter((item) => item.category === "furniture")
         .length,
     },
+    glb_validation: glbValidation.summary,
     limitations: [
       ...(spatialJson.validation.approved_scope === "visualization_only"
         ? ["Not approved for construction, procurement, or exact layout."]
@@ -123,6 +137,7 @@ export async function buildViewableScene(
     join(outputDirectory, "approval-verification-report.json"),
     validation,
   );
+  await writeJson(join(outputDirectory, "glb-validation-report.json"), glbValidation);
   await writeJson(join(outputDirectory, "validation-report.json"), validation);
   await writeJson(join(outputDirectory, "source-manifest.json"), sourceManifest);
   await writeJson(
@@ -147,6 +162,7 @@ export async function buildViewableScene(
     viewer: join(outputDirectory, "index.html"),
     manifest,
     validation,
+    glbValidation,
   };
 }
 

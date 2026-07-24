@@ -268,6 +268,12 @@ export function validateSpatialJson(
   const rooms = document.rooms;
   const roomIds = new Set();
   const roomPolygons = new Map();
+  const defaultFloorElevation = document.envelope?.floor_elevation;
+  const defaultCeilingElevation =
+    Number.isFinite(defaultFloorElevation) &&
+    Number.isFinite(document.envelope?.ceiling_height)
+      ? defaultFloorElevation + document.envelope.ceiling_height
+      : null;
   if (!Array.isArray(rooms) || rooms.length === 0) {
     addError("rooms.required", "/rooms", "At least one room is required.");
   } else {
@@ -275,6 +281,32 @@ export function validateSpatialJson(
       const path = `/rooms/${index}`;
       if (typeof room?.id === "string") {
         roomIds.add(room.id);
+      }
+      const floorElevation = room?.floor_elevation ?? defaultFloorElevation;
+      const ceilingElevation =
+        room?.ceiling_elevation ?? defaultCeilingElevation;
+      if (!Number.isFinite(floorElevation)) {
+        addError(
+          "room.floor_elevation",
+          `${path}/floor_elevation`,
+          "Room floor elevation must resolve to a finite number.",
+        );
+      }
+      if (!Number.isFinite(ceilingElevation)) {
+        addError(
+          "room.ceiling_elevation",
+          `${path}/ceiling_elevation`,
+          "Room ceiling elevation must resolve to a finite number.",
+        );
+      } else if (
+        Number.isFinite(floorElevation) &&
+        ceilingElevation <= floorElevation + 1e-6
+      ) {
+        addError(
+          "room.non_positive_height",
+          path,
+          "Room ceiling elevation must be above its floor elevation.",
+        );
       }
       if (!Array.isArray(room?.boundary_wall_ids) || room.boundary_wall_ids.length < 3) {
         addError(
@@ -326,6 +358,71 @@ export function validateSpatialJson(
         );
       }
       validateProvenance(room, path, { required: requireApproved });
+    });
+  }
+
+  const architecturalElements = document.envelope?.architectural_elements;
+  if (
+    architecturalElements !== undefined &&
+    !Array.isArray(architecturalElements)
+  ) {
+    addError(
+      "architectural_elements.type",
+      "/envelope/architectural_elements",
+      "architectural_elements must be an array.",
+    );
+  } else {
+    (architecturalElements || []).forEach((element, index) => {
+      const path = `/envelope/architectural_elements/${index}`;
+      if (!isObject(element) || !["column", "beam", "stair"].includes(element.kind)) {
+        addError(
+          "architectural_element.kind",
+          `${path}/kind`,
+          "Architectural element kind must be column, beam, or stair.",
+        );
+      }
+      if (
+        !isFiniteVector(element?.dimensions, 3) ||
+        element.dimensions.some((value) => value <= 0)
+      ) {
+        addError(
+          "architectural_element.dimensions",
+          `${path}/dimensions`,
+          "Architectural element dimensions must contain three positive numbers.",
+        );
+      }
+      if (!isFiniteVector(element?.transform?.position, 3)) {
+        addError(
+          "architectural_element.position",
+          `${path}/transform/position`,
+          "Architectural element position must contain three finite numbers.",
+        );
+      }
+      if (
+        element?.transform?.rotation_euler_degrees !== undefined &&
+        !isFiniteVector(element.transform.rotation_euler_degrees, 3)
+      ) {
+        addError(
+          "architectural_element.rotation",
+          `${path}/transform/rotation_euler_degrees`,
+          "Architectural element rotation must contain three finite numbers when supplied.",
+        );
+      }
+      if (element?.kind === "stair" && (!Number.isInteger(element.step_count) || element.step_count < 2)) {
+        addError(
+          "architectural_element.step_count",
+          `${path}/step_count`,
+          "A stair requires an integer step_count of at least two.",
+        );
+      }
+      if (element?.room_id && !roomIds.has(element.room_id)) {
+        addError(
+          "architectural_element.room",
+          `${path}/room_id`,
+          `Unknown room ${element.room_id}.`,
+        );
+      }
+      validateProvenance(element, path, { required: requireApproved });
     });
   }
 

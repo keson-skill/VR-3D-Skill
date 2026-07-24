@@ -84,8 +84,11 @@ export async function prepareTextureAssets(
   const allowedMaterialIds = materialIds ? new Set(materialIds) : null;
   const assets = [];
   const report = [];
-  for (const [materialId, material] of Object.entries(document.materials || {})) {
-    if (allowedMaterialIds && !allowedMaterialIds.has(materialId)) continue;
+  const requestedMaterialIds = allowedMaterialIds || new Set(Object.keys(document.materials || {}));
+  for (const materialId of requestedMaterialIds) {
+    const resolvedMaterialId = document.material_overrides?.[materialId] || materialId;
+    const material = document.materials?.[resolvedMaterialId];
+    if (!material) continue;
     for (const [slot, texture] of Object.entries(material.textures || {})) {
       let packed;
       let status = "packed";
@@ -113,6 +116,7 @@ export async function prepareTextureAssets(
       }
       const asset = {
         material_id: materialId,
+        resolved_material_id: resolvedMaterialId,
         slot,
         mime_type: packed.mimeType,
         color_space: texture.color_space,
@@ -122,6 +126,7 @@ export async function prepareTextureAssets(
       assets.push(asset);
       report.push({
         material_id: materialId,
+        resolved_material_id: resolvedMaterialId,
         slot,
         source_uri: texture.uri,
         source_filename: basename(texture.uri.split("?")[0]) || null,
@@ -350,7 +355,8 @@ export function buildGlb(document, primitives, { textureAssets = [], quality = "
     textureAssetsByMaterial.get(asset.material_id).push(asset);
   }
   const materials = materialIds.map((id) => {
-    const source = materialSource[id] || DEFAULT_MATERIALS.furniture_proxy;
+    const resolvedMaterialId = document.material_overrides?.[id] || id;
+    const source = materialSource[resolvedMaterialId] || DEFAULT_MATERIALS.furniture_proxy;
     const color = hexToFactor(source.base_color, [0.6, 0.6, 0.6, 1]);
     color[3] = Number.isFinite(source.alpha) ? source.alpha : 1;
     const emissive = hexToFactor(source.emissive_color, [0, 0, 0, 1]);
@@ -377,8 +383,9 @@ export function buildGlb(document, primitives, { textureAssets = [], quality = "
       ...(source.textures || Number.isInteger(source.texture_budget_bytes)
         ? {
             extras: {
-              texture_slots: source.textures || {},
-              texture_budget_bytes: source.texture_budget_bytes || 0,
+            texture_slots: source.textures || {},
+            texture_budget_bytes: source.texture_budget_bytes || 0,
+            material_binding: { source_material_id: id, resolved_material_id: resolvedMaterialId },
               texture_embedding: textureAssetsByMaterial.has(id)
                 ? "p4_glb_embedded"
                 : "deferred_p4_asset_pipeline",
@@ -533,6 +540,7 @@ export function buildGlb(document, primitives, { textureAssets = [], quality = "
 
   const images = [];
   const textures = [];
+  const embeddedTextureIndices = new Map();
   const materialTextureTargets = {
     base_color: ["pbrMetallicRoughness", "baseColorTexture"],
     metallic_roughness: ["pbrMetallicRoughness", "metallicRoughnessTexture"],
@@ -547,12 +555,17 @@ export function buildGlb(document, primitives, { textureAssets = [], quality = "
     for (const asset of assets) {
       const target = materialTextureTargets[asset.slot];
       if (!target || !Buffer.isBuffer(asset.bytes) || asset.bytes.length === 0) continue;
-      const imageIndex = images.push({
-        name: `${materialId}-${asset.slot}`,
-        bufferView: appendBuffer(asset.bytes),
-        mimeType: asset.mime_type,
-      }) - 1;
-      const textureIndex = textures.push({ source: imageIndex, name: `${materialId}-${asset.slot}` }) - 1;
+      const assetKey = `${asset.resolved_material_id || asset.material_id}:${asset.slot}:${asset.mime_type}:${sha256(asset.bytes)}`;
+      let textureIndex = embeddedTextureIndices.get(assetKey);
+      if (textureIndex === undefined) {
+        const imageIndex = images.push({
+          name: `${asset.resolved_material_id || materialId}-${asset.slot}`,
+          bufferView: appendBuffer(asset.bytes),
+          mimeType: asset.mime_type,
+        }) - 1;
+        textureIndex = textures.push({ source: imageIndex, name: `${asset.resolved_material_id || materialId}-${asset.slot}` }) - 1;
+        embeddedTextureIndices.set(assetKey, textureIndex);
+      }
       const textureInfo = { index: textureIndex };
       if (target.length === 2) {
         material[target[0]][target[1]] = textureInfo;

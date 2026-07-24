@@ -123,6 +123,10 @@
       "type": "object",
       "additionalProperties": { "$ref": "#/$defs/material" }
     },
+    "material_overrides": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/stableId" }
+    },
     "lights": {
       "type": "array",
       "items": { "$ref": "#/$defs/light" }

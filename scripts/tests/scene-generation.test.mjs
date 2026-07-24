@@ -365,6 +365,42 @@ test("P4 embeds local texture assets, records fallback assets, and exports punct
   }
 });
 
+test("P4 material overrides preserve source bindings while resolving replacement PBR textures", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "vr-3d-p4-override-"));
+  try {
+    const document = await loadExample();
+    document.materials.warm_finish = {
+      base_color: "#C99062",
+      roughness: 0.48,
+      textures: {
+        base_color: {
+          uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+          mime_type: "image/png",
+          color_space: "srgb",
+          scale_meters: 0.5,
+        },
+      },
+    };
+    document.material_overrides = { wall_default: "warm_finish" };
+    const result = await buildViewableScene(document, {
+      outputDirectory: directory,
+      ...createTestApprovalContext(document),
+    });
+    const gltf = gltfFromGlb(await readFile(result.sceneFile));
+    const wallMaterial = gltf.materials.find((item) => item.name === "wall_default");
+    assert.deepEqual(wallMaterial.pbrMetallicRoughness.baseColorFactor, [201 / 255, 144 / 255, 98 / 255, 1]);
+    assert.equal(wallMaterial.pbrMetallicRoughness.baseColorTexture.index >= 0, true);
+    assert.deepEqual(wallMaterial.extras.material_binding, {
+      source_material_id: "wall_default",
+      resolved_material_id: "warm_finish",
+    });
+    assert.deepEqual(result.manifest.material_overrides, { wall_default: "warm_finish" });
+    assert.equal(result.textureReport[0].resolved_material_id, "warm_finish");
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("shell mode omits furniture proxies", async () => {
   const directory = await mkdtemp(join(tmpdir(), "vr-3d-shell-"));
   try {

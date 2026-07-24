@@ -547,6 +547,30 @@ export function validateSpatialJson(
     "glass_default",
     "furniture_proxy",
   ]);
+  if (document.material_overrides !== undefined && !isObject(document.material_overrides)) {
+    addError(
+      "material_override.type",
+      "/material_overrides",
+      "material_overrides must map a source material ID to a declared replacement material ID.",
+    );
+  } else {
+    for (const [sourceId, replacementId] of Object.entries(document.material_overrides || {})) {
+      if (!materialIds.has(sourceId) && !builtInMaterialIds.has(sourceId)) {
+        addError(
+          "material_override.source",
+          `/material_overrides/${sourceId}`,
+          `Unknown source material ${sourceId}.`,
+        );
+      }
+      if (!materialIds.has(replacementId) && !builtInMaterialIds.has(replacementId)) {
+        addError(
+          "material_override.target",
+          `/material_overrides/${sourceId}`,
+          `Unknown replacement material ${replacementId || "(missing)"}.`,
+        );
+      }
+    }
+  }
   for (const [materialId, material] of Object.entries(materials)) {
     const textures = material?.textures;
     if (!isObject(textures)) continue;

@@ -1,0 +1,458 @@
+{
+  "schema_version": "1.0",
+  "stage": "P4",
+  "fixture_set": "examples/p4-acceptance/fixtures.json",
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 20,
+    "spatial_errors": 0,
+    "glb_errors": 0,
+    "blender_contract_errors": 0,
+    "texture_budget_errors": 0,
+    "count_errors": 0,
+    "embedded_images": 40,
+    "fallback_textures": 40
+  },
+  "samples": [
+    {
+      "id": "p4-01-rectangle",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "c951e25914a1d8ddb937a6ea32d105f39de35546e319e1d0900528148f0d6ced",
+      "primitives_sha256": "d16a33f3f85ae7349dbcac2c5dc56d90803e48eb338cfc3adcd17cd992b1fb5e",
+      "glb": {
+        "nodes": 9,
+        "meshes": 7,
+        "triangles": 64,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-02-door",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "60af97bd289b8d7c997289220886e04e482b0694173c3cac8edde3a4a651b7e9",
+      "primitives_sha256": "b86c89d145e24a7b7d73e6ab72ed41744106d9e5bc87ee5f5fd381e6d72ef196",
+      "glb": {
+        "nodes": 12,
+        "meshes": 10,
+        "triangles": 100,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-03-window",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "253a64ae90d5fcc1973206032f796debf408956a72b3eee2460e6c794c3dc14d",
+      "primitives_sha256": "8352f5e46687d955c3ce56248cf51b99eff83a4585e3392d2f4e2fb9162b8fd9",
+      "glb": {
+        "nodes": 13,
+        "meshes": 11,
+        "triangles": 112,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-04-l-room",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "866b09073db77cae90628111bf40ede0bfd41e1add9dad9c2e3bef9680f54bd4",
+      "primitives_sha256": "778d2eba56e0eefc50c83988a828fdc2ece096956866df781bbd2f6fa41671dc",
+      "glb": {
+        "nodes": 11,
+        "meshes": 9,
+        "triangles": 92,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-05-u-room",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "8f691404107cade7e669a6dfc62dfb31ca70444891f9d68bb7e544bdbd899a37",
+      "primitives_sha256": "19c399e3c580b43987c95caf812fdb427abb78643f82eb0c8349fe1d29978550",
+      "glb": {
+        "nodes": 13,
+        "meshes": 11,
+        "triangles": 120,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-06-two-room-vertical",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "3805d3e0df35c017003537005f0913868500421bd261b239b5ba0030e405147e",
+      "primitives_sha256": "76a12cc7a0bf055ac8819dde19b7ca8f12fe9f374bd4084e51b55ba841dc5f21",
+      "glb": {
+        "nodes": 14,
+        "meshes": 12,
+        "triangles": 104,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-07-two-room-horizontal",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "749d8a4054b9986041a0c40cb8ff01ce460723a7ee98254bdd0037fecb59b5fe",
+      "primitives_sha256": "12a138f6863a0e8e990d03aa96f38eb41975057be3c65bad51c001f93843e8cb",
+      "glb": {
+        "nodes": 14,
+        "meshes": 12,
+        "triangles": 104,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-08-three-room-t",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "7ca51aa9c832a30114da55e80388672d12448e71bfba4a4b7cd25fb9cebb3c1d",
+      "primitives_sha256": "20f8f601c67cb2f11eff6b13dfe86fd889ce1a2d28ea11fd12f0def5e46bd5fe",
+      "glb": {
+        "nodes": 19,
+        "meshes": 17,
+        "triangles": 144,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-09-four-room-grid",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "230b1e1a14954e2cf86f400dcdd163015ac17ec804d59b725bed20ac4acf8c9d",
+      "primitives_sha256": "84144869f754d2de1e530fc6a50176a97d9f82d2c78719eef5d6572667cfeb18",
+      "glb": {
+        "nodes": 23,
+        "meshes": 21,
+        "triangles": 172,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-10-corridor-living",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "e21723ae232cb0a1bcbcb3a8e95cfebc01c7d8cbc6f703c31c7f05fd787c9bb4",
+      "primitives_sha256": "15603ed2958b433f22a9413dd140e5270c377cb30e7f97fb7bbb68b7564c8676",
+      "glb": {
+        "nodes": 15,
+        "meshes": 13,
+        "triangles": 116,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-11-slanted-pentagon",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "5f350fc1978c52ff40209e7bc73a2ab53b31b162dea5a06043567e07c63403a3",
+      "primitives_sha256": "a981abd0dc8cd83e7a97768617a19bc41ebfc8413dd5646adb31de8a61104ad2",
+      "glb": {
+        "nodes": 10,
+        "meshes": 8,
+        "triangles": 78,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-12-level-change",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "99b9fdabd16bd473ba344e4fa62103933a748ca792ba537a134c527a208a0897",
+      "primitives_sha256": "b588214682899b46ddaed050634990db26a3932679ee9657249c64e90dd35f00",
+      "glb": {
+        "nodes": 14,
+        "meshes": 12,
+        "triangles": 104,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-13-column",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "ce06601ec1ade0ee6d5c614d0221b44c068951699e3679d4ec11a9737cb6bea9",
+      "primitives_sha256": "7bdf55c477eb842180816a6d88738ebe5680a2b1f20e45a2ecc2d3e476556e07",
+      "glb": {
+        "nodes": 10,
+        "meshes": 8,
+        "triangles": 76,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-14-beam",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "701c31b3de65f41db0ab2615dda4500a1152f117374fc7ef6d4338a758238a73",
+      "primitives_sha256": "c2f34b8d7cdd78708652b88ff53bcfd34273dd505d8c07b96f24318d5bd70622",
+      "glb": {
+        "nodes": 10,
+        "meshes": 8,
+        "triangles": 76,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-15-stair",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "74d5be1f4b0967afbfc9611d9089118df6e0b6de2f2bde83e608096bf8d040c3",
+      "primitives_sha256": "c3069d1a2e7fcb79463fb10866043c1a242accd7957f98647cd513932ec560bd",
+      "glb": {
+        "nodes": 15,
+        "meshes": 8,
+        "triangles": 76,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-16-structure-combined",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "8da873358777fe7724db67c833bc4f755c49a58224084956261c24dedbe6bed8",
+      "primitives_sha256": "d9b3acad6bf351cbb92e89a6b3bba58b4d59e93ac6552252404743e7aee5335a",
+      "glb": {
+        "nodes": 16,
+        "meshes": 8,
+        "triangles": 76,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-17-concave-two-room",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "1787a6289d4450fed329ab58a5d0851f4fc8575311e7952d0f3286eec67b117c",
+      "primitives_sha256": "64a9bb9295ea21df2bc7daf8af811c2376cbb54377fa024fffc88c7ef86bc3f2",
+      "glb": {
+        "nodes": 17,
+        "meshes": 15,
+        "triangles": 144,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-18-narrow-openings",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "c3defe74df402ce02604fc59f13961db857f120e424589ad303e68de8ac9c6de",
+      "primitives_sha256": "5c37f56acdc8ad0fcd90e6ec2462a35d22b470391986469d308f9e227cfedef1",
+      "glb": {
+        "nodes": 10,
+        "meshes": 8,
+        "triangles": 76,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-19-unequal-heights",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "73581398613857ffa91f96130ecffb1ac6b8fcf5c59fdb231e07a6324d5cefdc",
+      "primitives_sha256": "6c5d8a907ce2acc549a90b3089b09de96c17941f96b0698fa6e585f69f9eca74",
+      "glb": {
+        "nodes": 19,
+        "meshes": 17,
+        "triangles": 144,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    },
+    {
+      "id": "p4-20-complex-shared",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "blender_contract_valid": true,
+      "texture_budget_valid": true,
+      "expected_counts_valid": true,
+      "scene_sha256": "c328199fc7765cef0ca8a85ed48b495b0559c416b5abb1da9b8d3fcc1f9f89c6",
+      "primitives_sha256": "dbbfe864140529895292ece3d4f054ec02707f0af1f5a7ce4232f4a7a7646c18",
+      "glb": {
+        "nodes": 29,
+        "meshes": 27,
+        "triangles": 224,
+        "images": 2,
+        "lights": 2
+      },
+      "hard_finish_primitives": 1,
+      "texture_assets": {
+        "packed": 2,
+        "fallback": 2
+      }
+    }
+  ]
+}

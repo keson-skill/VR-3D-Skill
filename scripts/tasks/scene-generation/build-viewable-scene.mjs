@@ -113,6 +113,7 @@ export async function buildViewableScene(
       lighting: "KHR_lights_punctual",
       texture_packaging: "embedded_glb_with_deterministic_fallback",
     },
+    material_overrides: spatialJson.material_overrides || {},
     approval_scope: spatialJson.validation.approved_scope,
     spatial_approval: {
       id: approval.approval_id,

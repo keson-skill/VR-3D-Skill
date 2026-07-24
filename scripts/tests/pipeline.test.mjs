@@ -222,21 +222,33 @@ test("validates two explainable P5 layouts and distinguishes real assets from pr
   const document = validSpatialJson();
   document.assets[0].source = "catalog";
   const object = structuredClone(document.design_objects[0]);
+  object.transform.position = [3, 0, 3];
   const { asset_id: _proxyAssetId, ...proxyObject } = object;
   const proposal = {
     base_revision: document.project.revision,
+    design_brief: {
+      budget: { amount: 50000, currency: "CNY" },
+      occupants: [{ role: "adult", count: 2 }],
+      activities: ["conversation", "television"],
+      must_keep_ids: ["object-sofa"],
+      minimum_clearance_meters: 0.8,
+    },
     recommended_alternative_id: "family-layout",
     design_alternatives: [
       {
         id: "family-layout",
         explanation: { zoning: "Keep the sofa in the social zone and protect the door path.", tradeoff: "More seating, less open floor." },
-        score: { circulation: 0.9, budget: 0.8 },
+        score: { circulation: 0.9, budget: 0.8, function: 0.9 },
+        cost: { estimated_total: 42000, currency: "CNY" },
+        risk_notes: "Catalog availability may change.",
         design_objects: [object],
       },
       {
         id: "open-layout",
         explanation: { zoning: "Retain the social zone with a compact furniture arrangement.", tradeoff: "Less storage." },
-        score: { circulation: 0.95, budget: 0.85 },
+        score: { circulation: 0.95, budget: 0.85, function: 0.82 },
+        cost: { estimated_total: 38000, currency: "CNY" },
+        risk_notes: "Proxy must be replaced before procurement.",
         design_objects: [proxyObject],
       },
     ],
@@ -254,8 +266,8 @@ test("P5 resolves only licensed dimensionally compatible catalog assets and reco
     { id: "chair", kind: "chair", dimensions: [0.6, 0.8, 0.6] },
   ], {
     assets: [
-      { id: "catalog-sofa", kind: "sofa", uri: "catalog/sofa.glb", license: "commercial", dimensions: [2.02, 0.8, 0.91] },
-      { id: "bad-chair", kind: "chair", uri: "catalog/chair.glb", license: "forbidden", dimensions: [0.6, 0.8, 0.6] },
+      { id: "catalog-sofa", kind: "sofa", uri: "catalog/sofa.glb", format: "glb", source: "licensed_catalog", license: "commercial", units: "meters", pivot: "bottom_center", forward_axis: "-Z", optimized: true, collision_proxy: true, dimensions: [2.02, 0.8, 0.91] },
+      { id: "bad-chair", kind: "chair", uri: "catalog/chair.glb", format: "glb", source: "licensed_catalog", license: "forbidden", units: "meters", pivot: "bottom_center", forward_axis: "-Z", optimized: true, collision_proxy: true, dimensions: [0.6, 0.8, 0.6] },
     ],
   });
   assert.equal(result.valid, true);

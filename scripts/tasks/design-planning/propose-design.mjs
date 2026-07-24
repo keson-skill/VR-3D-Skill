@@ -93,6 +93,7 @@ ${JSON.stringify(providerSpatial, null, 2)}
 
 Return one JSON object with:
 - base_revision;
+- design_brief with budget, occupants, activities, must_keep_ids, minimum_clearance_meters;
 - design_alternatives with explainable zoning, furniture footprints, clearances, materials, lighting, cost/risk notes, and scores;
 - recommended_alternative_id;
 - a proposed revision_patch using stable target IDs and durable JSON Pointer paths.

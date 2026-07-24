@@ -7,6 +7,12 @@ Use the gates that apply to the requested output. Record evidence, exclusions, a
 - Every source file has an identifier, type, revision, and coordinate or image orientation.
 - Explicit dimensions remain distinct from inferred dimensions.
 - Unit conversions, scale anchors, confidence scores, and assumptions are recorded.
+- Local DWG, binary scan, FBX, PDF/video, and spreadsheet tool routes record the executable version, bounded arguments, input/output hashes, and failures without invoking a shell.
+- PDF pages retain vector/text evidence when present; scan pages retain page transforms and never gain authority merely because they were rasterized or OCR-processed.
+- Multi-view and video evidence has distinct image hashes, matching camera intrinsics/poses, acceptable reprojection error, and a metric scale; 360° evidence has a valid equirectangular projection and explicit alignment when multiple panoramas are used.
+- IFC evidence retains units, storeys, containment, semantic types, property sets, classifications, and stable source entity IDs; cross-storey or unsupported geometry requires selection or a verified geometry engine.
+- Point-cloud/depth evidence records source axis, unit scale, filtering, bounds, planes, point counts, limitations, and review-only opening candidates. It never claims hidden construction geometry.
+- Existing 3D references reject remote/absolute/traversing resources, hash packaged dependencies, require explicit OBJ axes/units, and require asset ID and license in asset mode.
 - Private plans, photos, addresses, and client metadata are sent only to approved providers.
 - The output can identify which source, user edit, model, or asset produced each important fact.
 

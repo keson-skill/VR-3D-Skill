@@ -34,6 +34,22 @@ async function moduleStatus(path) {
   }
 }
 
+const optionalTools = {
+  tesseract: await commandStatus("tesseract"),
+  blender: await commandStatus("blender"),
+  pdfinfo: await commandStatus("pdfinfo", ["-v"]),
+  pdfimages: await commandStatus("pdfimages", ["-v"]),
+  pdftotext: await commandStatus("pdftotext", ["-v"]),
+  pdftocairo: await commandStatus("pdftocairo", ["-v"]),
+  pdftoppm: await commandStatus("pdftoppm", ["-v"]),
+  ffmpeg: await commandStatus("ffmpeg", ["-version"]),
+  ffprobe: await commandStatus("ffprobe", ["-version"]),
+  libreoffice: await commandStatus("soffice", ["--version"]),
+  pdal: await commandStatus("pdal", ["--version"]),
+  ifcconvert: await commandStatus("IfcConvert", ["--version"]),
+  assimp: await commandStatus("assimp", ["version"]),
+};
+
 const report = {
   node: {
     available: Number(process.versions.node.split(".")[0]) >= 20,
@@ -46,10 +62,7 @@ const report = {
     sharp: await moduleStatus("../node_modules/sharp/package.json"),
     dxf_parser: await moduleStatus("../node_modules/dxf-parser/package.json"),
   },
-  optional_tools: {
-    tesseract: await commandStatus("tesseract"),
-    blender: await commandStatus("blender"),
-  },
+  optional_tools: optionalTools,
 };
 report.ready_for_p2_spatial =
   report.node.available &&
@@ -63,6 +76,19 @@ report.ready_for_local_ocr = report.optional_tools.tesseract.available;
 report.ready_for_high_fidelity_rendering = report.optional_tools.blender.available;
 report.ready_for_plan_render_alignment =
   report.node.available && report.dependencies.sharp.available;
+report.ready_for_pdf_ingest = [
+  "pdfinfo",
+  "pdfimages",
+  "pdftotext",
+  "pdftocairo",
+  "pdftoppm",
+].every((name) => report.optional_tools[name].available);
+report.ready_for_video_ingest =
+  report.optional_tools.ffmpeg.available && report.optional_tools.ffprobe.available;
+report.ready_for_xlsx_catalog_ingest = report.optional_tools.libreoffice.available;
+report.ready_for_binary_point_cloud_ingest = report.optional_tools.pdal.available;
+report.ready_for_ifc_geometry_conversion = report.optional_tools.ifcconvert.available;
+report.ready_for_fbx_scene_conversion = report.optional_tools.assimp.available;
 
 printJson(report);
 if (!report.ready_for_p2_spatial || !report.ready_for_parametric_web_scene) {

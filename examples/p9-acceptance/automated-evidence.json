@@ -1,0 +1,323 @@
+{
+  "schema_version": "1.0",
+  "stage": "P9",
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 33,
+    "categories": 11,
+    "category_counts": {
+      "dwg": 3,
+      "vector_pdf": 3,
+      "scanned_pdf": 3,
+      "ifc": 3,
+      "single_photo": 3,
+      "multiview_video": 3,
+      "panorama": 3,
+      "point_cloud": 3,
+      "depth": 3,
+      "existing_3d": 3,
+      "catalog": 3
+    },
+    "route_errors": 0
+  },
+  "samples": [
+    {
+      "id": "p9-dwg-normal",
+      "category": "dwg",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-dwg-boundary",
+      "category": "dwg",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-dwg-failure",
+      "category": "dwg",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-vector_pdf-normal",
+      "category": "vector_pdf",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-vector_pdf-boundary",
+      "category": "vector_pdf",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-vector_pdf-failure",
+      "category": "vector_pdf",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-scanned_pdf-normal",
+      "category": "scanned_pdf",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-scanned_pdf-boundary",
+      "category": "scanned_pdf",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-scanned_pdf-failure",
+      "category": "scanned_pdf",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-ifc-normal",
+      "category": "ifc",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-ifc-boundary",
+      "category": "ifc",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-ifc-failure",
+      "category": "ifc",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-single_photo-normal",
+      "category": "single_photo",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-single_photo-boundary",
+      "category": "single_photo",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-single_photo-failure",
+      "category": "single_photo",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-multiview_video-normal",
+      "category": "multiview_video",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-multiview_video-boundary",
+      "category": "multiview_video",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-multiview_video-failure",
+      "category": "multiview_video",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-panorama-normal",
+      "category": "panorama",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-panorama-boundary",
+      "category": "panorama",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-panorama-failure",
+      "category": "panorama",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-point_cloud-normal",
+      "category": "point_cloud",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-point_cloud-boundary",
+      "category": "point_cloud",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-point_cloud-failure",
+      "category": "point_cloud",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-depth-normal",
+      "category": "depth",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-depth-boundary",
+      "category": "depth",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-depth-failure",
+      "category": "depth",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-existing_3d-normal",
+      "category": "existing_3d",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-existing_3d-boundary",
+      "category": "existing_3d",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-existing_3d-failure",
+      "category": "existing_3d",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-catalog-normal",
+      "category": "catalog",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-catalog-boundary",
+      "category": "catalog",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p9-catalog-failure",
+      "category": "catalog",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    }
+  ],
+  "report_sha256": "1f2fd553890f1c89981cffef2d57b3b4bf3f6ec2832ec4567a3beffbf1a4a5f6"
+}

@@ -29,7 +29,15 @@ Keep provider names inside `adapters/`; name task directories after stable roles
 | Task | Entrypoint | Required input | Output |
 |---|---|---|---|
 | Input routing | `scripts/ingest/detect-input.mjs` | source paths | deterministic input routes |
-| Job preparation | `scripts/orchestration/prepare-interior-job.mjs` | one or more source files | preserved inputs, normalized raster/DXF evidence, source and job manifests |
+| Job preparation | `scripts/orchestration/prepare-interior-job.mjs` | one or more source files plus route sidecars/tool approvals | preserved inputs, route-specific evidence, blockers, source and job manifests |
+| DWG conversion | `scripts/ingest/convert-dwg-to-dxf.mjs` | DWG plus approved local converter | versioned/hash-bound DXF conversion and vector evidence |
+| PDF inspection | `scripts/ingest/inspect-pdf.mjs` | PDF plus local Poppler | per-page vector/scan/mixed classification, SVG/text/raster evidence |
+| IFC evidence | `scripts/ingest/extract-ifc-evidence.mjs` | IFC STEP file | units, storeys, semantic elements, properties, classifications, wall axes, optional pending Spatial draft |
+| Visual-media evidence | `scripts/ingest/inspect-visual-media.mjs` | images/video plus registration/scale sidecars | validated views, cameras, keyframes, scale and reconstruction policy |
+| Visual reconstruction | `scripts/tasks/visual-reconstruction/extract-visual-spatial.mjs` | unblocked visual evidence and exact matching images | validated, pending, visualization-only Spatial draft |
+| Point cloud/depth | `scripts/ingest/extract-point-cloud-evidence.mjs` | PLY/PCD/XYZ/PTS, depth plus intrinsics, or approved PDAL conversion | normalized points, planes, opening candidates, quality gate, optional pending Spatial draft |
+| Existing 3D | `scripts/ingest/inspect-existing-scene.mjs` | GLB/glTF/OBJ or approved FBX conversion plus asset metadata | bounds, axes, semantic candidates, resource hashes, import contract |
+| Product catalog | `scripts/ingest/import-product-catalog.mjs` | CSV/TSV or XLSX with local LibreOffice | validated asset manifest and license report |
 | DXF evidence | `scripts/ingest/extract-dxf-evidence.mjs` | DXF | vector entities, layers, units, bounds |
 | DXF semantic conversion | `scripts/spatial/dxf-to-spatial.mjs` | DXF evidence, source manifest, optional layer/block mapping | source-bound draft Spatial JSON |
 | Raster semantic conversion | `scripts/spatial/raster-to-spatial.mjs` | normalized plan, source manifest, optional scale anchor/correction | source-bound draft Spatial JSON |
@@ -45,6 +53,7 @@ Keep provider names inside `adapters/`; name task directories after stable roles
 | Viewable scene | `scripts/tasks/scene-generation/build-viewable-scene.mjs` | approved Spatial JSON, source manifest, validation report, approval sidecar, and reviewer trust store | deterministic GLB, primitive sidecar, static Three.js/WebXR viewer, approval verification, GLB structural report |
 | Compiled-scene top view | `scripts/validation/render-scene-top-view.mjs` | Spatial JSON or compiled primitives | deterministic wall-only top view for source alignment |
 | P3 regression gate | `scripts/validation/run-p3-acceptance.mjs` | 20 fixed Spatial JSON fixtures | Spatial, primitive, GLB, scene hash, and top-view alignment evidence |
+| P9 input gate | `scripts/validation/run-p9-acceptance.mjs` | 33 fixed normal/boundary/failure route fixtures | per-category route outcome and aggregate evidence |
 
 External-provider tasks require `--allow-provider`. Treat the flag as confirmation that the user approved the named provider and the exact data selected for that command. Do not add it automatically or call the adapter directly to avoid the check.
 

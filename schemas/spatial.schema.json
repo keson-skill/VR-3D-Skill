@@ -316,7 +316,18 @@
         "coordinate_transform"
       ],
       "properties": {
-        "source_kind": { "enum": ["dxf", "raster", "manual", "mixed"] },
+        "source_kind": {
+          "enum": [
+            "dxf",
+            "raster",
+            "manual",
+            "mixed",
+            "ifc",
+            "visual",
+            "point_cloud",
+            "existing_3d"
+          ]
+        },
         "method": { "$ref": "#/$defs/nonEmptyString" },
         "scale": {
           "type": "object",

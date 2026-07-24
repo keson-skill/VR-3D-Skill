@@ -56,17 +56,24 @@ Actions:
 - preserve originals and revisions;
 - detect the source route before processing;
 - parse DXF vector entities, layers, units, blocks, text, and dimensions without rasterizing them;
+- validate DWG headers and pass only explicitly approved local conversions into the DXF parser, recording converter version, arguments, and input/output hashes;
+- classify each PDF page as vector, scanned, mixed, or empty; retain SVG and text bounding boxes for vector pages and normalize a high-resolution raster for scan pages;
 - preprocess raster plans locally and run optional local Tesseract OCR; keep OCR boxes, confidence, and source hashes as evidence;
+- validate photo/panorama resolution and projection, video metadata/keyframes, multi-view intrinsics/poses/reprojection error, and a user-confirmed metric scale;
+- preserve IFC units, storeys, containment, properties, classifications, and source entity IDs; require storey selection or a verified geometry engine when simple wall axes are insufficient;
+- normalize point-cloud units and axes, cap source size/count, extract reviewable planes/opening candidates, and use an approved local PDAL route for LAS/LAZ/E57;
+- validate existing-scene dimensions, axes, handedness, resource containment/hashes, semantic names, asset identity, collision metadata, and license; convert FBX locally before import;
+- validate CSV/TSV/XLSX product catalogs before they become asset candidates;
 - detect file coordinate systems and drawing scales;
 - extract explicit dimensions, orientation, room labels, and scale anchors;
 - distinguish observed facts, user-provided facts, and inferences;
 - redact or obtain approval before sending sensitive project data externally.
 
-Output: normalized sources, OCR and/or CAD vector evidence, and a source manifest. DWG must be converted through an approved local converter before DXF parsing. If no reliable scale anchor exists, ask for one or keep the scene explicitly unscaled.
+Output: normalized sources, route-specific evidence, structured blockers, and a source manifest. Missing tools, unsafe resources, unresolved axes, weak registration, complex IFC/scan geometry, or absent scale must block that route or keep its result explicitly `visualization_only`.
 
 ## Stage 2: spatial understanding
 
-Run deterministic conversion first. `dxf-to-spatial.mjs` maps known layers, closed polylines, line openings, blocks, units, and labels without changing vector coordinates. `raster-to-spatial.mjs` extracts the supported orthogonal shell, wall gaps, room outline, and trusted or estimated scale while retaining the pixel-to-meter transform. Ambiguous or unsupported topology must become a blocking question for the correction UI rather than an invented room.
+Run deterministic conversion first. `dxf-to-spatial.mjs` maps known layers, closed polylines, line openings, blocks, units, and labels without changing vector coordinates. `raster-to-spatial.mjs` extracts the supported orthogonal shell, wall gaps, room outline, and trusted or estimated scale while retaining the pixel-to-meter transform. The IFC and point-cloud adapters may emit a pending visualization draft only for their bounded deterministic cases. `extract-visual-spatial.mjs` is an approval-gated model task that verifies every image hash and rejects paths, unsupported cameras, hidden-geometry claims, or model-created approval. Ambiguous or unsupported topology must become a blocking question for the correction UI rather than an invented room.
 
 The spatial reasoning model may then classify evidence that deterministic rules cannot resolve:
 

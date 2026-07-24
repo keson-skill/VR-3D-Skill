@@ -55,8 +55,8 @@ Read [model-routing.md](references/model-routing.md) before adding provider call
 
 Read [interior-design-workflow.md](references/interior-design-workflow.md) for stage inputs, outputs, and failure handling.
 
-1. **Route and normalize input.** Run `scripts/ingest/detect-input.mjs`. Preserve originals and fingerprints. For DXF, extract vector evidence without rasterizing it. For images, use cross-platform normalization and optional local Tesseract OCR. Treat OCR as evidence, never as geometry truth.
-2. **Understand space.** Run the deterministic DXF or raster converter first. Preserve DXF coordinates and explicit measurements; preserve the raster original-to-normalized transform and a trusted or estimated scale. Use the configured spatial model (`gpt-5.5` by default) only for ambiguous semantics that deterministic evidence cannot classify. Emit draft `Spatial JSON` with provenance, confidence, assumptions, conflicts, and unresolved questions.
+1. **Route and normalize input.** Run `scripts/ingest/detect-input.mjs` or the unified `prepare-interior-job.mjs`. Preserve originals and fingerprints. Keep DXF and vector PDF evidence structured; convert DWG, binary scans, FBX, and XLSX only through the configured local tool route. For raster/scan pages, use local normalization and optional Tesseract OCR. For IFC, visual media, point clouds, depth, existing 3D, and product catalogs, use their dedicated ingest adapters and preserve their blockers. Treat OCR, semantic node names, planes, and camera estimates as evidence, never as geometry truth.
+2. **Understand space.** Run a deterministic converter first when one exists. Preserve source coordinates, page transforms, units, axes, explicit measurements, resource hashes, camera registration, and a trusted or estimated scale. Simple closed IFC wall axes and qualified point-cloud bounds may produce a pending visualization draft; complex BIM, occluded photo geometry, and scan opening candidates remain explicit review items. Use the configured spatial model (`gpt-5.5` by default) only for ambiguous semantics that deterministic evidence cannot classify. Emit draft `Spatial JSON` with provenance, confidence, assumptions, conflicts, and unresolved questions.
 3. **Validate and obtain independent approval before designing.** Run Draft 2020-12 JSON Schema and business-geometry validation, generate a source-aligned top view, and review the overlay in the local correction UI. A human must then create a separate approval artifact that binds the source manifest, exact Spatial JSON, and exact validation report and signs them with an externally trusted Ed25519 reviewer key. The in-document `validation.status` never replaces this sidecar. Unknown scale, conflicts, unresolved questions, low-confidence topology, an untrusted signature, or a mismatched hash must block downstream work.
 4. **Propose design.** Add functional zoning, furniture footprints, ergonomic clearances, materials, lighting, and style intent without overwriting measured geometry.
 5. **Preview visually.** After design approval, use GPT Image 2 for generation or the reference-edit task for approved source images. Bind every image to a design revision and never feed inferred image geometry back into the spatial contract.
@@ -109,6 +109,21 @@ node scripts/spatial/dxf-to-spatial.mjs \
   --project-id job-001 \
   --output runs/job-001/spatial-draft.json
 ```
+
+For mixed inputs, let the unified preparation route create per-source evidence and structured blockers:
+
+```bash
+node scripts/orchestration/prepare-interior-job.mjs \
+  --input model.ifc \
+  --input room-a.jpg --role multiview \
+  --input room-b.jpg --role multiview \
+  --input room-c.jpg --role multiview \
+  --registration camera-registration.json \
+  --scale-anchor scale-anchor.json \
+  --output runs/job-001
+```
+
+DWG, LAS/LAZ/E57, FBX, PDF, video, and XLSX depend on local converters or tools reported by `npm run doctor`. Approval flags authorize only the configured local conversion process; they do not approve the resulting space. OBJ additionally requires explicit units, up/forward axes, and handedness. Visual, IFC, scan, point-cloud, and imported-scene drafts remain `pending` and normally `visualization_only` until their own evidence and the independent Spatial approval gate pass.
 
 Review and correct the source overlay locally, then rerun validation and alignment:
 

@@ -115,6 +115,10 @@
         }
       }
     },
+    "hard_finishes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/hardFinish" }
+    },
     "materials": {
       "type": "object",
       "additionalProperties": { "$ref": "#/$defs/material" }
@@ -525,7 +529,65 @@
         },
         "roughness": { "type": "number", "minimum": 0, "maximum": 1 },
         "metalness": { "type": "number", "minimum": 0, "maximum": 1 },
-        "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
+        "alpha": { "type": "number", "minimum": 0, "maximum": 1 },
+        "alpha_mode": { "enum": ["OPAQUE", "MASK", "BLEND"] },
+        "double_sided": { "type": "boolean" },
+        "emissive_color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "emissive_strength": { "type": "number", "minimum": 0 },
+        "texture_budget_bytes": { "type": "integer", "minimum": 0 },
+        "textures": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/textureSlot" },
+          "propertyNames": {
+            "enum": ["base_color", "normal", "metallic_roughness", "occlusion", "emissive"]
+          }
+        }
+      }
+    },
+    "textureSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["uri", "mime_type", "color_space", "scale_meters"],
+      "properties": {
+        "uri": { "type": "string", "minLength": 1 },
+        "mime_type": { "enum": ["image/png", "image/jpeg", "image/webp", "image/ktx2"] },
+        "color_space": { "enum": ["srgb", "linear"] },
+        "scale_meters": { "type": "number", "exclusiveMinimum": 0 },
+        "texcoord": { "type": "integer", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "hardFinish": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "kind", "material_id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/stableId" },
+        "kind": {
+          "enum": ["baseboard", "opening_trim", "dropped_ceiling", "fixed_cabinet", "fixed_fixture"]
+        },
+        "material_id": { "$ref": "#/$defs/stableId" },
+        "host_wall_id": { "$ref": "#/$defs/stableId" },
+        "opening_id": { "$ref": "#/$defs/stableId" },
+        "room_id": { "$ref": "#/$defs/stableId" },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "depth": { "type": "number", "exclusiveMinimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "drop": { "type": "number", "exclusiveMinimum": 0 },
+        "thickness": { "type": "number", "exclusiveMinimum": 0 },
+        "dimensions": { "$ref": "#/$defs/positiveVector3" },
+        "transform": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["position"],
+          "properties": {
+            "position": { "$ref": "#/$defs/vector3" },
+            "rotation_euler_degrees": { "$ref": "#/$defs/vector3" }
+          }
+        },
+        "provenance": { "$ref": "#/$defs/provenance" }
       }
     },
     "light": {

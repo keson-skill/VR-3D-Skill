@@ -538,6 +538,82 @@ export function validateSpatialJson(
     }
   }
 
+  const materials = isObject(document.materials) ? document.materials : {};
+  const materialIds = new Set(Object.keys(materials));
+  const builtInMaterialIds = new Set([
+    "wall_default",
+    "floor_default",
+    "door_default",
+    "glass_default",
+    "furniture_proxy",
+  ]);
+  for (const [materialId, material] of Object.entries(materials)) {
+    const textures = material?.textures;
+    if (!isObject(textures)) continue;
+    for (const [slot, texture] of Object.entries(textures)) {
+      const path = `/materials/${materialId}/textures/${slot}`;
+      const expectedColorSpace = ["base_color", "emissive"].includes(slot)
+        ? "srgb"
+        : "linear";
+      if (texture?.color_space !== expectedColorSpace) {
+        addError(
+          "material.texture_color_space",
+          `${path}/color_space`,
+          `${slot} texture must use ${expectedColorSpace} color space.`,
+        );
+      }
+      if (!Number.isFinite(texture?.scale_meters) || texture.scale_meters <= 0) {
+        addError(
+          "material.texture_scale",
+          `${path}/scale_meters`,
+          "Texture scale_meters must be positive and finite.",
+        );
+      }
+    }
+  }
+
+  const hardFinishes = document.hard_finishes;
+  if (hardFinishes !== undefined && !Array.isArray(hardFinishes)) {
+    addError("hard_finish.type", "/hard_finishes", "hard_finishes must be an array.");
+  } else {
+    (hardFinishes || []).forEach((finish, index) => {
+      const path = `/hard_finishes/${index}`;
+      if (!materialIds.has(finish?.material_id) && !builtInMaterialIds.has(finish?.material_id)) {
+        addError(
+          "hard_finish.material",
+          `${path}/material_id`,
+          `Unknown hard-finish material ${finish?.material_id || "(missing)"}.`,
+        );
+      }
+      const requiresWall = finish?.kind === "baseboard";
+      const requiresOpening = finish?.kind === "opening_trim";
+      const requiresRoom = ["dropped_ceiling", "fixed_cabinet", "fixed_fixture"].includes(finish?.kind);
+      if (requiresWall && !wallMap.has(finish?.host_wall_id)) {
+        addError("hard_finish.wall", `${path}/host_wall_id`, "Baseboard requires a known host wall.");
+      }
+      if (requiresOpening && !(openings || []).some((opening) => opening.id === finish?.opening_id)) {
+        addError("hard_finish.opening", `${path}/opening_id`, "Opening trim requires a known opening.");
+      }
+      if (requiresRoom && !roomIds.has(finish?.room_id)) {
+        addError("hard_finish.room", `${path}/room_id`, "Hard finish requires a known room.");
+      }
+      for (const key of requiresWall ? ["height", "depth"] : requiresOpening ? ["width", "depth"] : finish?.kind === "dropped_ceiling" ? ["drop", "thickness"] : []) {
+        if (!Number.isFinite(finish?.[key]) || finish[key] <= 0) {
+          addError("hard_finish.dimension", `${path}/${key}`, `${key} must be positive and finite.`);
+        }
+      }
+      if (["fixed_cabinet", "fixed_fixture"].includes(finish?.kind)) {
+        if (!isFiniteVector(finish?.dimensions, 3) || finish.dimensions.some((value) => value <= 0)) {
+          addError("hard_finish.dimensions", `${path}/dimensions`, "Fixed hard finish requires three positive dimensions.");
+        }
+        if (!isFiniteVector(finish?.transform?.position, 3)) {
+          addError("hard_finish.position", `${path}/transform/position`, "Fixed hard finish requires a finite position.");
+        }
+      }
+      validateProvenance(finish, path, { required: requireApproved });
+    });
+  }
+
   const paths = document.circulation?.paths;
   if (paths !== undefined && !Array.isArray(paths)) {
     addError(
@@ -702,6 +778,7 @@ export function validateSpatialJson(
       design_objects: Array.isArray(document.design_objects)
         ? document.design_objects.length
         : 0,
+      hard_finishes: Array.isArray(hardFinishes) ? hardFinishes.length : 0,
     },
   };
 }

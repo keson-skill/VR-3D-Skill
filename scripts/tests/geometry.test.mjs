@@ -101,3 +101,67 @@ test("validates P3 room elevations and stair descriptors", async () => {
     report.errors.some((error) => error.path.includes("step_count")),
   );
 });
+
+test("validates P4 material texture conventions and hard-finish references", async () => {
+  const document = await example();
+  document.materials.finish_paint = {
+    base_color: "#E4DDD3",
+    roughness: 0.74,
+    metalness: 0,
+    texture_budget_bytes: 524288,
+    textures: {
+      base_color: {
+        uri: "materials/finish-paint.webp",
+        mime_type: "image/webp",
+        color_space: "srgb",
+        scale_meters: 1,
+      },
+      normal: {
+        uri: "materials/finish-paint-normal.webp",
+        mime_type: "image/webp",
+        color_space: "linear",
+        scale_meters: 1,
+      },
+    },
+  };
+  document.hard_finishes = [
+    {
+      id: "baseboard-south",
+      kind: "baseboard",
+      host_wall_id: "wall-south",
+      material_id: "finish_paint",
+      height: 0.1,
+      depth: 0.018,
+    },
+    {
+      id: "trim-entry",
+      kind: "opening_trim",
+      opening_id: "door-entry",
+      material_id: "finish_paint",
+      width: 0.07,
+      depth: 0.025,
+    },
+    {
+      id: "ceiling-living",
+      kind: "dropped_ceiling",
+      room_id: "room-living",
+      material_id: "finish_paint",
+      drop: 0.12,
+      thickness: 0.03,
+    },
+    {
+      id: "cabinet-fixed",
+      kind: "fixed_cabinet",
+      room_id: "room-living",
+      material_id: "finish_paint",
+      dimensions: [1.2, 0.9, 0.45],
+      transform: { position: [1.1, 0, 0.4] },
+    },
+  ];
+  let report = validateSpatialJson(document);
+  assert.equal(report.valid, true, JSON.stringify(report.errors));
+
+  document.materials.finish_paint.textures.normal.color_space = "srgb";
+  report = validateSpatialJson(document);
+  assert.ok(report.errors.some((error) => error.code === "material.texture_color_space"));
+});

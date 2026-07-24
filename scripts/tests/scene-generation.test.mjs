@@ -37,9 +37,14 @@ async function loadP3Fixture(id) {
   return suite.fixtures.find((fixture) => fixture.id === id).spatial;
 }
 
+function gltfFromGlb(glb) {
+  const jsonLength = glb.readUInt32LE(12);
+  return JSON.parse(glb.toString("utf8", 20, 20 + jsonLength).trim());
+}
+
 function triangleNormalY(glb, meshName) {
   const jsonLength = glb.readUInt32LE(12);
-  const gltf = JSON.parse(glb.toString("utf8", 20, 20 + jsonLength).trim());
+  const gltf = gltfFromGlb(glb);
   const binaryOffset = 20 + jsonLength + 8;
   const meshIndex = gltf.meshes.findIndex((mesh) => mesh.name === meshName);
   const primitive = gltf.meshes[meshIndex].primitives[0];
@@ -268,6 +273,43 @@ test("T and X wall junctions use through and butt joints without wall-volume ove
     assert.ok(wallJoints.includes("through"), `${fixtureId} lacks a through joint`);
     assert.ok(wallJoints.includes("butt"), `${fixtureId} lacks a butt joint`);
   }
+});
+
+test("compiles P4 hard finishes and preserves PBR texture-slot metadata", async () => {
+  const document = await loadExample();
+  document.materials.finish_paint = {
+    base_color: "#E4DDD3",
+    roughness: 0.74,
+    metalness: 0,
+    double_sided: false,
+    texture_budget_bytes: 524288,
+    textures: {
+      base_color: {
+        uri: "materials/finish-paint.webp",
+        mime_type: "image/webp",
+        color_space: "srgb",
+        scale_meters: 1,
+      },
+    },
+  };
+  document.hard_finishes = [
+    { id: "baseboard-south", kind: "baseboard", host_wall_id: "wall-south", material_id: "finish_paint", height: 0.1, depth: 0.018 },
+    { id: "trim-entry", kind: "opening_trim", opening_id: "door-entry", material_id: "finish_paint", width: 0.07, depth: 0.025 },
+    { id: "ceiling-living", kind: "dropped_ceiling", room_id: "room-living", material_id: "finish_paint", drop: 0.12, thickness: 0.03 },
+    { id: "cabinet-fixed", kind: "fixed_cabinet", room_id: "room-living", material_id: "finish_paint", dimensions: [1.2, 0.9, 0.45], transform: { position: [1.1, 0, 0.4] } },
+  ];
+  const primitives = compileScenePrimitives(document);
+  const finishes = primitives.filter((primitive) => primitive.category === "hard_finish");
+  assert.deepEqual(
+    finishes.map((primitive) => primitive.kind).sort(),
+    ["baseboard", "dropped_ceiling", "fixed_cabinet", "opening_trim", "opening_trim", "opening_trim"],
+  );
+  const glb = buildGlb(document, primitives);
+  const report = validateGlbBytes(glb, { expectedProject: document.project });
+  assert.equal(report.valid, true, JSON.stringify(report.errors));
+  const material = gltfFromGlb(glb).materials.find((item) => item.name === "finish_paint");
+  assert.equal(material.extras.texture_slots.base_color.color_space, "srgb");
+  assert.equal(material.extras.texture_embedding, "deferred_p4_asset_pipeline");
 });
 
 test("shell mode omits furniture proxies", async () => {

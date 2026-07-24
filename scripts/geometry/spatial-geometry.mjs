@@ -682,6 +682,130 @@ export function buildArchitecturalPrimitives(elements = []) {
   return primitives;
 }
 
+function finishBox({ name, kind, sourceId, materialId, translation, rotation, scale }) {
+  return {
+    shape: "box",
+    name,
+    category: "hard_finish",
+    kind,
+    source_id: sourceId,
+    fixed: true,
+    translation,
+    rotation_y_radians: rotation,
+    scale,
+    material_id: materialId,
+  };
+}
+
+export function buildHardFinishPrimitives(document, wallMap) {
+  const finishes = document.hard_finishes || [];
+  const openings = document.envelope?.openings || [];
+  const floorElevation = document.envelope?.floor_elevation || 0;
+  const primitives = [];
+  for (const finish of finishes) {
+    if (finish.kind === "baseboard") {
+      const wall = wallMap.get(finish.host_wall_id);
+      if (!wall) continue;
+      const length = distance2d(wall.start, wall.end);
+      const center = interpolate(wall.start, wall.end, length / 2);
+      const angle = Math.atan2(wall.end[1] - wall.start[1], wall.end[0] - wall.start[0]);
+      primitives.push(finishBox({
+        name: finish.id,
+        kind: "baseboard",
+        sourceId: finish.id,
+        materialId: finish.material_id,
+        translation: [center[0], floorElevation + finish.height / 2, center[1]],
+        rotation: -angle,
+        scale: [length, finish.height, finish.depth],
+      }));
+      continue;
+    }
+    if (finish.kind === "opening_trim") {
+      const opening = openings.find((item) => item.id === finish.opening_id);
+      const wall = opening ? wallMap.get(opening.host_wall_id) : null;
+      if (!opening || !wall) continue;
+      const angle = Math.atan2(wall.end[1] - wall.start[1], wall.end[0] - wall.start[0]);
+      const trimHeight = opening.height + finish.width * 2;
+      const left = interpolate(wall.start, wall.end, opening.offset + finish.width / 2);
+      const right = interpolate(
+        wall.start,
+        wall.end,
+        opening.offset + opening.width - finish.width / 2,
+      );
+      const y = floorElevation + opening.sill_height + trimHeight / 2;
+      for (const [suffix, center] of [["left", left], ["right", right]]) {
+        primitives.push(finishBox({
+          name: `${finish.id}-${suffix}`,
+          kind: "opening_trim",
+          sourceId: finish.id,
+          materialId: finish.material_id,
+          translation: [center[0], y, center[1]],
+          rotation: -angle,
+          scale: [finish.width, trimHeight, finish.depth],
+        }));
+      }
+      const topCenter = interpolate(
+        wall.start,
+        wall.end,
+        opening.offset + opening.width / 2,
+      );
+      primitives.push(finishBox({
+        name: `${finish.id}-top`,
+        kind: "opening_trim",
+        sourceId: finish.id,
+        materialId: finish.material_id,
+        translation: [
+          topCenter[0],
+          floorElevation + opening.sill_height + opening.height + finish.width / 2,
+          topCenter[1],
+        ],
+        rotation: -angle,
+        scale: [opening.width + finish.width * 2, finish.width, finish.depth],
+      }));
+      continue;
+    }
+    if (finish.kind === "dropped_ceiling") {
+      const room = (document.rooms || []).find((item) => item.id === finish.room_id);
+      const ordered = room
+        ? orderRoomPolygon(room.boundary_wall_ids.map((id) => wallMap.get(id)).filter(Boolean))
+        : null;
+      if (!room || !ordered?.valid) continue;
+      const elevations = roomElevations(document, room);
+      primitives.push({
+        shape: "extruded_polygon",
+        name: finish.id,
+        category: "hard_finish",
+        kind: "dropped_ceiling",
+        source_id: finish.id,
+        footprint: ordered.polygon,
+        bottom_elevation: elevations.ceiling - finish.drop - finish.thickness,
+        top_elevation: elevations.ceiling - finish.drop,
+        material_id: finish.material_id,
+      });
+      continue;
+    }
+    if (["fixed_cabinet", "fixed_fixture"].includes(finish.kind)) {
+      const rotation =
+        -((finish.transform.rotation_euler_degrees?.[1] || 0) * Math.PI) / 180;
+      const position = finish.transform.position;
+      primitives.push(finishBox({
+        name: finish.id,
+        kind: finish.kind,
+        sourceId: finish.id,
+        materialId: finish.material_id,
+        translation: [
+          position[0],
+          position[1] + finish.dimensions[1] / 2,
+          position[2],
+        ],
+        rotation,
+        scale: finish.dimensions,
+      }));
+    }
+  }
+  return primitives;
+}
+
 export function compileScenePrimitives(document) {
   const floorElevation = document.envelope?.floor_elevation || 0;
   const openings = document.envelope?.openings || [];
@@ -740,6 +864,7 @@ export function compileScenePrimitives(document) {
   primitives.push(
     ...buildArchitecturalPrimitives(document.envelope?.architectural_elements),
   );
+  primitives.push(...buildHardFinishPrimitives(document, wallMap));
   for (const object of document.design_objects || []) {
     const position = object.transform.position;
     primitives.push({

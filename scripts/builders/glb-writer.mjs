@@ -220,6 +220,11 @@ export function buildGlb(document, primitives) {
     const source = materialSource[id] || DEFAULT_MATERIALS.furniture_proxy;
     const color = hexToFactor(source.base_color, [0.6, 0.6, 0.6, 1]);
     color[3] = Number.isFinite(source.alpha) ? source.alpha : 1;
+    const emissive = hexToFactor(source.emissive_color, [0, 0, 0, 1]);
+    const emissiveStrength = Number.isFinite(source.emissive_strength)
+      ? source.emissive_strength
+      : 0;
+    const alphaMode = source.alpha_mode || (color[3] < 1 ? "BLEND" : "OPAQUE");
     return {
       name: id,
       pbrMetallicRoughness: {
@@ -227,7 +232,24 @@ export function buildGlb(document, primitives) {
         metallicFactor: source.metalness ?? 0,
         roughnessFactor: source.roughness ?? 0.7,
       },
-      ...(color[3] < 1 ? { alphaMode: "BLEND", doubleSided: true } : {}),
+      ...(emissiveStrength > 0
+        ? {
+            emissiveFactor: emissive.slice(0, 3).map(
+              (value) => Math.min(1, value * emissiveStrength),
+            ),
+          }
+        : {}),
+      ...(alphaMode !== "OPAQUE" ? { alphaMode } : {}),
+      ...(source.double_sided === true || color[3] < 1 ? { doubleSided: true } : {}),
+      ...(source.textures || Number.isInteger(source.texture_budget_bytes)
+        ? {
+            extras: {
+              texture_slots: source.textures || {},
+              texture_budget_bytes: source.texture_budget_bytes || 0,
+              texture_embedding: "deferred_p4_asset_pipeline",
+            },
+          }
+        : {}),
     };
   });
   const materialIndex = new Map(materialIds.map((id, index) => [id, index]));

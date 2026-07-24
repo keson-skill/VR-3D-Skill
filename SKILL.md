@@ -7,6 +7,18 @@ description: Turn CAD, DXF, floor-plan images, PDFs, room photos, scans, and ren
 
 Turn architectural inputs into a traceable spatial model, then derive design, assets, code, and immersive experiences from that model.
 
+## Obey the product requirements and development gate
+
+Read [需求文档.md](需求文档.md) before planning, implementing, or reviewing a project change. Treat it as authoritative for final product scope, current progress, and development-stage status. Do not confuse its project-development stages with the per-job workflow stages below.
+
+- Identify the single stage marked `IN_PROGRESS` or `ACCEPTANCE` before changing code.
+- Work only on that active stage and its acceptance evidence.
+- Do not start, extend, or claim completion of a later stage until every mandatory item in the active stage passes and the requirements document records it as `COMPLETED`.
+- Treat code that already exists for a blocked later stage as a frozen research prototype. Use it only when needed to verify or unblock the active stage.
+- Require tests, traceable evidence, zero open blockers, human acceptance, and a status update in the same change before opening the next stage.
+- If a request targets a blocked later stage, report the active-stage blockers and continue only with work that closes the current gate.
+- Permit only minimal cross-stage repairs for security, data loss, test infrastructure, or a defect that directly blocks the active stage. Do not count the repair as stage advancement.
+
 ## Keep one source of spatial truth
 
 - Treat `Spatial JSON` as the authoritative contract between understanding, planning, asset generation, engineering, and rendering.

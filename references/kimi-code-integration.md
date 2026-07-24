@@ -27,7 +27,7 @@ Official references:
 4. Put the new key only in `KIMI_CODE_API_KEY`.
 5. Keep `KIMI_CODE_BASE_URL=https://api.kimi.com/coding/v1`.
 6. Use `KIMI_CODE_ENGINEERING_MODEL=k3`.
-7. Use `high` reasoning by default. Supported values are `low`, `high`, and `max`.
+7. Use `max` reasoning for the highest-quality engineering generation. Supported values are `low`, `high`, and `max`.
 
 K3 requires a Moderato or higher membership. Moderato supports up to 256K context; Allegretto or higher can unlock up to 1M. The adapter does not request or enforce a context window; keep task payloads within the account entitlement.
 

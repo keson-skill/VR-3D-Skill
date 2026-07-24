@@ -4,11 +4,11 @@ import { readFile, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
 const DEFAULT_BASE_URL = "https://realmrouter.cn";
-const DEFAULT_SPATIAL_MODEL = "gpt-5.6-sol";
+const DEFAULT_SPATIAL_MODEL = "gpt-5.5";
 const DEFAULT_IMAGE_MODEL = "gpt-image-2";
-const DEFAULT_REASONING_EFFORT = "high";
+const DEFAULT_REASONING_EFFORT = "xhigh";
 const DEFAULT_IMAGE_SIZE = "1536x1024";
-const DEFAULT_IMAGE_QUALITY = "medium";
+const DEFAULT_IMAGE_QUALITY = "high";
 const DEFAULT_TIMEOUT_MS = 120000;
 const DEFAULT_MAX_RETRIES = 3;
 const DEFAULT_RETRY_DELAY_MS = 500;
@@ -138,6 +138,7 @@ async function requestOnce({
   apiKey,
   method = "GET",
   body,
+  headers = {},
   timeoutMs = DEFAULT_TIMEOUT_MS,
   fetchImpl = globalThis.fetch,
 }) {
@@ -156,10 +157,21 @@ async function requestOnce({
       method,
       headers: {
         Authorization: `Bearer ${apiKey.trim()}`,
-        ...(body ? { "Content-Type": "application/json" } : {}),
+        ...(body && !(typeof FormData !== "undefined" && body instanceof FormData)
+          ? { "Content-Type": "application/json" }
+          : {}),
+        ...headers,
         "User-Agent": "vr-3d-skill-realmrouter-adapter/1.0",
       },
-      ...(body ? { body: JSON.stringify(body) } : {}),
+      ...(body
+        ? {
+            body:
+              typeof body === "string" ||
+              (typeof FormData !== "undefined" && body instanceof FormData)
+                ? body
+                : JSON.stringify(body),
+          }
+        : {}),
       signal: controller.signal,
     }));
     const timeoutPromise = new Promise((_, reject) => {
@@ -205,6 +217,7 @@ async function request({
   apiKey,
   method = "GET",
   body,
+  headers,
   timeoutMs = DEFAULT_TIMEOUT_MS,
   maxRetries = DEFAULT_MAX_RETRIES,
   retryDelayMs = DEFAULT_RETRY_DELAY_MS,
@@ -222,6 +235,7 @@ async function request({
         apiKey,
         method,
         body,
+        headers,
         timeoutMs,
         fetchImpl,
       });
@@ -281,6 +295,36 @@ export async function discoverModels({
   }
 
   throw new Error(`Model discovery failed: ${failures.join(" | ")}`);
+}
+
+export async function assertModelAvailable({
+  apiKey,
+  baseUrl = DEFAULT_BASE_URL,
+  model,
+  routeLabel = "provider",
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  maxRetries = DEFAULT_MAX_RETRIES,
+  retryDelayMs = DEFAULT_RETRY_DELAY_MS,
+  fetchImpl = globalThis.fetch,
+}) {
+  if (!model?.trim()) {
+    throw new Error(`${routeLabel} model must not be empty.`);
+  }
+  const catalog = await discoverModels({
+    apiKey,
+    baseUrl,
+    timeoutMs,
+    maxRetries,
+    retryDelayMs,
+    fetchImpl,
+  });
+  if (!catalog.modelIds.includes(model)) {
+    throw new Error(
+      `${routeLabel} model ${model} is not available for this API key. ` +
+        `Available models: ${catalog.modelIds.join(", ") || "none"}.`,
+    );
+  }
+  return catalog;
 }
 
 export async function generateSpatialJson({
@@ -406,6 +450,56 @@ export async function generateImage({
   throw new Error("RealmRouter Images returned neither b64_json nor a URL.");
 }
 
+export async function editImage({
+  apiKey,
+  baseUrl = DEFAULT_BASE_URL,
+  model = DEFAULT_IMAGE_MODEL,
+  prompt,
+  inputImage,
+  maskImage = null,
+  size = DEFAULT_IMAGE_SIZE,
+  quality = DEFAULT_IMAGE_QUALITY,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  maxRetries = DEFAULT_MAX_RETRIES,
+  retryDelayMs = DEFAULT_RETRY_DELAY_MS,
+  fetchImpl = globalThis.fetch,
+}) {
+  if (!prompt?.trim()) throw new Error("A non-empty image edit prompt is required.");
+  if (!inputImage) throw new Error("Image edits require --input-image.");
+  if (!ALLOWED_IMAGE_QUALITIES.has(quality)) {
+    throw new Error("REALMROUTER_IMAGE_QUALITY must be low, medium, high, or auto.");
+  }
+  const form = new FormData();
+  form.append("model", model);
+  form.append("prompt", prompt.trim());
+  form.append("size", size);
+  form.append("quality", quality);
+  form.append("image", new Blob([await readFile(inputImage)]), inputImage.split("/").pop());
+  if (maskImage) {
+    form.append("mask", new Blob([await readFile(maskImage)]), maskImage.split("/").pop());
+  }
+  const { payload, attempts } = await request({
+    endpoint: buildEndpoint(baseUrl, "/images/edits"),
+    apiKey,
+    method: "POST",
+    body: form,
+    timeoutMs,
+    maxRetries,
+    retryDelayMs,
+    fetchImpl,
+  });
+  const result = payload?.data?.[0];
+  if (typeof result?.b64_json === "string" && result.b64_json) {
+    return { bytes: Buffer.from(result.b64_json, "base64"), sourceUrl: null, model: payload.model || model, requestId: payload.id || null, attempts };
+  }
+  if (typeof result?.url === "string" && result.url) {
+    const response = await fetchImpl(result.url);
+    if (!response.ok) throw new Error(`Edited image download failed (${response.status}).`);
+    return { bytes: Buffer.from(await response.arrayBuffer()), sourceUrl: result.url, model: payload.model || model, requestId: payload.id || null, attempts };
+  }
+  throw new Error("RealmRouter Images edit returned neither b64_json nor a URL.");
+}
+
 function parseArgs(argv) {
   const options = {
     command:
@@ -415,6 +509,8 @@ function parseArgs(argv) {
     outputFile: null,
     size: null,
     quality: null,
+    inputImage: null,
+    maskImage: null,
   };
 
   for (let index = 1; index < argv.length; index += 1) {
@@ -422,7 +518,11 @@ function parseArgs(argv) {
     if (arg === "--prompt-file") {
       options.promptFile = argv[++index];
     } else if (arg === "--input-image") {
-      options.inputImages.push(argv[++index]);
+      const value = argv[++index];
+      if (options.command === "spatial") options.inputImages.push(value);
+      else options.inputImage = value;
+    } else if (arg === "--mask-image") {
+      options.maskImage = argv[++index];
     } else if (arg === "--output") {
       options.outputFile = argv[++index];
     } else if (arg === "--size") {
@@ -443,7 +543,8 @@ function printHelp() {
   node --env-file=.env scripts/adapters/realmrouter-openai.mjs check
   node --env-file=.env scripts/adapters/realmrouter-openai.mjs models
   node --env-file=.env scripts/adapters/realmrouter-openai.mjs spatial --prompt-file TASK.md [--input-image plan.png] --output spatial.json
-  node --env-file=.env scripts/adapters/realmrouter-openai.mjs image --prompt-file PROMPT.md --output preview.png [--size 1536x1024] [--quality medium]
+  node --env-file=.env scripts/adapters/realmrouter-openai.mjs image --prompt-file PROMPT.md --output preview.png [--size 1536x1024] [--quality high]
+  node --env-file=.env scripts/adapters/realmrouter-openai.mjs edit --prompt-file PROMPT.md --input-image reference.png --output preview.png [--mask-image mask.png]
 
 The adapter reads REALMROUTER_SPATIAL_API_KEY, REALMROUTER_IMAGE_API_KEY,
 REALMROUTER_BASE_URL,
@@ -600,6 +701,14 @@ async function main() {
     }
     const prompt = await readRequiredFile(options.promptFile, "spatial");
     const imageDataUrls = await readImageDataUrls(options.inputImages);
+    await assertModelAvailable({
+      apiKey: spatialApiKey,
+      baseUrl,
+      model: spatialModel,
+      routeLabel: "spatial",
+      timeoutMs,
+      maxRetries,
+    });
     const result = await generateSpatialJson({
       apiKey: spatialApiKey,
       baseUrl,
@@ -627,21 +736,42 @@ async function main() {
     return;
   }
 
-  if (options.command === "image") {
+  if (options.command === "image" || options.command === "edit") {
     if (!options.outputFile) {
-      throw new Error("image requires --output.");
+      throw new Error(`${options.command} requires --output.`);
     }
     const prompt = await readRequiredFile(options.promptFile, "image");
-    const result = await generateImage({
+    await assertModelAvailable({
       apiKey: imageApiKey,
       baseUrl,
       model: imageModel,
-      prompt,
-      size: imageSize,
-      quality: imageQuality,
+      routeLabel: "image",
       timeoutMs,
       maxRetries,
     });
+    const result = options.command === "edit"
+      ? await editImage({
+          apiKey: imageApiKey,
+          baseUrl,
+          model: imageModel,
+          prompt,
+          inputImage: options.inputImage,
+          maskImage: options.maskImage,
+          size: imageSize,
+          quality: imageQuality,
+          timeoutMs,
+          maxRetries,
+        })
+      : await generateImage({
+          apiKey: imageApiKey,
+          baseUrl,
+          model: imageModel,
+          prompt,
+          size: imageSize,
+          quality: imageQuality,
+          timeoutMs,
+          maxRetries,
+        });
     await writeFile(options.outputFile, result.bytes);
     process.stdout.write(
       `${JSON.stringify({

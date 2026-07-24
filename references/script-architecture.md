@@ -24,8 +24,10 @@ Keep provider names inside `adapters/`; name task directories after stable roles
 | Task | Entrypoint | Required input | Output |
 |---|---|---|---|
 | Spatial extraction | `scripts/tasks/spatial-extraction/extract-spatial-json.mjs` | prompt, source manifest, approved images | draft Spatial JSON, provider metadata, structural validation |
+| Local OCR evidence | `scripts/ingest/extract-ocr-evidence.mjs` | normalized image | local Tesseract TSV evidence with boxes and confidence |
 | Design planning | `scripts/tasks/design-planning/propose-design.mjs` | approved Spatial JSON, requirements | design alternatives and proposed revision patch |
 | Visual preview | `scripts/tasks/visual-preview/generate-preview.mjs` | approved Spatial JSON, visual direction | image plus revision-bound metadata |
+| Reference image edit | `scripts/tasks/visual-preview/edit-reference.mjs` | approved reference image, visual direction, design revision ID | edited image plus revision-bound metadata |
 | Engineering generation | `scripts/tasks/engineering-generation/generate-engineering.mjs` | approved Spatial JSON, task, optional asset manifest | reviewable generated text/code plus metadata |
 | Asset generation preparation | `scripts/tasks/asset-generation/create-asset-brief.mjs` | approved Spatial JSON and design-object ID | provider-neutral asset brief |
 
@@ -42,10 +44,19 @@ node scripts/ingest/build-source-manifest.mjs \
   --input plan.png \
   --output source-manifest.json
 
+node scripts/processing/preprocess-plan-image.mjs \
+  --input plan.png --output normalized-plan.png
+
+node scripts/ingest/extract-ocr-evidence.mjs \
+  --input normalized-plan.png --output ocr-evidence.json
+
 node scripts/validation/validate-spatial-json.mjs \
   --input spatial.json \
   --output spatial-validation.json \
   --require-approved
+
+node scripts/validation/compare-plan-render.mjs \
+  --source plan.png --render top-view.png --output alignment.json
 
 node scripts/validation/validate-revision.mjs \
   --base spatial.json \

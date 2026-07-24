@@ -24,7 +24,7 @@ Requirements:
 - return unresolved measurement conflicts instead of guessing;
 - support deterministic validation and retry from validator errors.
 
-Use the endpoint exposed for the configured deployment. RealmRouter currently exposes `gpt-5.6-sol` through Chat Completions, so its adapter must not assume Responses support. Do not embed images or client data in logs. If CAD cannot be consumed natively, preprocess it into dimensioned vector data and approved raster views while retaining the source manifest.
+Use the endpoint exposed for the configured deployment. The current default is `gpt-5.5` through Chat Completions; the task preflights the token-visible model catalog before sending data. Do not embed images or client data in logs. If CAD cannot be consumed natively, preprocess it into dimensioned vector data and approved raster views while retaining the source manifest.
 
 Fallback: preserve extracted measurements and use a manual or deterministic drafting path. A fallback model must pass the same schema and geometry validation; model substitution never lowers the gates.
 

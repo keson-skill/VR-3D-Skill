@@ -30,36 +30,40 @@
 
 # 2. 总体技术架构
 
-    CAD / 图片 / 用户需求
+   CAD / 图片 / PDF / 用户需求
+              |
+              ↓
+   本地输入路由与确定性解析
+   DXF Parser / Sharp / OCR
               |
               ↓
  RealmRouter OpenAI Compatible Gateway
               |
               ↓
-   GPT-5.6 Sol多模态空间理解
+       GPT-5.5空间理解
               |
               ↓
      Spatial JSON 空间语义模型
               |
               ↓
-       空间与设计约束验证
+   拓扑、尺寸、开口与碰撞验证
               |
        ----------------------
        |                    |
        ↓                    ↓
- GPT Image 2视觉预演    Kimi K3 Agent工程生成
+ GPT Image 2视觉预演      固定场景编译器
        |                    |
        ↓              -----------------
   效果图/风格对比       |               |
                        ↓               ↓
-                 Three.js/WebGPU   Blender Pipeline
+                 GLB + Three.js   Blender Pipeline
                        |               |
                        ↓               ↓
-                    WebVR场景       高质量3D场景
+                 Web 3D / WebXR   全景/高质量渲染
 
               +
 
-     混元3D / Hunyuan3D
+       资产库 / 3D资产模型
               |
               ↓
      家具与装饰资产生成
@@ -72,7 +76,7 @@
 
 定位：
 
-RealmRouter作为GPT-5.6 Sol与GPT Image 2的OpenAI兼容接入层，负责统一鉴权和路由，不拥有空间事实、设计约束或业务状态。
+RealmRouter作为GPT-5.5与GPT Image 2的OpenAI兼容接入层，负责统一鉴权和路由，不拥有空间事实、设计约束或业务状态。
 
 配置：
 
@@ -80,7 +84,7 @@ RealmRouter作为GPT-5.6 Sol与GPT Image 2的OpenAI兼容接入层，负责统�
 REALMROUTER_BASE_URL=https://realmrouter.cn
 REALMROUTER_SPATIAL_API_KEY=
 REALMROUTER_IMAGE_API_KEY=
-REALMROUTER_SPATIAL_MODEL=gpt-5.6-sol
+REALMROUTER_SPATIAL_MODEL=gpt-5.5
 REALMROUTER_IMAGE_MODEL=gpt-image-2
 ```
 
@@ -93,20 +97,19 @@ REALMROUTER_IMAGE_MODEL=gpt-image-2
 
 能力验证：
 
-1. RealmRouter当前没有通用的`gpt-5.6`模型ID，空间推理默认使用`gpt-5.6-sol`。
-2. `gpt-5.6-sol`当前通过`POST /v1/chat/completions`提供，支持`GPT-plus`、`GPT-plus 特惠`、`GPT-pro`或`default`分组。
-3. `gpt-image-2`当前通过`POST /v1/images/generations`提供，只支持`GPT-image`分组。
-4. 每个RealmRouter令牌绑定一个分组，因此空间推理和图像生成使用两把独立的最小权限令牌。
-5. 分别通过模型目录检查两把令牌是否可见目标模型，再执行最小Chat Completions与Images Generations请求验证实际路由权限。
-6. 模型目录可见不等于调用一定成功，仍需同时满足令牌分组、余额、通道和接口权限。
+1. 空间推理默认使用当前令牌可见的`gpt-5.5`，通过Chat Completions适配器调用。
+2. `gpt-image-2`通过图像生成或图像编辑接口调用。
+3. 空间推理和图像生成使用两把独立的最小权限令牌。
+4. 调用前检查对应令牌可见的模型目录，不把网关模型可用性写死在业务代码中。
+5. 模型目录可见不等于调用一定成功，仍需同时满足令牌分组、余额、通道和接口权限。
 
 ------------------------------------------------------------------------
 
-## 3.1 空间理解层（GPT-5.6 Sol）
+## 3.1 空间理解层（GPT-5.5）
 
 职责：
 
--   识别CAD结构
+-   对本地DXF解析结果进行语义分类
 -   理解房间布局
 -   分析空间关系
 -   判断设计风格
@@ -141,7 +144,7 @@ REALMROUTER_IMAGE_MODEL=gpt-image-2
 
 定位：
 
-GPT Image 2不替代GPT-5.6 Sol的空间理解与设计推理，而是在Spatial JSON和设计约束通过验证后，生成用于沟通、比较和人工审阅的二维视觉方案。
+GPT Image 2不替代GPT-5.5的空间理解与设计推理，而是在Spatial JSON和设计约束通过验证后，生成用于沟通、比较和人工审阅的二维视觉方案。
 
 事件：
 
@@ -179,7 +182,7 @@ GPT Image 2不替代GPT-5.6 Sol的空间理解与设计推理，而是在Spatial
 
 -   需要明确使用`gpt-image-2`时，通过RealmRouter OpenAI Compatible的`POST /v1/images/generations`生成效果图。
 -   图像编辑使用`POST /v1/images/edits`并以`multipart/form-data`上传原图和可选蒙版。
--   多轮对话式改图只有在网关确认完整兼容Responses图像工具后才启用；空间推理仍由GPT-5.6 Sol完成。
+-   多轮对话式改图只有在网关确认兼容对应图像工具后才启用；空间推理仍由GPT-5.5完成。
 
 边界：
 
@@ -197,34 +200,28 @@ GPT Image 2不替代GPT-5.6 Sol的空间理解与设计推理，而是在Spatial
 
 ------------------------------------------------------------------------
 
-# 4. AI Agent工程层（Kimi K3）
+# 4. 确定性场景工程层
 
 职责：
 
-将空间设计转换成可运行3D工程。
+使用固定编译器将已批准的Spatial JSON转换成可运行3D工程。
 
 生成：
 
--   Three.js代码
--   Blender Python脚本
--   场景配置文件
--   交互逻辑
-
-例如：
-
-    scene.js
-    wall.js
-    camera.js
-    lighting.js
-    interaction.js
-    assets.json
+-   `scene.glb`
+-   固定Three.js/WebXR Viewer
+-   `scene-manifest.json`
+-   验证报告
+-   毛坯、硬装或精装模式
 
 负责：
 
--   创建3D空间
--   添加灯光
--   设置摄像机
--   实现VR交互
+-   根据门窗开口切分墙体
+-   生成地面、墙体、门窗和家具代理
+-   复用固定Viewer，避免每个任务重写前端
+-   输出可复现的场景哈希
+
+Kimi K3只在固定编译器、Blender路径、Viewer交互或测试需要扩展时作为工程辅助，不再为每个用户任务重新生成整个Three.js项目。
 
 ------------------------------------------------------------------------
 
@@ -356,12 +353,12 @@ GPT Image 2根据已批准的空间设计生成：
 -   空间理解
 -   设计推理
 -   效果图与视觉方案生成
--   代码生成
+-   确定性场景编译
 -   高质量建模
 
 因此采用：
 
-## GPT-5.6 Sol
+## GPT-5.5
 
 负责：
 
@@ -377,11 +374,17 @@ GPT Image 2根据已批准的空间设计生成：
 
 空间尺寸、拓扑、碰撞、动线和施工判断。
 
+## 固定场景编译器
+
+负责：
+
+把已批准的Spatial JSON编译为GLB、场景清单和固定Web 3D Viewer。
+
 ## Kimi K3
 
 负责：
 
-AI工程师角色。
+只在需要时扩展或修复编译器、Blender、Viewer和测试。
 
 ## 混元3D
 

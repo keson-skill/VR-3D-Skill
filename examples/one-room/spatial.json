@@ -1,0 +1,217 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "id": "warm-living-room",
+    "name": "暖色客厅示例",
+    "revision": "rev-001",
+    "units": "meters",
+    "up_axis": "Y",
+    "forward_axis": "-Z",
+    "handedness": "right",
+    "origin": [0, 0, 0]
+  },
+  "sources": [
+    {
+      "id": "source-example",
+      "type": "dimensioned_floor_plan",
+      "uri": "local://example",
+      "contains_personal_data": false
+    }
+  ],
+  "requirements": {
+    "design_intent": {
+      "style": "warm cream",
+      "output_mode": "furnished"
+    },
+    "constraints": []
+  },
+  "envelope": {
+    "floor_elevation": 0,
+    "ceiling_height": 2.8,
+    "walls": [
+      {
+        "id": "wall-south",
+        "start": [0, 0],
+        "end": [5, 0],
+        "thickness": 0.2,
+        "height": 2.8,
+        "structural_role": "unknown",
+        "edit_policy": "review_required"
+      },
+      {
+        "id": "wall-east",
+        "start": [5, 0],
+        "end": [5, 4],
+        "thickness": 0.2,
+        "height": 2.8,
+        "structural_role": "unknown",
+        "edit_policy": "review_required"
+      },
+      {
+        "id": "wall-north",
+        "start": [5, 4],
+        "end": [0, 4],
+        "thickness": 0.2,
+        "height": 2.8,
+        "structural_role": "unknown",
+        "edit_policy": "review_required"
+      },
+      {
+        "id": "wall-west",
+        "start": [0, 4],
+        "end": [0, 0],
+        "thickness": 0.2,
+        "height": 2.8,
+        "structural_role": "unknown",
+        "edit_policy": "review_required"
+      }
+    ],
+    "openings": [
+      {
+        "id": "door-entry",
+        "kind": "hinged_door",
+        "host_wall_id": "wall-south",
+        "offset": 0.4,
+        "width": 0.9,
+        "height": 2.1,
+        "sill_height": 0
+      },
+      {
+        "id": "window-main",
+        "kind": "window",
+        "host_wall_id": "wall-north",
+        "offset": 1.5,
+        "width": 2,
+        "height": 1.2,
+        "sill_height": 0.9
+      }
+    ]
+  },
+  "rooms": [
+    {
+      "id": "room-living",
+      "name": "客厅",
+      "type": "living",
+      "boundary_wall_ids": [
+        "wall-south",
+        "wall-east",
+        "wall-north",
+        "wall-west"
+      ],
+      "area": 20,
+      "floor_material_id": "floor_oak"
+    }
+  ],
+  "circulation": {
+    "minimum_clearance": 0.9,
+    "paths": [
+      {
+        "id": "path-entry",
+        "purpose": "primary",
+        "polyline": [[0.85, 0.3], [0.85, 2.4], [1.5, 2.4]],
+        "minimum_width": 0.9,
+        "must_remain_clear": true
+      }
+    ]
+  },
+  "design_objects": [
+    {
+      "id": "sofa-main",
+      "kind": "sofa",
+      "room_id": "room-living",
+      "dimensions": [2.2, 0.85, 0.9],
+      "transform": {
+        "position": [2.5, 0, 3.25],
+        "rotation_euler_degrees": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+      "material_id": "fabric_cream",
+      "placement_status": "validated"
+    },
+    {
+      "id": "coffee-table",
+      "kind": "coffee_table",
+      "room_id": "room-living",
+      "dimensions": [1.1, 0.42, 0.6],
+      "transform": {
+        "position": [2.5, 0, 2],
+        "rotation_euler_degrees": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+      "material_id": "wood_walnut",
+      "placement_status": "validated"
+    },
+    {
+      "id": "tv-console",
+      "kind": "tv_console",
+      "room_id": "room-living",
+      "dimensions": [1.8, 0.55, 0.4],
+      "transform": {
+        "position": [2.5, 0, 0.45],
+        "rotation_euler_degrees": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+      "material_id": "wood_walnut",
+      "placement_status": "validated"
+    }
+  ],
+  "assets": [],
+  "materials": {
+    "wall_default": {
+      "base_color": "#ECE4D8",
+      "roughness": 0.82,
+      "metalness": 0
+    },
+    "floor_oak": {
+      "base_color": "#B98252",
+      "roughness": 0.68,
+      "metalness": 0
+    },
+    "fabric_cream": {
+      "base_color": "#D8C8B2",
+      "roughness": 0.9,
+      "metalness": 0
+    },
+    "wood_walnut": {
+      "base_color": "#684735",
+      "roughness": 0.62,
+      "metalness": 0
+    }
+  },
+  "lights": [
+    {
+      "id": "light-main",
+      "kind": "area",
+      "position": [2.5, 2.65, 2],
+      "intensity": 500,
+      "color_temperature_kelvin": 3000
+    }
+  ],
+  "xr": {
+    "spawn": [1.25, 0, 1.2],
+    "spawn_yaw_degrees": 0,
+    "navigation": "teleport",
+    "snap_turn_degrees": 30,
+    "boundary_room_ids": ["room-living"]
+  },
+  "render_profiles": {
+    "webxr": {
+      "quality_tier": "balanced",
+      "target_asset_format": "glb"
+    }
+  },
+  "assumptions": [
+    "This bundled example demonstrates the visualization pipeline only."
+  ],
+  "unresolved_questions": [],
+  "validation": {
+    "status": "approved",
+    "approved_scope": "visualization_only",
+    "checks": [
+      "schema",
+      "wall_topology",
+      "opening_bounds",
+      "proxy_collision"
+    ]
+  }
+}

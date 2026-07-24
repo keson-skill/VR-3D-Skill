@@ -85,6 +85,21 @@ node --env-file=.env scripts/tasks/spatial-extraction/extract-spatial-json.mjs \
 
 Repeat `--input-image` for multiple approved PNG, JPEG, or WebP views. The task uses Chat Completions, preflights the configured model against the token-visible catalog, rejects non-JSON model output, preserves the draft, and emits deterministic validation results before approval.
 
+For DXF, extract local vector evidence and pass it without rasterizing the drawing:
+
+```bash
+node scripts/ingest/extract-dxf-evidence.mjs \
+  --input approved-plan.dxf --output dxf-evidence.json
+
+node --env-file=.env scripts/tasks/spatial-extraction/extract-spatial-json.mjs \
+  --prompt-file SPATIAL_TASK.md \
+  --source-manifest source-manifest.json \
+  --cad-evidence dxf-evidence.json \
+  --output spatial-draft.json \
+  --validation-report spatial-validation.json \
+  --allow-provider
+```
+
 ## Call the image route
 
 Generate visual previews only from an approved design revision:

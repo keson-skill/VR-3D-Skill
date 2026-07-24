@@ -7,6 +7,12 @@ import {
   readJson,
   writeJson,
 } from "../lib/cli.mjs";
+import {
+  convexPolygonsOverlap,
+  designObjectFootprint,
+  orderRoomPolygon,
+  pointInPolygon,
+} from "../geometry/spatial-geometry.mjs";
 
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -22,10 +28,6 @@ function isFiniteVector(value, length) {
 
 function distance2d(left, right) {
   return Math.hypot(right[0] - left[0], right[1] - left[1]);
-}
-
-function pointKey(point) {
-  return `${Number(point[0]).toFixed(6)},${Number(point[1]).toFixed(6)}`;
 }
 
 export function collectStableIds(document) {
@@ -195,6 +197,24 @@ export function validateSpatialJson(
           "Opening width and height must be greater than zero.",
         );
       }
+      const sillHeight = opening.sill_height || 0;
+      if (!Number.isFinite(sillHeight) || sillHeight < 0) {
+        addError(
+          "opening.sill_height",
+          `${path}/sill_height`,
+          "sill_height must be a non-negative finite number.",
+        );
+      } else if (
+        Number.isFinite(opening.height) &&
+        Number.isFinite(wall.height) &&
+        sillHeight + opening.height > wall.height + 1e-6
+      ) {
+        addError(
+          "opening.above_wall",
+          path,
+          "Opening sill and height extend above the host wall.",
+        );
+      }
       if (
         isFiniteVector(wall.start, 2) &&
         isFiniteVector(wall.end, 2) &&
@@ -213,6 +233,7 @@ export function validateSpatialJson(
 
   const rooms = document.rooms;
   const roomIds = new Set();
+  const roomPolygons = new Map();
   if (!Array.isArray(rooms) || rooms.length === 0) {
     addError("rooms.required", "/rooms", "At least one room is required.");
   } else {
@@ -242,21 +263,55 @@ export function validateSpatialJson(
         return;
       }
 
-      const degree = new Map();
-      for (const wall of boundaryWalls) {
-        for (const point of [wall.start, wall.end]) {
-          const key = pointKey(point);
-          degree.set(key, (degree.get(key) || 0) + 1);
-        }
-      }
-      if ([...degree.values()].some((value) => value !== 2)) {
+      if (new Set(room.boundary_wall_ids).size !== room.boundary_wall_ids.length) {
         addError(
-          "room.not_closed",
+          "room.duplicate_wall",
           `${path}/boundary_wall_ids`,
-          "Boundary walls do not form one closed loop.",
+          "Room boundary must not contain a wall more than once.",
+        );
+        return;
+      }
+      const ordered = orderRoomPolygon(boundaryWalls);
+      if (!ordered.valid) {
+        addError(
+          ordered.code,
+          `${path}/boundary_wall_ids`,
+          "Boundary walls must form one connected, non-self-intersecting closed polygon.",
+        );
+        return;
+      }
+      roomPolygons.set(room.id, ordered.polygon);
+      if (
+        Number.isFinite(room.area) &&
+        Math.abs(room.area - ordered.area) > Math.max(0.05, ordered.area * 0.02)
+      ) {
+        addWarning(
+          "room.area_mismatch",
+          `${path}/area`,
+          `Declared area ${room.area} differs from wall polygon area ${ordered.area.toFixed(3)}.`,
         );
       }
     });
+  }
+
+  const openingsByWall = new Map();
+  for (const opening of Array.isArray(openings) ? openings : []) {
+    if (!openingsByWall.has(opening.host_wall_id)) {
+      openingsByWall.set(opening.host_wall_id, []);
+    }
+    openingsByWall.get(opening.host_wall_id).push(opening);
+  }
+  for (const [wallId, hosted] of openingsByWall) {
+    const sorted = [...hosted].sort((left, right) => left.offset - right.offset);
+    for (let index = 1; index < sorted.length; index += 1) {
+      if (sorted[index].offset < sorted[index - 1].offset + sorted[index - 1].width - 1e-6) {
+        addError(
+          "opening.overlap",
+          "/envelope/openings",
+          `Openings ${sorted[index - 1].id} and ${sorted[index].id} overlap on wall ${wallId}.`,
+        );
+      }
+    }
   }
 
   const assetIds = new Set(
@@ -275,6 +330,7 @@ export function validateSpatialJson(
       "design_objects must be an array.",
     );
   } else {
+    const objectFootprints = [];
     (document.design_objects || []).forEach((object, index) => {
       const path = `/design_objects/${index}`;
       if (!roomIds.has(object?.room_id)) {
@@ -304,8 +360,50 @@ export function validateSpatialJson(
           `${path}/transform/position`,
           "Object position must contain three finite numbers.",
         );
+      } else if (
+        isFiniteVector(object?.dimensions, 3) &&
+        object.dimensions.every((value) => value > 0)
+      ) {
+        const roomPolygon = roomPolygons.get(object.room_id);
+        if (roomPolygon) {
+          const footprint = designObjectFootprint(object);
+          const center = [
+            object.transform.position[0],
+            object.transform.position[2],
+          ];
+          if (!pointInPolygon(center, roomPolygon)) {
+            addError(
+              "design_object.outside_room",
+              `${path}/transform/position`,
+              "Object center is outside its assigned room.",
+            );
+          } else if (footprint.some((corner) => !pointInPolygon(corner, roomPolygon))) {
+            addWarning(
+              "design_object.crosses_room_boundary",
+              path,
+              "Object footprint crosses its room boundary; confirm wall clearance and asset pivot.",
+            );
+          }
+          objectFootprints.push({ object, footprint, path });
+        }
       }
     });
+    for (let left = 0; left < objectFootprints.length; left += 1) {
+      for (let right = left + 1; right < objectFootprints.length; right += 1) {
+        const first = objectFootprints[left];
+        const second = objectFootprints[right];
+        if (
+          first.object.room_id === second.object.room_id &&
+          convexPolygonsOverlap(first.footprint, second.footprint)
+        ) {
+          addError(
+            "design_object.collision",
+            first.path,
+            `Object ${first.object.id} overlaps ${second.object.id}.`,
+          );
+        }
+      }
+    }
   }
 
   const paths = document.circulation?.paths;

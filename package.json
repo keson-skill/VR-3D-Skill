@@ -1,0 +1,23 @@
+{
+  "name": "vr-3d-skill",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic spatial validation, parametric GLB generation, and WebXR viewing tools for the VR 3D Skill.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "npm run check:syntax && npm test",
+    "check:syntax": "node scripts/check-syntax.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "example": "node scripts/tasks/scene-generation/build-viewable-scene.mjs --spatial-json examples/one-room/spatial.json --output runs/example",
+    "serve:example": "node scripts/serve-viewer.mjs --directory runs/example",
+    "test": "node --test scripts/tests/*.test.mjs"
+  },
+  "dependencies": {
+    "dxf-parser": "1.1.2",
+    "sharp": "0.34.3",
+    "three": "0.179.1"
+  }
+}

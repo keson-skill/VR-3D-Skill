@@ -1,6 +1,6 @@
 ---
 name: vr-3d-skill
-description: Design, build, review, and optimize AI-assisted VR interior-design systems and immersive real-time 3D experiences. Use when Codex works from CAD or floor plans, room photos, existing design drawings, or renovation requirements to produce a validated Spatial JSON, furniture layouts, generated GLB assets, Three.js or Blender scene code, WebXR walkthroughs, or high-fidelity Unreal and Twinmotion outputs; also use for WebXR interaction, locomotion, comfort, device input, asset pipelines, and headset performance.
+description: Turn CAD, DXF, floor-plan images, PDFs, room photos, scans, and renovation requirements into validated Spatial JSON and directly viewable interior results, including parametric shell, hard-furnished, or furnished GLB scenes, Three.js desktop walkthroughs, WebXR viewing, panorama renders, and editable Blender outputs. Use when Codex must extract room geometry, design an interior, generate or review a 3D/VR workflow, build a viewable property scene, or implement WebXR interaction, asset, comfort, and performance behavior.
 ---
 
 # AI VR Interior Design
@@ -29,13 +29,13 @@ Turn architectural inputs into a traceable spatial model, then derive design, as
 
 ## Route model responsibilities
 
-Read [model-routing.md](references/model-routing.md) before adding provider calls and [script-architecture.md](references/script-architecture.md) before invoking bundled scripts. When routing GPT-5.6 Sol and GPT Image 2 through RealmRouter, read [realmrouter-integration.md](references/realmrouter-integration.md) and use the task entrypoints under `scripts/tasks/`; keep the raw provider protocol in `scripts/adapters/realmrouter-openai.mjs`. When using a Kimi Code membership for engineering generation, also read [kimi-code-integration.md](references/kimi-code-integration.md) and call `scripts/tasks/engineering-generation/generate-engineering.mjs`. Keep deployment values in an ignored `.env`, based on `.env-example`.
+Read [model-routing.md](references/model-routing.md) before adding provider calls and [script-architecture.md](references/script-architecture.md) before invoking bundled scripts. When routing GPT-5.5 and GPT Image 2 through RealmRouter, read [realmrouter-integration.md](references/realmrouter-integration.md) and use the task entrypoints under `scripts/tasks/`; keep the raw provider protocol in `scripts/adapters/realmrouter-openai.mjs`. When using a Kimi Code membership for engineering assistance, also read [kimi-code-integration.md](references/kimi-code-integration.md). Keep deployment values in an ignored `.env`, based on `.env-example`.
 
 | Role | Responsibility | Must not own |
 |---|---|---|
 | Spatial reasoning model | Interpret drawings, photos, scale cues, room semantics, constraints, and user intent; produce structured spatial facts | Final code, unvalidated construction dimensions, or decorative mesh generation |
 | Visual preview model | Generate and edit customer-facing images from an approved design revision | Spatial JSON, construction geometry, collision, circulation, or dimensional truth |
-| Engineering model | Convert approved scene data into Three.js, Blender Python, scene configuration, interactions, and tests | Changing room topology or design constraints without an explicit patch |
+| Engineering model | Extend or repair the fixed scene compiler, Blender path, viewer, interactions, and tests | Regenerating the whole viewer for every job or changing approved room geometry |
 | 3D asset model | Generate furniture and decor assets with requested dimensions and style | Walls, openings, circulation planning, or whole-room design decisions |
 | Runtime or renderer | Display, interact with, profile, export, or render the approved scene | Reinterpreting design intent |
 
@@ -43,19 +43,60 @@ Read [model-routing.md](references/model-routing.md) before adding provider call
 
 Read [interior-design-workflow.md](references/interior-design-workflow.md) for stage inputs, outputs, and failure handling.
 
-1. **Ingest and normalize.** Preserve originals, fingerprint inputs, run local raster preprocessing and Tesseract OCR when available, extract explicit measurements, set units and axes, and mark inferred values. Treat OCR as evidence, never as geometry truth.
-2. **Understand space.** Send the approved image plus local OCR/geometry evidence to the configured spatial model (`gpt-5.5` by default). Detect walls, openings, rooms, fixed equipment, usable zones, circulation, and scale anchors. Emit `Spatial JSON`.
+1. **Route and normalize input.** Run `scripts/ingest/detect-input.mjs`. Preserve originals and fingerprints. For DXF, extract vector evidence without rasterizing it. For images, use cross-platform normalization and optional local Tesseract OCR. Treat OCR as evidence, never as geometry truth.
+2. **Understand space.** Send only approved images and local OCR/CAD evidence to the configured spatial model (`gpt-5.5` by default). Preserve DXF coordinates and explicit measurements. Detect walls, openings, rooms, fixed equipment, usable zones, circulation, and scale anchors. Emit `Spatial JSON`.
 3. **Validate before designing.** Check wall topology, opening placement, room closure, dimensional consistency, accessible paths, unresolved low-confidence facts, and the approval scope (`visualization_only` or `construction_ready`).
 4. **Propose design.** Add functional zoning, furniture footprints, ergonomic clearances, materials, lighting, and style intent without overwriting measured geometry.
 5. **Preview visually.** After design approval, use GPT Image 2 for generation or the reference-edit task for approved source images. Bind every image to a design revision and never feed inferred image geometry back into the spatial contract.
 6. **Generate assets.** Reuse catalog assets first. Generate only missing furniture or decor, request real dimensions, normalize pivots and scale, and export GLB when targeting the web.
-7. **Generate engineering artifacts.** Produce deterministic scene code or Blender scripts from the approved `Spatial JSON` and asset manifest. Use Kimi Code only as a coding specialist through the documented adapter, review its output before applying it, and keep generated code reproducible.
-8. **Render and interact.** Provide desktop inspection first, then WebXR or native VR. Compare a normalized top-view render against the source plan before delivery using `scripts/validation/compare-plan-render.mjs`. Use Unreal or Twinmotion when high-fidelity offline output is required.
+7. **Compile the viewable scene.** Run the fixed `build-viewable-scene.mjs` task against approved Spatial JSON. Generate a deterministic GLB and static Three.js viewer. Represent unresolved furniture assets with dimensionally correct proxies. Do not ask a model to rewrite the viewer per job.
+8. **Render and interact.** Serve the viewer over HTTP and verify orbit, top, first-person, furniture visibility, desktop fallback, and WebXR. Add Blender panorama or high-fidelity rendering only after the deterministic scene passes. Compare a normalized top-view render against the source plan before delivery.
 9. **Apply revisions incrementally.** Convert user changes into explicit JSON Patch-like operations, re-run affected validations, and preserve revision history.
 
 Use the contract in [spatial-json-contract.md](references/spatial-json-contract.md). Validate the contract before any downstream generation. If geometry conflicts with source measurements, stop and surface the conflict rather than choosing silently.
 
 Run bundled model-task entrypoints only after their deterministic preconditions pass. External-provider task scripts require the explicit `--allow-provider` flag; use it only after the user approves the provider and the exact project data being sent. Do not bypass this boundary by calling an adapter directly for normal workflow execution.
+
+## Produce the first viewable result
+
+Install and check local dependencies:
+
+```bash
+npm install
+npm run doctor
+```
+
+Route the input. For a raster plan:
+
+```bash
+node scripts/orchestration/prepare-interior-job.mjs \
+  --input plan.png --output runs/job-001
+
+node scripts/ingest/extract-ocr-evidence.mjs \
+  --input runs/job-001/evidence/01-plan-normalized.png \
+  --output runs/job-001/ocr-evidence.json
+```
+
+For DXF, preserve its vectors:
+
+```bash
+node scripts/ingest/extract-dxf-evidence.mjs \
+  --input plan.dxf --output runs/job-001/dxf-evidence.json
+```
+
+After spatial extraction, human review, and approval, generate a viewable result:
+
+```bash
+node scripts/tasks/scene-generation/build-viewable-scene.mjs \
+  --spatial-json runs/job-001/spatial-approved.json \
+  --output runs/job-001/viewer \
+  --mode furnished
+
+node scripts/serve-viewer.mjs \
+  --directory runs/job-001/viewer --port 4173
+```
+
+Use `--mode shell` for a bare shell, `hard-furnishing` for fixed finishes, and `furnished` for furniture proxies or resolved assets. A single raster plan defaults to `visualization_only`; surface that warning in the viewer.
 
 ## Build the immersive experience
 
@@ -111,7 +152,7 @@ Deliver the artifacts relevant to the request:
 - normalized `spatial.json` plus its schema version, provenance, assumptions, and validation report;
 - design constraints, layout alternatives, and an incremental revision or patch log;
 - asset manifest with source or generation provenance, dimensions, license, format, and optimization status;
-- deterministic scene configuration, Three.js project or Blender script, and run or build commands;
+- deterministic `scene.glb`, the static Three.js viewer, source Spatial JSON, validation report, and run command;
 - desktop review path, WebXR build or native scene, and required HTTPS, device, browser, or permission notes;
 - customer-facing renders, walkthrough, bill of materials, or proposal only when requested.
 

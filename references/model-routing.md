@@ -8,10 +8,10 @@ Use models as replaceable specialists behind typed interfaces. Keep exact deploy
 |---|---|---|---|
 | Spatial understanding and design reasoning | `REALMROUTER_SPATIAL_MODEL` | Approved plan or room images, normalized measurements, source manifest, and user constraints | Draft `Spatial JSON`, confidence, assumptions, questions, and design alternatives |
 | Visual preview | `REALMROUTER_IMAGE_MODEL` | Approved design revision, allowed reference images, locked geometry summary, style, materials, lighting, and camera intent | Preview image, request metadata, prompt provenance, and design revision ID |
-| Engineering generation | `KIMI_CODE_ENGINEERING_MODEL` | Approved `Spatial JSON`, engine conventions, asset manifest, and acceptance criteria | Three.js code, Blender Python, scene configuration, interactions, and tests |
+| Optional engineering assistance | `KIMI_CODE_ENGINEERING_MODEL` | Existing compiler or viewer code, approved `Spatial JSON`, repository conventions, and acceptance criteria | Reviewable extensions, Blender utilities, interactions, and tests |
 | Furniture and decor generation | `HUNYUAN3D_MODEL` | Asset brief, dimensions, style, materials, views, and polygon budget | Job ID, generated model, preview, and metadata to normalize into the asset manifest |
 
-The solution document calls these roles GPT-5.6 Sol, GPT Image 2, Kimi K3, and Hunyuan3D. The environment example maps them to deployment identifiers. Verify the provider's model list and the token's group entitlement before production deployment. Read [realmrouter-integration.md](realmrouter-integration.md) for the OpenAI-compatible gateway and [kimi-code-integration.md](kimi-code-integration.md) when the Kimi credential comes from a Kimi Code membership rather than the Kimi Open Platform.
+The current solution uses GPT-5.5, GPT Image 2, optional Kimi K3 engineering assistance, and catalog or generated furniture assets. The deterministic scene compiler is not a model and remains the default production path from approved Spatial JSON to GLB and the Web viewer. Verify provider model lists and token entitlements before deployment.
 
 ## Spatial reasoning adapter
 
@@ -39,14 +39,15 @@ Requirements:
 - never convert image pixels back into asserted dimensions or overwrite the spatial contract;
 - require separate approval before sending customer photos through a third-party gateway.
 
-Use `gpt-image-2` through the RealmRouter Images generation endpoint. Current RealmRouter model details place it in the `GPT-image` group, separate from the groups that expose `gpt-5.6-sol`; configure a separate image token. A catalog match alone does not prove the token can invoke the image endpoint.
+Use `gpt-image-2` through the RealmRouter Images generation endpoint and configure a separate least-privilege image token. A catalog match alone does not prove the token can invoke the image endpoint.
 
 Fallback: render the approved scene through the active 3D engine. A deterministic scene render is preferable when exact geometry preservation matters more than visual ideation.
 
-## Engineering adapter
+## Optional engineering adapter
 
 Requirements:
 
+- extend the existing deterministic compiler, viewer, Blender path, or tests rather than recreating the application per job;
 - consume only approved structured scene data and repository context;
 - preserve stable IDs and transforms;
 - generate code in small, reviewable units;

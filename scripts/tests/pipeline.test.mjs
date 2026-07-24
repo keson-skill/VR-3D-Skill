@@ -251,7 +251,7 @@ test("retries transient RealmRouter failures before returning Spatial JSON", asy
       return new Response(
         JSON.stringify({
           id: "request-123",
-          model: "gpt-5.6-sol",
+          model: "gpt-5.5",
           choices: [{ message: { content: "{\"ok\":true}" } }],
         }),
         { status: 200, headers: { "content-type": "application/json" } },

@@ -1,0 +1,143 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #111315;
+  color: #f6f4ef;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app,
+#scene {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+#scene {
+  display: block;
+  touch-action: none;
+}
+
+.panel {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: min(360px, calc(100vw - 40px));
+  padding: 18px;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 18px;
+  background: rgb(15 18 20 / 82%);
+  box-shadow: 0 18px 50px rgb(0 0 0 / 30%);
+  backdrop-filter: blur(18px);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #9ac7b7;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.meta,
+.status,
+.warning {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.meta,
+.status {
+  color: #adb4b6;
+}
+
+.warning {
+  padding: 9px 11px;
+  border: 1px solid rgb(243 176 66 / 35%);
+  border-radius: 10px;
+  background: rgb(243 176 66 / 10%);
+  color: #ffd58f;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+button,
+label {
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 10px;
+  background: #252a2c;
+  color: #f4f2ed;
+  font: inherit;
+  font-size: 12px;
+}
+
+button {
+  padding: 9px 11px;
+  cursor: pointer;
+}
+
+button:hover,
+button.active {
+  border-color: #7fc0aa;
+  background: #24483d;
+}
+
+label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+}
+
+.help {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  gap: 12px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  background: rgb(15 18 20 / 70%);
+  color: #bbc1c3;
+  font-size: 11px;
+  backdrop-filter: blur(12px);
+}
+
+#VRButton {
+  right: 20px !important;
+  bottom: 62px !important;
+  left: auto !important;
+}
+
+@media (max-width: 640px) {
+  .panel {
+    top: 10px;
+    left: 10px;
+    width: calc(100vw - 20px);
+    padding: 14px;
+  }
+
+  .help {
+    right: 10px;
+    bottom: 10px;
+  }
+}

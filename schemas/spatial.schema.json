@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vr-3d-skill.local/schemas/spatial.schema.json",
+  "title": "VR 3D Spatial Contract",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "project",
+    "envelope",
+    "rooms",
+    "validation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "id",
+        "revision",
+        "units",
+        "up_axis",
+        "forward_axis",
+        "handedness",
+        "origin"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "name": { "type": "string" },
+        "revision": { "$ref": "#/$defs/nonEmptyString" },
+        "units": { "const": "meters" },
+        "up_axis": { "const": "Y" },
+        "forward_axis": { "enum": ["-Z", "Z"] },
+        "handedness": { "const": "right" },
+        "origin": { "$ref": "#/$defs/vector3" }
+      }
+    },
+    "envelope": {
+      "type": "object",
+      "required": ["walls"],
+      "properties": {
+        "floor_elevation": { "type": "number" },
+        "ceiling_height": { "type": "number", "exclusiveMinimum": 0 },
+        "walls": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/wall" }
+        },
+        "openings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/opening" }
+        }
+      }
+    },
+    "rooms": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/room" }
+    },
+    "design_objects": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/designObject" }
+    },
+    "materials": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/material" }
+    },
+    "validation": {
+      "type": "object",
+      "required": ["status", "approved_scope"],
+      "properties": {
+        "status": { "enum": ["pending", "blocked", "approved"] },
+        "approved_scope": {
+          "type": ["string", "null"],
+          "enum": [null, "visualization_only", "construction_ready"]
+        },
+        "checks": { "type": "array" }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vector2": {
+      "type": "array",
+      "prefixItems": [{ "type": "number" }, { "type": "number" }],
+      "items": false
+    },
+    "vector3": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "number" },
+        { "type": "number" },
+        { "type": "number" }
+      ],
+      "items": false
+    },
+    "wall": {
+      "type": "object",
+      "required": ["id", "start", "end", "thickness", "height"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "start": { "$ref": "#/$defs/vector2" },
+        "end": { "$ref": "#/$defs/vector2" },
+        "thickness": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "structural_role": {
+          "enum": ["load_bearing", "partition", "unknown"]
+        },
+        "edit_policy": {
+          "enum": ["locked", "review_required", "editable"]
+        }
+      }
+    },
+    "opening": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "host_wall_id",
+        "offset",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "kind": {
+          "enum": [
+            "hinged_door",
+            "sliding_door",
+            "open_passage",
+            "window",
+            "fixed_window"
+          ]
+        },
+        "host_wall_id": { "$ref": "#/$defs/nonEmptyString" },
+        "offset": { "type": "number", "minimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "sill_height": { "type": "number", "minimum": 0 }
+      }
+    },
+    "room": {
+      "type": "object",
+      "required": ["id", "boundary_wall_ids"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "boundary_wall_ids": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "area": { "type": "number", "exclusiveMinimum": 0 },
+        "floor_material_id": { "type": "string" }
+      }
+    },
+    "designObject": {
+      "type": "object",
+      "required": ["id", "kind", "room_id", "dimensions", "transform"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "kind": { "$ref": "#/$defs/nonEmptyString" },
+        "room_id": { "$ref": "#/$defs/nonEmptyString" },
+        "asset_id": { "type": "string" },
+        "material_id": { "type": "string" },
+        "dimensions": {
+          "allOf": [
+            { "$ref": "#/$defs/vector3" },
+            {
+              "items": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            }
+          ]
+        },
+        "transform": {
+          "type": "object",
+          "required": ["position"],
+          "properties": {
+            "position": { "$ref": "#/$defs/vector3" },
+            "rotation_euler_degrees": { "$ref": "#/$defs/vector3" },
+            "scale": { "$ref": "#/$defs/vector3" }
+          }
+        }
+      }
+    },
+    "material": {
+      "type": "object",
+      "properties": {
+        "base_color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "roughness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "metalness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "alpha": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

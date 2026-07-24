@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "Deterministic spatial validation, parametric GLB generation, and WebXR viewing tools for the VR 3D Skill.",
+  "description": "Source-bound interior plan extraction, Spatial JSON validation, and human approval gates for the VR 3D Skill.",
   "engines": {
     "node": ">=20"
   },
@@ -11,11 +11,17 @@
     "check": "npm run check:syntax && npm test",
     "check:syntax": "node scripts/check-syntax.mjs",
     "doctor": "node scripts/doctor.mjs",
-    "example": "node scripts/tasks/scene-generation/build-viewable-scene.mjs --spatial-json examples/one-room/spatial.json --output runs/example",
+    "p2:fixtures": "node scripts/tests/fixtures/generate-p2-fixtures.mjs",
+    "p2:acceptance": "node scripts/validation/run-p2-acceptance.mjs --output examples/p2-acceptance/automated-evidence.json",
+    "review:spatial": "node scripts/serve-viewer.mjs --directory assets/spatial-review --port 4174",
+    "approval:key": "node scripts/approval/create-approval-key.mjs",
+    "approve:spatial": "node scripts/approval/approve-spatial-json.mjs",
+    "example": "node scripts/tests/build-bundled-example.mjs --output runs/example",
     "serve:example": "node scripts/serve-viewer.mjs --directory runs/example",
     "test": "node --test scripts/tests/*.test.mjs"
   },
   "dependencies": {
+    "ajv": "8.17.1",
     "dxf-parser": "1.1.2",
     "sharp": "0.34.3",
     "three": "0.179.1"

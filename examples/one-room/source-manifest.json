@@ -1,0 +1,11 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-example",
+      "type": "dimensioned_floor_plan",
+      "uri": "local://example",
+      "contains_personal_data": false
+    }
+  ]
+}

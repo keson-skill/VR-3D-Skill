@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-6825e0af1311",
+      "type": "image",
+      "name": "raster-04-left-passage.png",
+      "uri": "local://raster-04-left-passage.png",
+      "revision": null,
+      "bytes": 2390,
+      "sha256": "6825e0af1311add603e6265448528c2f73038df0a6b62a11b27fd4449d304c7e",
+      "contains_personal_data": false
+    }
+  ]
+}

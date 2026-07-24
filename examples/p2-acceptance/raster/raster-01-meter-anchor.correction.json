@@ -1,0 +1,10 @@
+{
+  "openings": [
+    {
+      "wall_index": 0,
+      "start_pixel": 120,
+      "end_pixel": 210,
+      "kind": "hinged_door"
+    }
+  ]
+}

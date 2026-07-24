@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-96e12f9e933d",
+      "type": "image",
+      "name": "raster-01-meter-anchor.png",
+      "uri": "local://raster-01-meter-anchor.png",
+      "revision": null,
+      "bytes": 1433,
+      "sha256": "96e12f9e933deb47f094ce2cba4b6eb99587fa769295801c703e5aca0936d83d",
+      "contains_personal_data": false
+    }
+  ]
+}

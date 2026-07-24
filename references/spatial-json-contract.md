@@ -265,6 +265,18 @@ Set `validation.status` to `approved` only with an explicit `validation.approved
 
 Downstream scripts may render either scope, but must surface a visible warning for `visualization_only`. Never silently promote scope based on model confidence, an image preview, or a rendered scene.
 
+The in-document `validation.status` records the reviewed state of that exact Spatial JSON, but is not sufficient authority for downstream work. Production gates must also verify a separate [spatial-approval.schema.json](../schemas/spatial-approval.schema.json) artifact containing:
+
+- canonical SHA-256 of the source manifest;
+- canonical SHA-256 of the exact Spatial JSON;
+- canonical SHA-256 of its zero-error validation report;
+- project ID and revision;
+- human approver, UTC approval time, approval scope, and notes;
+- an attestation digest over the hashes, scope, and approver;
+- an Ed25519 signature whose public key is active in a separately managed reviewer trust store.
+
+Create a reviewer key once with `scripts/approval/create-approval-key.mjs`; keep its private key outside the workspace and protect the public trust store from job-level writes. Create a human artifact only with `scripts/approval/approve-spatial-json.mjs` in an interactive terminal after reviewing the source overlay. A model task and non-interactive process must not create it. Checked-in `test_fixture` approvals are valid only inside dedicated test helpers and must be rejected by production CLIs. Any changed source, Spatial JSON, validation report, signature, or trusted-key status invalidates the approval.
+
 ## Revision contract
 
 Every edit should include:

@@ -20,13 +20,25 @@ const STAGES = new Set([
 export function checkStageReadiness(
   stage,
   spatialJson,
-  { assetManifest = null } = {},
+  {
+    assetManifest = null,
+    approval = null,
+    approvalTrust = null,
+    sourceManifest = null,
+    validationReport = null,
+    allowTestApproval = false,
+  } = {},
 ) {
   if (!STAGES.has(stage)) {
     throw new Error(`Unknown stage ${stage}.`);
   }
   const spatial = validateSpatialJson(spatialJson, {
     requireApproved: true,
+    approval,
+    approvalTrust,
+    sourceManifest,
+    validationReport,
+    allowTestApproval,
   });
   const blockers = spatial.errors.map((error) => ({
     source: "spatial-validation",
@@ -109,7 +121,13 @@ export function checkStageReadiness(
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node scripts/orchestration/check-stage-readiness.mjs --stage preview --spatial-json approved-spatial.json [--asset-manifest assets.json] [--output readiness.json]
+  node scripts/orchestration/check-stage-readiness.mjs \\
+    --stage preview --spatial-json approved-spatial.json \\
+    --source-manifest source-manifest.json \\
+    --validation-report spatial-validation.json \\
+    --approval spatial-approval.json \\
+    --approval-trust spatial-approval-trust.json \\
+    [--asset-manifest assets.json] [--output readiness.json]
 
 This deterministic gate never calls an external provider.
 `);
@@ -119,6 +137,10 @@ async function main() {
   const options = parseArgs(process.argv.slice(2), {
     stage: { type: "string", required: true },
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "validation-report": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     "asset-manifest": { type: "string" },
     output: { type: "string" },
     help: { type: "boolean" },
@@ -131,14 +153,29 @@ async function main() {
     throw new Error(`--stage must be one of: ${[...STAGES].join(", ")}.`);
   }
 
-  const [spatialJson, assetManifest] = await Promise.all([
+  const [
+    spatialJson,
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
+    assetManifest,
+  ] = await Promise.all([
     readJson(options["spatial-json"], "approved Spatial JSON"),
+    readJson(options["source-manifest"], "source manifest"),
+    readJson(options["validation-report"], "validation report"),
+    readJson(options.approval, "spatial approval"),
+    readJson(options["approval-trust"], "spatial approval trust store"),
     options["asset-manifest"]
       ? readJson(options["asset-manifest"], "asset manifest")
       : Promise.resolve(null),
   ]);
   const report = checkStageReadiness(options.stage, spatialJson, {
     assetManifest,
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
   });
   if (options.output) {
     await writeJson(options.output, report);

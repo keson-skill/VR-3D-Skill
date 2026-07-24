@@ -1,0 +1,12 @@
+{
+  "openings": [
+    {
+      "wall_index": 2,
+      "start_pixel": 300,
+      "end_pixel": 396,
+      "kind": "window",
+      "height_meters": 1.2,
+      "sill_meters": 0.9
+    }
+  ]
+}

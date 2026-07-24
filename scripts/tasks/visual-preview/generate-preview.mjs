@@ -40,13 +40,17 @@ function buildLockedVisualContext(spatialJson) {
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node --env-file=.env scripts/tasks/visual-preview/generate-preview.mjs --spatial-json approved-spatial.json --prompt-file visual-direction.md --output preview.png --metadata preview.json [--size 1536x1024] [--quality high] --allow-provider
+  node --env-file=.env scripts/tasks/visual-preview/generate-preview.mjs --spatial-json approved-spatial.json --source-manifest source-manifest.json --spatial-validation spatial-validation.json --approval spatial-approval.json --approval-trust spatial-approval-trust.json --prompt-file visual-direction.md --output preview.png --metadata preview.json [--size 1536x1024] [--quality high] --allow-provider
 `);
 }
 
 async function main() {
   const options = parseArgs(process.argv.slice(2), {
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "spatial-validation": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     "prompt-file": { type: "string", required: true },
     output: { type: "string", required: true },
     metadata: { type: "string", required: true },
@@ -61,11 +65,27 @@ async function main() {
   }
   requireProviderApproval(options);
 
-  const [spatialJson, visualDirection] = await Promise.all([
+  const [
+    spatialJson,
+    sourceManifest,
+    spatialValidation,
+    approval,
+    approvalTrust,
+    visualDirection,
+  ] = await Promise.all([
     readJson(options["spatial-json"], "approved Spatial JSON"),
+    readJson(options["source-manifest"], "source manifest"),
+    readJson(options["spatial-validation"], "spatial validation report"),
+    readJson(options.approval, "spatial approval"),
+    readJson(options["approval-trust"], "spatial approval trust store"),
     readText(options["prompt-file"], "visual direction"),
   ]);
-  const readiness = checkStageReadiness("preview", spatialJson);
+  const readiness = checkStageReadiness("preview", spatialJson, {
+    sourceManifest,
+    validationReport: spatialValidation,
+    approval,
+    approvalTrust,
+  });
   if (!readiness.ready) {
     throw new Error(
       `Visual preview blocked: ${readiness.blockers[0]?.message}`,

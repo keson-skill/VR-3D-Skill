@@ -10,6 +10,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { createViewerServer } from "../serve-viewer.mjs";
 import { buildViewableScene } from "../tasks/scene-generation/build-viewable-scene.mjs";
+import { createTestApprovalContext } from "./helpers/p2-approval.mjs";
 
 async function loadExample() {
   return JSON.parse(
@@ -23,9 +24,11 @@ async function loadExample() {
 test("builds a deterministic GLB and self-contained Web viewer", async () => {
   const directory = await mkdtemp(join(tmpdir(), "vr-3d-scene-"));
   try {
-    const result = await buildViewableScene(await loadExample(), {
+    const document = await loadExample();
+    const result = await buildViewableScene(document, {
       outputDirectory: directory,
       mode: "furnished",
+      ...createTestApprovalContext(document),
     });
     const glb = await readFile(result.sceneFile);
     assert.equal(glb.toString("ascii", 0, 4), "glTF");
@@ -51,7 +54,11 @@ test("builds a deterministic GLB and self-contained Web viewer", async () => {
       "vendor/jsm/controls/PointerLockControls.js",
       "vendor/jsm/webxr/VRButton.js",
       "vendor/jsm/utils/BufferGeometryUtils.js",
+      "approval-verification-report.json",
       "validation-report.json",
+      "source-manifest.json",
+      "spatial-validation.json",
+      "spatial-approval.json",
       "spatial.json",
     ]) {
       assert.equal((await stat(join(directory, path))).isFile(), true, path);
@@ -82,9 +89,11 @@ test("builds a deterministic GLB and self-contained Web viewer", async () => {
 test("shell mode omits furniture proxies", async () => {
   const directory = await mkdtemp(join(tmpdir(), "vr-3d-shell-"));
   try {
-    const result = await buildViewableScene(await loadExample(), {
+    const document = await loadExample();
+    const result = await buildViewableScene(document, {
       outputDirectory: directory,
       mode: "shell",
+      ...createTestApprovalContext(document),
     });
     assert.equal(result.manifest.counts.design_objects, 0);
   } finally {
@@ -100,6 +109,7 @@ test("hard-furnishing mode keeps only fixed design objects", async () => {
     const result = await buildViewableScene(document, {
       outputDirectory: directory,
       mode: "hard-furnishing",
+      ...createTestApprovalContext(document),
     });
     assert.equal(result.manifest.counts.design_objects, 1);
   } finally {

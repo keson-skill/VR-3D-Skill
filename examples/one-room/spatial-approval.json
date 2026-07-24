@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "kind": "spatial_approval",
+  "approval_id": "approval-warm-living-room-rev-001-002a77c95373",
+  "approval_kind": "test_fixture",
+  "project": {
+    "id": "warm-living-room",
+    "revision": "rev-001"
+  },
+  "bindings": {
+    "source_manifest": {
+      "algorithm": "sha256",
+      "canonicalization": "json-key-sort-v1",
+      "sha256": "adcba256c57ee88d663b149e8598f1f28526c6e5e1eba395f8e714bc53dda1d2"
+    },
+    "spatial_json": {
+      "algorithm": "sha256",
+      "canonicalization": "json-key-sort-v1",
+      "sha256": "002a77c953739b156d121ec0050631fd89589c74cb0ea21850b615987b46c163"
+    },
+    "validation_report": {
+      "algorithm": "sha256",
+      "canonicalization": "json-key-sort-v1",
+      "sha256": "72d38d7242bb65ec541de6aed854f8b63ce5e79746e3ce2b90295939811ba3bc"
+    }
+  },
+  "decision": {
+    "status": "approved",
+    "scope": "visualization_only",
+    "approver": {
+      "name": "Bundled example fixture"
+    },
+    "approved_at": "2026-01-01T00:00:00.000Z",
+    "notes": "This test fixture is only for npm run example and is rejected by production approval gates."
+  },
+  "attestation": {
+    "method": "test_fixture",
+    "statement": "I reviewed the source alignment, spatial geometry, unresolved issues, validation report, and approval scope.",
+    "confirmation_digest": "7de1845daed5a7266291928861e94eceed0ecf5900a6d01bf20d589a736c6c44"
+  },
+  "signature": {
+    "algorithm": "test_fixture",
+    "key_id": "test-fixture",
+    "value_base64": "0kuXupro2zmK+vpu4/ELOVeIJUppdZuLmZMsPBmelVk="
+  }
+}

@@ -46,6 +46,76 @@ export async function preprocessPlanImage(
   const outputInfo = await pipeline
     .png({ compressionLevel: 9, adaptiveFiltering: true })
     .toFile(output);
+  const orientation = inputMetadata.orientation || 1;
+  const swapsAxes = [5, 6, 7, 8].includes(orientation);
+  const orientedWidth = swapsAxes ? inputMetadata.height : inputMetadata.width;
+  const orientedHeight = swapsAxes ? inputMetadata.width : inputMetadata.height;
+  const scaleX = outputInfo.width / orientedWidth;
+  const scaleY = outputInfo.height / orientedHeight;
+  const orientationMatrix = (() => {
+    switch (orientation) {
+      case 2:
+        return [-1, 0, inputMetadata.width, 0, 1, 0, 0, 0, 1];
+      case 3:
+        return [
+          -1,
+          0,
+          inputMetadata.width,
+          0,
+          -1,
+          inputMetadata.height,
+          0,
+          0,
+          1,
+        ];
+      case 4:
+        return [1, 0, 0, 0, -1, inputMetadata.height, 0, 0, 1];
+      case 5:
+        return [0, 1, 0, 1, 0, 0, 0, 0, 1];
+      case 6:
+        return [0, -1, inputMetadata.height, 1, 0, 0, 0, 0, 1];
+      case 7:
+        return [
+          0,
+          -1,
+          inputMetadata.height,
+          -1,
+          0,
+          inputMetadata.width,
+          0,
+          0,
+          1,
+        ];
+      case 8:
+        return [0, 1, 0, -1, 0, inputMetadata.width, 0, 0, 1];
+      default:
+        return [1, 0, 0, 0, 1, 0, 0, 0, 1];
+    }
+  })();
+  const originalToNormalized = [
+    orientationMatrix[0] * scaleX,
+    orientationMatrix[1] * scaleX,
+    orientationMatrix[2] * scaleX,
+    orientationMatrix[3] * scaleY,
+    orientationMatrix[4] * scaleY,
+    orientationMatrix[5] * scaleY,
+    0,
+    0,
+    1,
+  ];
+  const [a, b, c, d, e, f] = originalToNormalized;
+  const determinant = a * e - b * d;
+  const normalizedToOriginal = [
+    e / determinant,
+    -b / determinant,
+    (b * f - e * c) / determinant,
+    -d / determinant,
+    a / determinant,
+    (d * c - a * f) / determinant,
+    0,
+    0,
+    1,
+  ];
   return {
     inputFile: input,
     outputFile: output,
@@ -61,6 +131,12 @@ export async function preprocessPlanImage(
       width: outputInfo.width,
       height: outputInfo.height,
       bytes: outputInfo.size,
+    },
+    coordinate_transform: {
+      source_space: "original-image-pixels",
+      target_space: "normalized-image-pixels",
+      original_to_normalized_matrix_3x3: originalToNormalized,
+      normalized_to_original_matrix_3x3: normalizedToOriginal,
     },
   };
 }

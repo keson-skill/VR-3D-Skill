@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-82d31a2278b8",
+      "type": "image",
+      "name": "raster-02-right-door.png",
+      "uri": "local://raster-02-right-door.png",
+      "revision": null,
+      "bytes": 2012,
+      "sha256": "82d31a2278b869bbbcccb4cf9b6fd7380fbd9cd21fe0a8854fc69f101562f0d4",
+      "contains_personal_data": false
+    }
+  ]
+}

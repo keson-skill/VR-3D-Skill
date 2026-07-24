@@ -56,8 +56,8 @@ Read [model-routing.md](references/model-routing.md) before adding provider call
 Read [interior-design-workflow.md](references/interior-design-workflow.md) for stage inputs, outputs, and failure handling.
 
 1. **Route and normalize input.** Run `scripts/ingest/detect-input.mjs`. Preserve originals and fingerprints. For DXF, extract vector evidence without rasterizing it. For images, use cross-platform normalization and optional local Tesseract OCR. Treat OCR as evidence, never as geometry truth.
-2. **Understand space.** Send only approved images and local OCR/CAD evidence to the configured spatial model (`gpt-5.5` by default). Preserve DXF coordinates and explicit measurements. Detect walls, openings, rooms, fixed equipment, usable zones, circulation, and scale anchors. Emit `Spatial JSON`.
-3. **Validate before designing.** Check wall topology, opening placement, room closure, dimensional consistency, accessible paths, unresolved low-confidence facts, and the approval scope (`visualization_only` or `construction_ready`).
+2. **Understand space.** Run the deterministic DXF or raster converter first. Preserve DXF coordinates and explicit measurements; preserve the raster original-to-normalized transform and a trusted or estimated scale. Use the configured spatial model (`gpt-5.5` by default) only for ambiguous semantics that deterministic evidence cannot classify. Emit draft `Spatial JSON` with provenance, confidence, assumptions, conflicts, and unresolved questions.
+3. **Validate and obtain independent approval before designing.** Run Draft 2020-12 JSON Schema and business-geometry validation, generate a source-aligned top view, and review the overlay in the local correction UI. A human must then create a separate approval artifact that binds the source manifest, exact Spatial JSON, and exact validation report and signs them with an externally trusted Ed25519 reviewer key. The in-document `validation.status` never replaces this sidecar. Unknown scale, conflicts, unresolved questions, low-confidence topology, an untrusted signature, or a mismatched hash must block downstream work.
 4. **Propose design.** Add functional zoning, furniture footprints, ergonomic clearances, materials, lighting, and style intent without overwriting measured geometry.
 5. **Preview visually.** After design approval, use GPT Image 2 for generation or the reference-edit task for approved source images. Bind every image to a design revision and never feed inferred image geometry back into the spatial contract.
 6. **Generate assets.** Reuse catalog assets first. Generate only missing furniture or decor, request real dimensions, normalize pivots and scale, and export GLB when targeting the web.
@@ -87,6 +87,14 @@ node scripts/orchestration/prepare-interior-job.mjs \
 node scripts/ingest/extract-ocr-evidence.mjs \
   --input runs/job-001/evidence/01-plan-normalized.png \
   --output runs/job-001/ocr-evidence.json
+
+node scripts/spatial/raster-to-spatial.mjs \
+  --input runs/job-001/evidence/01-plan-normalized.png \
+  --source-manifest runs/job-001/source-manifest.json \
+  --preprocess-metadata runs/job-001/evidence/01-plan-preprocess.json \
+  --scale-anchor scale-anchor.json \
+  --project-id job-001 \
+  --output runs/job-001/spatial-draft.json
 ```
 
 For DXF, preserve its vectors:
@@ -94,13 +102,65 @@ For DXF, preserve its vectors:
 ```bash
 node scripts/ingest/extract-dxf-evidence.mjs \
   --input plan.dxf --output runs/job-001/dxf-evidence.json
+
+node scripts/spatial/dxf-to-spatial.mjs \
+  --evidence runs/job-001/dxf-evidence.json \
+  --source-manifest runs/job-001/source-manifest.json \
+  --project-id job-001 \
+  --output runs/job-001/spatial-draft.json
 ```
 
-After spatial extraction, human review, and approval, generate a viewable result:
+Review and correct the source overlay locally, then rerun validation and alignment:
+
+```bash
+npm run review:spatial
+
+node scripts/validation/validate-spatial-json.mjs \
+  --input runs/job-001/spatial-approved.json \
+  --output runs/job-001/spatial-validation.json
+
+node scripts/validation/render-spatial-top-view.mjs \
+  --spatial-json runs/job-001/spatial-approved.json \
+  --output runs/job-001/top-view.png
+
+node scripts/validation/compare-plan-render.mjs \
+  --source runs/job-001/evidence/01-plan-normalized.png \
+  --render runs/job-001/top-view.png \
+  --output runs/job-001/alignment.json \
+  --diff runs/job-001/alignment-diff.png
+```
+
+Set up a reviewer trust root once. Keep the private key outside the repository:
+
+```bash
+node scripts/approval/create-approval-key.mjs \
+  --key-id reviewer-001 \
+  --owner "Reviewer name" \
+  --private-key /secure/outside/repo/reviewer-ed25519.pem \
+  --trust-store config/spatial-approval-trust.json
+```
+
+Only the human reviewer runs the interactive approval command:
+
+```bash
+node scripts/approval/approve-spatial-json.mjs \
+  --source-manifest runs/job-001/source-manifest.json \
+  --spatial-json runs/job-001/spatial-approved.json \
+  --validation-report runs/job-001/spatial-validation.json \
+  --signing-key /secure/outside/repo/reviewer-ed25519.pem \
+  --key-id reviewer-001 \
+  --output runs/job-001/spatial-approval.json
+```
+
+After the independent approval passes, generate a viewable compatibility result:
 
 ```bash
 node scripts/tasks/scene-generation/build-viewable-scene.mjs \
   --spatial-json runs/job-001/spatial-approved.json \
+  --source-manifest runs/job-001/source-manifest.json \
+  --validation-report runs/job-001/spatial-validation.json \
+  --approval runs/job-001/spatial-approval.json \
+  --approval-trust config/spatial-approval-trust.json \
   --output runs/job-001/viewer \
   --mode furnished
 
@@ -161,7 +221,7 @@ Read [quality-gates.md](references/quality-gates.md), then verify the relevant r
 
 Deliver the artifacts relevant to the request:
 
-- normalized `spatial.json` plus its schema version, provenance, assumptions, and validation report;
+- normalized `spatial.json` plus its schema version, provenance, assumptions, validation report, source manifest, source-alignment report, and independent approval artifact;
 - design constraints, layout alternatives, and an incremental revision or patch log;
 - asset manifest with source or generation provenance, dimensions, license, format, and optimization status;
 - deterministic `scene.glb`, the static Three.js viewer, source Spatial JSON, validation report, and run command;

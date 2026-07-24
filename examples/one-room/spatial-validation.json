@@ -1,0 +1,16 @@
+{
+  "report_version": "1.0",
+  "document_sha256": "002a77c953739b156d121ec0050631fd89589c74cb0ea21850b615987b46c163",
+  "valid": true,
+  "schema_valid": true,
+  "require_approved": false,
+  "errors": [],
+  "warnings": [],
+  "summary": {
+    "stable_ids": 14,
+    "walls": 4,
+    "rooms": 1,
+    "openings": 2,
+    "design_objects": 3
+  }
+}

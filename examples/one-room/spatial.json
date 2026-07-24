@@ -18,6 +18,21 @@
       "contains_personal_data": false
     }
   ],
+  "extraction": {
+    "source_kind": "manual",
+    "method": "bundled-reviewed-example-v1",
+    "scale": {
+      "status": "trusted",
+      "meters_per_source_unit": 1
+    },
+    "topology_confidence": 1,
+    "coordinate_transform": {
+      "source_space": "manual-meters",
+      "target_space": "spatial-meters-xz",
+      "matrix_3x3": [1, 0, 0, 0, 1, 0, 0, 0, 1]
+    },
+    "source_conflicts": []
+  },
   "requirements": {
     "design_intent": {
       "style": "warm cream",
@@ -36,7 +51,12 @@
         "thickness": 0.2,
         "height": 2.8,
         "structural_role": "unknown",
-        "edit_policy": "review_required"
+        "edit_policy": "review_required",
+        "provenance": {
+          "source_id": "source-example",
+          "method": "measured",
+          "confidence": 1
+        }
       },
       {
         "id": "wall-east",
@@ -45,7 +65,12 @@
         "thickness": 0.2,
         "height": 2.8,
         "structural_role": "unknown",
-        "edit_policy": "review_required"
+        "edit_policy": "review_required",
+        "provenance": {
+          "source_id": "source-example",
+          "method": "measured",
+          "confidence": 1
+        }
       },
       {
         "id": "wall-north",
@@ -54,7 +79,12 @@
         "thickness": 0.2,
         "height": 2.8,
         "structural_role": "unknown",
-        "edit_policy": "review_required"
+        "edit_policy": "review_required",
+        "provenance": {
+          "source_id": "source-example",
+          "method": "measured",
+          "confidence": 1
+        }
       },
       {
         "id": "wall-west",
@@ -63,7 +93,12 @@
         "thickness": 0.2,
         "height": 2.8,
         "structural_role": "unknown",
-        "edit_policy": "review_required"
+        "edit_policy": "review_required",
+        "provenance": {
+          "source_id": "source-example",
+          "method": "measured",
+          "confidence": 1
+        }
       }
     ],
     "openings": [
@@ -74,7 +109,12 @@
         "offset": 0.4,
         "width": 0.9,
         "height": 2.1,
-        "sill_height": 0
+        "sill_height": 0,
+        "provenance": {
+          "source_id": "source-example",
+          "method": "measured",
+          "confidence": 1
+        }
       },
       {
         "id": "window-main",
@@ -83,7 +123,12 @@
         "offset": 1.5,
         "width": 2,
         "height": 1.2,
-        "sill_height": 0.9
+        "sill_height": 0.9,
+        "provenance": {
+          "source_id": "source-example",
+          "method": "measured",
+          "confidence": 1
+        }
       }
     ]
   },
@@ -99,7 +144,12 @@
         "wall-west"
       ],
       "area": 20,
-      "floor_material_id": "floor_oak"
+      "floor_material_id": "floor_oak",
+      "provenance": {
+        "source_id": "source-example",
+        "method": "measured",
+        "confidence": 1
+      }
     }
   ],
   "circulation": {

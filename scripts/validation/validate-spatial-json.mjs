@@ -2,6 +2,7 @@
 
 import { pathToFileURL } from "node:url";
 import {
+  canonicalJsonSha256,
   parseArgs,
   printJson,
   readJson,
@@ -13,6 +14,8 @@ import {
   orderRoomPolygon,
   pointInPolygon,
 } from "../geometry/spatial-geometry.mjs";
+import { verifySpatialApproval } from "../approval/spatial-approval.mjs";
+import { validateSpatialSchema } from "./json-schema.mjs";
 
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -53,7 +56,14 @@ export function collectStableIds(document) {
 
 export function validateSpatialJson(
   document,
-  { requireApproved = false } = {},
+  {
+    requireApproved = false,
+    approval = null,
+    sourceManifest = null,
+    validationReport = null,
+    approvalTrust = null,
+    allowTestApproval = false,
+  } = {},
 ) {
   const errors = [];
   const warnings = [];
@@ -67,12 +77,9 @@ export function validateSpatialJson(
     return { valid: false, errors, warnings };
   }
 
-  if (typeof document.schema_version !== "string") {
-    addError(
-      "schema_version.required",
-      "/schema_version",
-      "schema_version must be a string.",
-    );
+  const schemaValidation = validateSpatialSchema(document);
+  for (const error of schemaValidation.errors) {
+    errors.push(error);
   }
 
   const project = document.project;
@@ -118,6 +125,31 @@ export function validateSpatialJson(
     }
   }
 
+  const sourceIds = new Set(
+    Array.isArray(document.sources)
+      ? document.sources.map((source) => source?.id).filter(Boolean)
+      : [],
+  );
+  function validateProvenance(fact, path, { required = false } = {}) {
+    if (!isObject(fact?.provenance)) {
+      if (required) {
+        addError(
+          "provenance.required",
+          `${path}/provenance`,
+          "Approved spatial facts require source-bound provenance.",
+        );
+      }
+      return;
+    }
+    if (!sourceIds.has(fact.provenance.source_id)) {
+      addError(
+        "provenance.source",
+        `${path}/provenance/source_id`,
+        `Unknown provenance source ${fact.provenance.source_id || "(missing)"}.`,
+      );
+    }
+  }
+
   const walls = document.envelope?.walls;
   const wallMap = new Map();
   if (!Array.isArray(walls) || walls.length === 0) {
@@ -159,6 +191,7 @@ export function validateSpatialJson(
           "A wall with unknown structural role cannot be freely editable.",
         );
       }
+      validateProvenance(wall, path, { required: requireApproved });
     });
   }
 
@@ -228,6 +261,7 @@ export function validateSpatialJson(
           "Opening extends beyond its host wall.",
         );
       }
+      validateProvenance(opening, path, { required: requireApproved });
     });
   }
 
@@ -291,6 +325,7 @@ export function validateSpatialJson(
           `Declared area ${room.area} differs from wall polygon area ${ordered.area.toFixed(3)}.`,
         );
       }
+      validateProvenance(room, path, { required: requireApproved });
     });
   }
 
@@ -484,10 +519,81 @@ export function validateSpatialJson(
         "Approved Spatial JSON must declare visualization_only or construction_ready scope.",
       );
     }
+    if (
+      Array.isArray(document.source_conflicts) &&
+      document.source_conflicts.length > 0
+    ) {
+      addError(
+        "validation.source_conflicts",
+        "/source_conflicts",
+        "Approved Spatial JSON cannot contain unresolved source conflicts.",
+      );
+    }
+    if (
+      Array.isArray(document.extraction?.source_conflicts) &&
+      document.extraction.source_conflicts.length > 0
+    ) {
+      addError(
+        "validation.extraction_conflicts",
+        "/extraction/source_conflicts",
+        "Extraction source conflicts must be resolved before approval.",
+      );
+    }
+    if (document.extraction?.scale?.status === "unknown") {
+      addError(
+        "validation.unknown_scale",
+        "/extraction/scale/status",
+        "Unknown units or scale block approval.",
+      );
+    }
+    if (
+      Number.isFinite(document.extraction?.topology_confidence) &&
+      document.extraction.topology_confidence < 0.9
+    ) {
+      addError(
+        "validation.low_topology_confidence",
+        "/extraction/topology_confidence",
+        "Topology confidence below 0.9 requires human correction before approval.",
+      );
+    }
+    if (
+      document.extraction?.source_kind === "raster" &&
+      (document.extraction?.scale?.status !== "trusted" ||
+        document.extraction?.construction_ready_eligible !== true) &&
+      document.validation?.approved_scope !== "visualization_only"
+    ) {
+      addError(
+        "validation.raster_scope",
+        "/validation/approved_scope",
+        "Raster geometry without trusted scale and independent dimensional verification is limited to visualization_only.",
+      );
+    }
+    if (!approval || !sourceManifest || !validationReport) {
+      addError(
+        "approval.artifact_required",
+        "",
+        "Downstream generation requires a source-bound human approval artifact and its validation report.",
+      );
+    } else {
+      const approvalVerification = verifySpatialApproval({
+        approval,
+        sourceManifest,
+        spatialJson: document,
+        validationReport,
+        approvalTrust,
+        allowTestFixture: allowTestApproval,
+      });
+      for (const error of approvalVerification.errors) {
+        errors.push(error);
+      }
+    }
   }
 
   return {
+    report_version: "1.0",
+    document_sha256: canonicalJsonSha256(document),
     valid: errors.length === 0,
+    schema_valid: schemaValidation.valid,
     require_approved: requireApproved,
     errors,
     warnings,
@@ -505,7 +611,15 @@ export function validateSpatialJson(
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node scripts/validation/validate-spatial-json.mjs --input spatial.json [--output validation-report.json] [--require-approved]
+  node scripts/validation/validate-spatial-json.mjs --input spatial.json [--output validation-report.json]
+
+Approval verification:
+  node scripts/validation/validate-spatial-json.mjs \\
+    --input approved-spatial.json --require-approved \\
+    --source-manifest source-manifest.json \\
+    --validation-report spatial-validation.json \\
+    --approval spatial-approval.json \\
+    --approval-trust spatial-approval-trust.json
 `);
 }
 
@@ -514,6 +628,10 @@ async function main() {
     input: { type: "string", required: true },
     output: { type: "string" },
     "require-approved": { type: "boolean" },
+    "source-manifest": { type: "string" },
+    "validation-report": { type: "string" },
+    approval: { type: "string" },
+    "approval-trust": { type: "string" },
     help: { type: "boolean" },
   });
   if (options.help) {
@@ -521,9 +639,34 @@ async function main() {
     return;
   }
 
-  const document = await readJson(options.input, "Spatial JSON");
+  const [
+    document,
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
+  ] =
+    await Promise.all([
+      readJson(options.input, "Spatial JSON"),
+      options["source-manifest"]
+        ? readJson(options["source-manifest"], "source manifest")
+        : Promise.resolve(null),
+      options["validation-report"]
+        ? readJson(options["validation-report"], "validation report")
+        : Promise.resolve(null),
+      options.approval
+        ? readJson(options.approval, "spatial approval")
+        : Promise.resolve(null),
+      options["approval-trust"]
+        ? readJson(options["approval-trust"], "spatial approval trust store")
+        : Promise.resolve(null),
+    ]);
   const report = validateSpatialJson(document, {
     requireApproved: options["require-approved"],
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
   });
   if (options.output) {
     await writeJson(options.output, report);

@@ -107,6 +107,42 @@ export function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+function canonicalizeJsonValue(value, path = "$") {
+  if (value === null || typeof value === "string" || typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value === "number") {
+    if (!Number.isFinite(value)) {
+      throw new Error(`Cannot hash non-finite JSON number at ${path}.`);
+    }
+    return value;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item, index) =>
+      canonicalizeJsonValue(item, `${path}[${index}]`),
+    );
+  }
+  if (typeof value === "object") {
+    const result = {};
+    for (const key of Object.keys(value).sort()) {
+      if (value[key] === undefined) {
+        throw new Error(`Cannot hash undefined JSON value at ${path}.${key}.`);
+      }
+      result[key] = canonicalizeJsonValue(value[key], `${path}.${key}`);
+    }
+    return result;
+  }
+  throw new Error(`Cannot hash non-JSON value at ${path}.`);
+}
+
+export function canonicalJson(value) {
+  return JSON.stringify(canonicalizeJsonValue(value));
+}
+
+export function canonicalJsonSha256(value) {
+  return sha256(Buffer.from(canonicalJson(value), "utf8"));
+}
+
 export function requireProviderApproval(options) {
   if (!options["allow-provider"]) {
     throw new Error(

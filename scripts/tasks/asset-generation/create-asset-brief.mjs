@@ -54,7 +54,7 @@ export function createAssetBrief(spatialJson, objectId, options = {}) {
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node scripts/tasks/asset-generation/create-asset-brief.mjs --spatial-json approved-spatial.json --object-id furniture-sofa-01 --output sofa-brief.json [--style "warm cream"] [--polygon-budget 50000]
+  node scripts/tasks/asset-generation/create-asset-brief.mjs --spatial-json approved-spatial.json --source-manifest source-manifest.json --spatial-validation spatial-validation.json --approval spatial-approval.json --approval-trust spatial-approval-trust.json --object-id furniture-sofa-01 --output sofa-brief.json [--style "warm cream"] [--polygon-budget 50000]
 
 This command prepares a validated provider-neutral brief. It does not upload data or submit a Hunyuan3D job.
 `);
@@ -63,6 +63,10 @@ This command prepares a validated provider-neutral brief. It does not upload dat
 async function main() {
   const options = parseArgs(process.argv.slice(2), {
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "spatial-validation": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     "object-id": { type: "string", required: true },
     output: { type: "string", required: true },
     style: { type: "string" },
@@ -74,11 +78,26 @@ async function main() {
     return;
   }
 
-  const spatialJson = await readJson(
-    options["spatial-json"],
-    "approved Spatial JSON",
-  );
-  const readiness = checkStageReadiness("assets", spatialJson);
+  const [
+    spatialJson,
+    sourceManifest,
+    spatialValidation,
+    approval,
+    approvalTrust,
+  ] =
+    await Promise.all([
+      readJson(options["spatial-json"], "approved Spatial JSON"),
+      readJson(options["source-manifest"], "source manifest"),
+      readJson(options["spatial-validation"], "spatial validation report"),
+      readJson(options.approval, "spatial approval"),
+      readJson(options["approval-trust"], "spatial approval trust store"),
+    ]);
+  const readiness = checkStageReadiness("assets", spatialJson, {
+    sourceManifest,
+    validationReport: spatialValidation,
+    approval,
+    approvalTrust,
+  });
   if (!readiness.ready) {
     throw new Error(
       `Asset brief blocked: ${readiness.blockers[0]?.message}`,

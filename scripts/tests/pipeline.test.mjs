@@ -15,6 +15,7 @@ import {
   editImage,
   generateSpatialJson,
 } from "../adapters/realmrouter-openai.mjs";
+import { createTestApprovalContext } from "./helpers/p2-approval.mjs";
 
 function validSpatialJson() {
   return {
@@ -28,10 +29,18 @@ function validSpatialJson() {
       handedness: "right",
       origin: [0, 0, 0],
     },
-    sources: [],
+    sources: [
+      {
+        id: "source-plan",
+        type: "dimensioned_floor_plan",
+        uri: "local://test-plan",
+        contains_personal_data: false,
+      },
+    ],
     requirements: { design_intent: { style: "warm cream" } },
     envelope: {
       floor_elevation: 0,
+      ceiling_height: 2.8,
       walls: [
         {
           id: "wall-01",
@@ -41,6 +50,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
         {
           id: "wall-02",
@@ -50,6 +64,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
         {
           id: "wall-03",
@@ -59,6 +78,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
         {
           id: "wall-04",
@@ -68,6 +92,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
       ],
       openings: [
@@ -78,6 +107,12 @@ function validSpatialJson() {
           offset: 0.5,
           width: 0.9,
           height: 2.1,
+          sill_height: 0,
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
       ],
     },
@@ -86,6 +121,11 @@ function validSpatialJson() {
         id: "room-living",
         type: "living",
         boundary_wall_ids: ["wall-01", "wall-02", "wall-03", "wall-04"],
+        provenance: {
+          source_id: "source-plan",
+          method: "measured",
+          confidence: 1,
+        },
       },
     ],
     circulation: {
@@ -158,8 +198,11 @@ function validSpatialJson() {
 }
 
 test("validates an approved one-room spatial contract", () => {
+  const document = validSpatialJson();
+  const approval = createTestApprovalContext(document);
   const report = validateSpatialJson(validSpatialJson(), {
     requireApproved: true,
+    ...approval,
   });
   assert.equal(report.valid, true, JSON.stringify(report.errors));
 });
@@ -216,8 +259,12 @@ test("builds an asset brief and web asset manifest", () => {
 
 test("reports downstream stage and XR readiness", () => {
   const document = validSpatialJson();
-  assert.equal(checkStageReadiness("preview", document).ready, true);
-  assert.equal(verifyXrConfig(document).valid, true);
+  const approval = createTestApprovalContext(document);
+  assert.equal(
+    checkStageReadiness("preview", document, approval).ready,
+    true,
+  );
+  assert.equal(verifyXrConfig(document, approval).valid, true);
 });
 
 test("builds a deterministic local source manifest", async () => {

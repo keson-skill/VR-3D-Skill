@@ -45,6 +45,11 @@ export async function buildViewableScene(
     outputDirectory,
     mode = "furnished",
     sourcePath = null,
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust = null,
+    allowTestApproval = false,
   },
 ) {
   if (!MODES.has(mode)) {
@@ -52,6 +57,11 @@ export async function buildViewableScene(
   }
   const validation = validateSpatialJson(spatialJson, {
     requireApproved: true,
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
+    allowTestApproval,
   });
   if (!validation.valid) {
     throw new Error(
@@ -82,6 +92,14 @@ export async function buildViewableScene(
     mode,
     mode_label: MODES.get(mode),
     approval_scope: spatialJson.validation.approved_scope,
+    spatial_approval: {
+      id: approval.approval_id,
+      approver: approval.decision.approver,
+      approved_at: approval.decision.approved_at,
+      scope: approval.decision.scope,
+      spatial_sha256: approval.bindings.spatial_json.sha256,
+      signature_key_id: approval.signature.key_id,
+    },
     scene: "./scene.glb",
     scene_sha256: sha256(sceneBytes),
     bounds: sceneBounds(spatialJson),
@@ -101,7 +119,23 @@ export async function buildViewableScene(
     ],
   };
   await buildWebViewer(outputDirectory, manifest);
+  await writeJson(
+    join(outputDirectory, "approval-verification-report.json"),
+    validation,
+  );
   await writeJson(join(outputDirectory, "validation-report.json"), validation);
+  await writeJson(join(outputDirectory, "source-manifest.json"), sourceManifest);
+  await writeJson(
+    join(outputDirectory, "spatial-validation.json"),
+    validationReport,
+  );
+  await writeJson(join(outputDirectory, "spatial-approval.json"), approval);
+  if (approvalTrust) {
+    await writeJson(
+      join(outputDirectory, "spatial-approval-trust.json"),
+      approvalTrust,
+    );
+  }
   if (sourcePath) {
     await copyFile(sourcePath, join(outputDirectory, "spatial.json"));
   } else {
@@ -120,6 +154,10 @@ function printHelp() {
   process.stdout.write(`Usage:
   node scripts/tasks/scene-generation/build-viewable-scene.mjs \\
     --spatial-json approved-spatial.json \\
+    --source-manifest source-manifest.json \\
+    --validation-report spatial-validation.json \\
+    --approval spatial-approval.json \\
+    --approval-trust spatial-approval-trust.json \\
     --output runs/project-001 \\
     [--mode shell|hard-furnishing|furnished]
 
@@ -131,19 +169,37 @@ Example: npx http-server runs/project-001
 async function main() {
   const options = parseArgs(process.argv.slice(2), {
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "validation-report": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     output: { type: "string", required: true },
     mode: { type: "string", default: "furnished" },
     help: { type: "boolean" },
   });
   if (options.help) return printHelp();
-  const spatialJson = await readJson(
-    options["spatial-json"],
-    "approved Spatial JSON",
-  );
+  const [
+    spatialJson,
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
+  ] =
+    await Promise.all([
+      readJson(options["spatial-json"], "approved Spatial JSON"),
+      readJson(options["source-manifest"], "source manifest"),
+      readJson(options["validation-report"], "validation report"),
+      readJson(options.approval, "spatial approval"),
+      readJson(options["approval-trust"], "spatial approval trust store"),
+    ]);
   const result = await buildViewableScene(spatialJson, {
     outputDirectory: options.output,
     mode: options.mode,
     sourcePath: options["spatial-json"],
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
   });
   printJson({
     outputDirectory: result.outputDirectory,

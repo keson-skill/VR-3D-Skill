@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-fc525f81e177",
+      "type": "cad",
+      "name": "dxf-02-millimeters.dxf",
+      "uri": "local://dxf-02-millimeters.dxf",
+      "revision": null,
+      "bytes": 307,
+      "sha256": "fc525f81e177721d713085531a589eebc8d5edb0c30aa75657819e27c4ee8386",
+      "contains_personal_data": false
+    }
+  ]
+}

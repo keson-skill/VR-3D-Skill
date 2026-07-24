@@ -50,11 +50,22 @@ export async function prepareInteriorJob(
         evidenceDirectory,
         `${storedName.slice(0, -extname(storedName).length)}-normalized.png`,
       );
-      await preprocessPlanImage(storedPath, normalizedPath, { maxEdge });
+      const preprocessing = await preprocessPlanImage(
+        storedPath,
+        normalizedPath,
+        { maxEdge },
+      );
+      const metadataPath = join(
+        evidenceDirectory,
+        `${storedName.slice(0, -extname(storedName).length)}-preprocess.json`,
+      );
+      await writeJson(metadataPath, preprocessing);
       entry.evidence.push({
         type: "normalized_raster",
         path: normalizedPath,
         sha256: sha256(await readFile(normalizedPath)),
+        preprocessing_metadata: metadataPath,
+        coordinate_transform: preprocessing.coordinate_transform,
       });
     } else if (route.route === "dxf") {
       const bytes = await readFile(storedPath);

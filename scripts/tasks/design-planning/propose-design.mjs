@@ -19,13 +19,17 @@ import { validateRevision } from "../../validation/validate-revision.mjs";
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node --env-file=.env scripts/tasks/design-planning/propose-design.mjs --spatial-json approved-spatial.json --requirements requirements.md --output design-proposal.json [--metadata output-metadata.json] [--validation-report revision-validation.json] --allow-provider
+  node --env-file=.env scripts/tasks/design-planning/propose-design.mjs --spatial-json approved-spatial.json --source-manifest source-manifest.json --spatial-validation spatial-validation.json --approval spatial-approval.json --approval-trust spatial-approval-trust.json --requirements requirements.md --output design-proposal.json [--metadata output-metadata.json] [--validation-report revision-validation.json] --allow-provider
 `);
 }
 
 async function main() {
   const options = parseArgs(process.argv.slice(2), {
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "spatial-validation": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     requirements: { type: "string", required: true },
     output: { type: "string", required: true },
     metadata: { type: "string" },
@@ -39,11 +43,27 @@ async function main() {
   }
   requireProviderApproval(options);
 
-  const [spatialJson, requirements] = await Promise.all([
+  const [
+    spatialJson,
+    sourceManifest,
+    spatialValidation,
+    approval,
+    approvalTrust,
+    requirements,
+  ] = await Promise.all([
     readJson(options["spatial-json"], "approved Spatial JSON"),
+    readJson(options["source-manifest"], "source manifest"),
+    readJson(options["spatial-validation"], "spatial validation report"),
+    readJson(options.approval, "spatial approval"),
+    readJson(options["approval-trust"], "spatial approval trust store"),
     readText(options.requirements, "design requirements"),
   ]);
-  const readiness = checkStageReadiness("design", spatialJson);
+  const readiness = checkStageReadiness("design", spatialJson, {
+    sourceManifest,
+    validationReport: spatialValidation,
+    approval,
+    approvalTrust,
+  });
   if (!readiness.ready) {
     throw new Error(
       `Design planning blocked: ${readiness.blockers

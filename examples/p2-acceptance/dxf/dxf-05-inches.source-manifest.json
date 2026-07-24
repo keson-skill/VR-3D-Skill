@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-1011a106de8a",
+      "type": "cad",
+      "name": "dxf-05-inches.dxf",
+      "uri": "local://dxf-05-inches.dxf",
+      "revision": null,
+      "bytes": 272,
+      "sha256": "1011a106de8a0c4539b7aec961e6bf309efd4e730cf8fad065477f3b2996af14",
+      "contains_personal_data": false
+    }
+  ]
+}

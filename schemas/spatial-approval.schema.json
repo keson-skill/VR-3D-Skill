@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vr-3d-skill.local/schemas/spatial-approval.schema.json",
+  "title": "Spatial approval artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "approval_id",
+    "approval_kind",
+    "project",
+    "bindings",
+    "decision",
+    "attestation",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "kind": { "const": "spatial_approval" },
+    "approval_id": { "$ref": "#/$defs/nonEmptyString" },
+    "approval_kind": { "enum": ["human", "test_fixture"] },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "revision"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nonEmptyString" },
+        "revision": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_manifest", "spatial_json", "validation_report"],
+      "properties": {
+        "source_manifest": { "$ref": "#/$defs/binding" },
+        "spatial_json": { "$ref": "#/$defs/binding" },
+        "validation_report": { "$ref": "#/$defs/binding" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "scope",
+        "approver",
+        "approved_at",
+        "notes"
+      ],
+      "properties": {
+        "status": { "const": "approved" },
+        "scope": {
+          "enum": ["visualization_only", "construction_ready"]
+        },
+        "approver": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name"],
+          "properties": {
+            "name": { "$ref": "#/$defs/nonEmptyString" },
+            "id": { "type": "string" }
+          }
+        },
+        "approved_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$"
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "statement", "confirmation_digest"],
+      "properties": {
+        "method": { "enum": ["interactive_tty", "test_fixture"] },
+        "statement": {
+          "const": "I reviewed the source alignment, spatial geometry, unresolved issues, validation report, and approval scope."
+        },
+        "confirmation_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "signature": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "key_id", "value_base64"],
+          "properties": {
+            "algorithm": { "const": "ed25519" },
+            "key_id": { "$ref": "#/$defs/nonEmptyString" },
+            "value_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "key_id", "value_base64"],
+          "properties": {
+            "algorithm": { "const": "test_fixture" },
+            "key_id": { "const": "test-fixture" },
+            "value_base64": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "canonicalization", "sha256"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "canonicalization": { "const": "json-key-sort-v1" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "path": { "type": "string" }
+      }
+    }
+  }
+}

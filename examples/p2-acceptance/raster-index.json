@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "fixtures": [
+    {
+      "id": "raster-01-meter-anchor",
+      "image": "raster/raster-01-meter-anchor.png",
+      "source_manifest": "raster/raster-01-meter-anchor.source-manifest.json",
+      "scale_anchor": "raster/raster-01-meter-anchor.scale-anchor.json",
+      "correction": "raster/raster-01-meter-anchor.correction.json",
+      "estimated_meters_per_pixel": 0.01,
+      "expected": {
+        "width_meters": 4,
+        "height_meters": 3,
+        "opening_count": 1,
+        "automatic_opening_check": true,
+        "trusted_scale": true
+      }
+    },
+    {
+      "id": "raster-02-right-door",
+      "image": "raster/raster-02-right-door.png",
+      "source_manifest": "raster/raster-02-right-door.source-manifest.json",
+      "scale_anchor": "raster/raster-02-right-door.scale-anchor.json",
+      "correction": "raster/raster-02-right-door.correction.json",
+      "estimated_meters_per_pixel": 0.01,
+      "expected": {
+        "width_meters": 5,
+        "height_meters": 3.6,
+        "opening_count": 1,
+        "automatic_opening_check": true,
+        "trusted_scale": true
+      }
+    },
+    {
+      "id": "raster-03-bottom-window",
+      "image": "raster/raster-03-bottom-window.png",
+      "source_manifest": "raster/raster-03-bottom-window.source-manifest.json",
+      "scale_anchor": "raster/raster-03-bottom-window.scale-anchor.json",
+      "correction": "raster/raster-03-bottom-window.correction.json",
+      "estimated_meters_per_pixel": 0.0125,
+      "expected": {
+        "width_meters": 7,
+        "height_meters": 4.75,
+        "opening_count": 1,
+        "automatic_opening_check": true,
+        "trusted_scale": true
+      }
+    },
+    {
+      "id": "raster-04-left-passage",
+      "image": "raster/raster-04-left-passage.png",
+      "source_manifest": "raster/raster-04-left-passage.source-manifest.json",
+      "scale_anchor": "raster/raster-04-left-passage.scale-anchor.json",
+      "correction": "raster/raster-04-left-passage.correction.json",
+      "estimated_meters_per_pixel": 0.008,
+      "expected": {
+        "width_meters": 3.6,
+        "height_meters": 3.6,
+        "opening_count": 1,
+        "automatic_opening_check": false,
+        "trusted_scale": true
+      }
+    },
+    {
+      "id": "raster-05-estimated-scale",
+      "image": "raster/raster-05-estimated-scale.png",
+      "source_manifest": "raster/raster-05-estimated-scale.source-manifest.json",
+      "estimated_meters_per_pixel": 0.01,
+      "expected": {
+        "width_meters": 4.2,
+        "height_meters": 3,
+        "opening_count": 0,
+        "automatic_opening_check": true,
+        "trusted_scale": false
+      }
+    }
+  ]
+}

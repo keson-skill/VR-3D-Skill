@@ -30,9 +30,23 @@ function pointToSegmentDistance(point, start, end) {
   );
 }
 
-export function verifyXrConfig(spatialJson) {
+export function verifyXrConfig(
+  spatialJson,
+  {
+    approval = null,
+    approvalTrust = null,
+    sourceManifest = null,
+    validationReport = null,
+    allowTestApproval = false,
+  } = {},
+) {
   const spatial = validateSpatialJson(spatialJson, {
     requireApproved: true,
+    approval,
+    approvalTrust,
+    sourceManifest,
+    validationReport,
+    allowTestApproval,
   });
   const errors = spatial.errors.map((error) => ({
     source: "spatial-validation",
@@ -161,13 +175,23 @@ export function verifyXrConfig(spatialJson) {
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node scripts/runtime/verify-xr-config.mjs --spatial-json approved-spatial.json [--output xr-report.json]
+  node scripts/runtime/verify-xr-config.mjs \\
+    --spatial-json approved-spatial.json \\
+    --source-manifest source-manifest.json \\
+    --validation-report spatial-validation.json \\
+    --approval spatial-approval.json \\
+    --approval-trust spatial-approval-trust.json \\
+    [--output xr-report.json]
 `);
 }
 
 async function main() {
   const options = parseArgs(process.argv.slice(2), {
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "validation-report": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     output: { type: "string" },
     help: { type: "boolean" },
   });
@@ -176,11 +200,26 @@ async function main() {
     return;
   }
 
-  const spatialJson = await readJson(
-    options["spatial-json"],
-    "approved Spatial JSON",
-  );
-  const report = verifyXrConfig(spatialJson);
+  const [
+    spatialJson,
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
+  ] =
+    await Promise.all([
+      readJson(options["spatial-json"], "approved Spatial JSON"),
+      readJson(options["source-manifest"], "source manifest"),
+      readJson(options["validation-report"], "validation report"),
+      readJson(options.approval, "spatial approval"),
+      readJson(options["approval-trust"], "spatial approval trust store"),
+    ]);
+  const report = verifyXrConfig(spatialJson, {
+    sourceManifest,
+    validationReport,
+    approval,
+    approvalTrust,
+  });
   if (options.output) {
     await writeJson(options.output, report);
     printJson({

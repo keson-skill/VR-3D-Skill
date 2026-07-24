@@ -41,6 +41,7 @@ const report = {
     required: ">=20",
   },
   dependencies: {
+    ajv: await moduleStatus("../node_modules/ajv/package.json"),
     three: await moduleStatus("../node_modules/three/build/three.module.js"),
     sharp: await moduleStatus("../node_modules/sharp/package.json"),
     dxf_parser: await moduleStatus("../node_modules/dxf-parser/package.json"),
@@ -48,21 +49,22 @@ const report = {
   optional_tools: {
     tesseract: await commandStatus("tesseract"),
     blender: await commandStatus("blender"),
-    python_opencv: await commandStatus("python3", [
-      "-c",
-      "import cv2; print(cv2.__version__)",
-    ]),
   },
 };
+report.ready_for_p2_spatial =
+  report.node.available &&
+  report.dependencies.ajv.available &&
+  report.dependencies.sharp.available &&
+  report.dependencies.dxf_parser.available;
 report.ready_for_parametric_web_scene =
   report.node.available &&
   Object.values(report.dependencies).every((item) => item.available);
 report.ready_for_local_ocr = report.optional_tools.tesseract.available;
 report.ready_for_high_fidelity_rendering = report.optional_tools.blender.available;
 report.ready_for_plan_render_alignment =
-  report.optional_tools.python_opencv.available;
+  report.node.available && report.dependencies.sharp.available;
 
 printJson(report);
-if (!report.ready_for_parametric_web_scene) {
+if (!report.ready_for_p2_spatial || !report.ready_for_parametric_web_scene) {
   process.exitCode = 1;
 }

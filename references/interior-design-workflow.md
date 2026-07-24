@@ -66,7 +66,9 @@ Output: normalized sources, OCR and/or CAD vector evidence, and a source manifes
 
 ## Stage 2: spatial understanding
 
-The spatial reasoning model identifies:
+Run deterministic conversion first. `dxf-to-spatial.mjs` maps known layers, closed polylines, line openings, blocks, units, and labels without changing vector coordinates. `raster-to-spatial.mjs` extracts the supported orthogonal shell, wall gaps, room outline, and trusted or estimated scale while retaining the pixel-to-meter transform. Ambiguous or unsupported topology must become a blocking question for the correction UI rather than an invented room.
+
+The spatial reasoning model may then classify evidence that deterministic rules cannot resolve:
 
 - exterior and interior walls, thicknesses, columns, openings, stairs, ceiling changes, and fixed equipment;
 - room boundaries, labels, connections, usable regions, and likely functions;
@@ -74,19 +76,21 @@ The spatial reasoning model identifies:
 - circulation, door swings, daylight cues, and immovable constraints;
 - user intent, occupants, style, storage, accessibility, budget, and retained objects.
 
-Output: a draft `Spatial JSON` plus unresolved questions. Never convert low-confidence image interpretation into asserted construction dimensions.
+Output: a source-bound draft `Spatial JSON` plus unresolved questions. Never convert low-confidence image interpretation into asserted construction dimensions.
 
 ## Stage 3: validation
 
 Run deterministic checks before design:
 
-- schema, units, axes, stable IDs, references, and transforms;
+- Draft 2020-12 schema, units, axes, stable IDs, references, and transforms;
 - wall connectivity, intersections, room closure, openings on host walls, and plausible dimensions;
 - agreement between duplicated measurements and source annotations;
 - explicit handling of conflicting inputs;
-- privacy and provider routing approval.
+- privacy and provider routing approval;
+- source-aligned top-view comparison and human overlay correction;
+- independent approval-sidecar hashes, human attestation, and signature against an active externally managed reviewer trust key.
 
-Output: an approved contract or a blocking issue list. A render is not a substitute for geometry validation.
+Output: the exact approved contract, its source manifest, validation report, alignment report, and independent human approval sidecar—or a blocking issue list. A render and the in-document `validation.status` are not substitutes for geometry validation or independent approval.
 
 ## Stage 4: design generation
 

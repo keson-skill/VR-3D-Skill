@@ -18,6 +18,7 @@ Use the gates that apply to the requested output. Record evidence, exclusions, a
 - Room boundaries, area, ceiling height, fixed services, columns, and unusable zones agree with available measurements.
 - Structural roles are source-backed; load-bearing or otherwise protected elements have explicit locked edit policies.
 - Low-confidence topology or dimension conflicts block downstream generation until accepted or resolved.
+- Production approval is an independent human-created sidecar bound to the exact source manifest, Spatial JSON, and zero-error validation report and signed by an active externally trusted Ed25519 reviewer key; in-document status and test fixtures are insufficient.
 - User requirements, design intent, primary circulation rules, surface-material bindings, and asset material-slot bindings use stable IDs.
 - Every revision uses stable IDs or exact JSON Pointers, contains no durable array indexes or wildcards, and revalidates affected geometry.
 

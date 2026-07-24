@@ -116,10 +116,10 @@ export async function callKimiCode({
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let timeout;
 
   try {
-    const response = await fetchImpl(buildChatEndpoint(baseUrl), {
+    const fetchPromise = Promise.resolve(fetchImpl(buildChatEndpoint(baseUrl), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey.trim()}`,
@@ -130,7 +130,18 @@ export async function callKimiCode({
         buildRequest({ model, reasoningEffort, system, prompt }),
       ),
       signal: controller.signal,
+    }));
+    const timeoutPromise = new Promise((_, reject) => {
+      timeout = setTimeout(() => {
+        controller.abort();
+        const error = new Error(
+          `Kimi Code request exceeded ${timeoutMs} ms without a response.`,
+        );
+        error.code = "ETIMEDOUT";
+        reject(error);
+      }, timeoutMs);
     });
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
 
     const raw = await response.text();
     let payload;
@@ -200,8 +211,8 @@ function parseArgs(argv) {
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node --env-file=.env scripts/kimi-code-engineer.mjs --check
-  node --env-file=.env scripts/kimi-code-engineer.mjs --prompt-file TASK.md [--spatial-json spatial.json] [--asset-manifest assets.json] [--system-file SYSTEM.md] [--output RESULT.md]
+  node --env-file=.env scripts/adapters/kimi-code-engineer.mjs --check
+  node --env-file=.env scripts/adapters/kimi-code-engineer.mjs --prompt-file TASK.md [--spatial-json spatial.json] [--asset-manifest assets.json] [--system-file SYSTEM.md] [--output RESULT.md]
 
 The adapter reads KIMI_CODE_API_KEY, KIMI_CODE_BASE_URL,
 KIMI_CODE_ENGINEERING_MODEL, KIMI_CODE_REASONING_EFFORT, and
@@ -335,6 +346,6 @@ if (isDirectRun) {
         ? "Kimi Code request timed out."
         : error?.message || String(error);
     process.stderr.write(`${message}\n`);
-    process.exitCode = 1;
+    process.exit(1);
   });
 }

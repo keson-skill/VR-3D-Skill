@@ -13,6 +13,7 @@ Turn architectural inputs into a traceable spatial model, then derive design, as
 - Never let a mesh or image generator decide room topology, circulation, furniture clearances, or construction dimensions.
 - Preserve source dimensions. Use meters internally unless an existing project requires another unit, and record every conversion.
 - Record confidence, assumptions, unresolved questions, and provenance instead of inventing missing measurements.
+- For raster-only plans, mark approvals as `visualization_only` unless dimensions, topology, openings, and scale have independently passed the stricter construction-ready gate. Never present a visualization-only approval as construction, procurement, or exact-layout approval.
 - Apply later style or furniture requests as patches to the approved `Spatial JSON`; do not silently rebuild the room.
 - Never send floor plans, room photos, client addresses, or project metadata to an external provider without user authorization.
 - Never write API keys into source files, logs, generated scenes, or committed configuration.
@@ -28,7 +29,7 @@ Turn architectural inputs into a traceable spatial model, then derive design, as
 
 ## Route model responsibilities
 
-Read [model-routing.md](references/model-routing.md) before adding provider calls. When routing GPT-5.6 Sol and GPT Image 2 through RealmRouter, read [realmrouter-integration.md](references/realmrouter-integration.md) and use `scripts/realmrouter-openai.mjs`. When using a Kimi Code membership for engineering generation, also read [kimi-code-integration.md](references/kimi-code-integration.md) and call `scripts/kimi-code-engineer.mjs`. Keep deployment values in an ignored `.env`, based on `.env-example`.
+Read [model-routing.md](references/model-routing.md) before adding provider calls and [script-architecture.md](references/script-architecture.md) before invoking bundled scripts. When routing GPT-5.6 Sol and GPT Image 2 through RealmRouter, read [realmrouter-integration.md](references/realmrouter-integration.md) and use the task entrypoints under `scripts/tasks/`; keep the raw provider protocol in `scripts/adapters/realmrouter-openai.mjs`. When using a Kimi Code membership for engineering generation, also read [kimi-code-integration.md](references/kimi-code-integration.md) and call `scripts/tasks/engineering-generation/generate-engineering.mjs`. Keep deployment values in an ignored `.env`, based on `.env-example`.
 
 | Role | Responsibility | Must not own |
 |---|---|---|
@@ -44,7 +45,7 @@ Read [interior-design-workflow.md](references/interior-design-workflow.md) for s
 
 1. **Ingest and normalize.** Preserve originals, fingerprint inputs, extract explicit measurements, set units and axes, and mark inferred values.
 2. **Understand space.** Detect walls, openings, rooms, fixed equipment, usable zones, circulation, and scale anchors. Emit `Spatial JSON`.
-3. **Validate before designing.** Check wall topology, opening placement, room closure, dimensional consistency, accessible paths, and unresolved low-confidence facts.
+3. **Validate before designing.** Check wall topology, opening placement, room closure, dimensional consistency, accessible paths, unresolved low-confidence facts, and the approval scope (`visualization_only` or `construction_ready`).
 4. **Propose design.** Add functional zoning, furniture footprints, ergonomic clearances, materials, lighting, and style intent without overwriting measured geometry.
 5. **Preview visually.** After design approval, use GPT Image 2 for visual comparison and human review. Bind every image to a design revision and never feed inferred image geometry back into the spatial contract.
 6. **Generate assets.** Reuse catalog assets first. Generate only missing furniture or decor, request real dimensions, normalize pivots and scale, and export GLB when targeting the web.
@@ -53,6 +54,8 @@ Read [interior-design-workflow.md](references/interior-design-workflow.md) for s
 9. **Apply revisions incrementally.** Convert user changes into explicit JSON Patch-like operations, re-run affected validations, and preserve revision history.
 
 Use the contract in [spatial-json-contract.md](references/spatial-json-contract.md). Validate the contract before any downstream generation. If geometry conflicts with source measurements, stop and surface the conflict rather than choosing silently.
+
+Run bundled model-task entrypoints only after their deterministic preconditions pass. External-provider task scripts require the explicit `--allow-provider` flag; use it only after the user approves the provider and the exact project data being sent. Do not bypass this boundary by calling an adapter directly for normal workflow execution.
 
 ## Build the immersive experience
 

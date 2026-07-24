@@ -224,6 +224,7 @@ Use this contract as the authoritative, renderer-neutral representation of the i
   "unresolved_questions": [],
   "validation": {
     "status": "pending",
+    "approved_scope": null,
     "checks": []
   }
 }
@@ -254,6 +255,15 @@ Do not treat model confidence as dimensional tolerance. Store tolerances separat
 7. Asset scale, pivot, materials, license, and provenance.
 8. XR spawn, navigation boundaries, reach, and comfort defaults.
 9. Renderer adapter and performance budgets.
+
+## Approval scope
+
+Set `validation.status` to `approved` only with an explicit `validation.approved_scope`:
+
+- `visualization_only`: adequate for concept previews, proxy-asset WebXR review, and iterative design discussion. Use this for a raster plan whose dimensions, openings, or hidden interior topology have not been independently verified.
+- `construction_ready`: adequate for exact layout, procurement, or construction-adjacent outputs only after source-backed dimensions, openings, topology, structural edit policies, and applicable project checks pass.
+
+Downstream scripts may render either scope, but must surface a visible warning for `visualization_only`. Never silently promote scope based on model confidence, an image preview, or a rendered scene.
 
 ## Revision contract
 

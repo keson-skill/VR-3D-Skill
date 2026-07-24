@@ -34,7 +34,7 @@ K3 requires a Moderato or higher membership. Moderato supports up to 256K contex
 Check configuration without making a network request:
 
 ```bash
-node --env-file=.env scripts/kimi-code-engineer.mjs --check
+node --env-file=.env scripts/adapters/kimi-code-engineer.mjs --check
 ```
 
 The output must show the Kimi Code endpoint, model `k3`, an allowed reasoning effort, `apiKeyPresent: true`, and `apiKeyLooksLikeKimiCode: true`. It never prints the key.
@@ -53,21 +53,25 @@ Do not include raw client photos, addresses, unapproved plans, or unrelated repo
 Pass the actual approved JSON files explicitly so the adapter validates and embeds their contents. A remote model cannot read a local filesystem path mentioned only in prose.
 
 ```bash
-node --env-file=.env scripts/kimi-code-engineer.mjs \
-  --prompt-file TASK.md \
+node --env-file=.env scripts/tasks/engineering-generation/generate-engineering.mjs \
+  --task TASK.md \
   --spatial-json spatial.json \
   --asset-manifest asset-manifest.json \
-  --output KIMI_RESULT.md
+  --output KIMI_RESULT.md \
+  --metadata KIMI_RESULT.json \
+  --allow-provider
 ```
 
-Review the result before applying it. The adapter does not edit the project by itself. Feed approved output through the normal repository editing, testing, and review workflow.
+The task blocks unapproved Spatial JSON, strips local source URIs, and requires explicit provider approval. Review the result before applying it. The adapter does not edit the project by itself. Feed approved output through the normal repository editing, testing, and review workflow.
 
 For a one-off prompt through standard input:
 
 ```bash
 printf '%s\n' 'Review the supplied scene adapter and list required tests.' |
-  node --env-file=.env scripts/kimi-code-engineer.mjs
+  node --env-file=.env scripts/adapters/kimi-code-engineer.mjs
 ```
+
+Use this low-level stdin route only for provider diagnostics or tasks that contain no project data. Use the guarded engineering task for normal pipeline work.
 
 ## Preserve the coding-agent boundary
 

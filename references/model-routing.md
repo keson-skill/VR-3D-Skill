@@ -54,7 +54,7 @@ Requirements:
 - produce tests for import, validation, scene assembly, revision patches, and fallbacks;
 - never reinterpret measured geometry in order to make code simpler.
 
-For a Kimi Code membership, use the bundled `scripts/kimi-code-engineer.mjs` adapter with `KIMI_CODE_BASE_URL=https://api.kimi.com/coding/v1` and model ID `k3`. Do not use a Kimi Code key with the Moonshot Open Platform endpoint. Keep provider-specific tool calling and long-context options inside the adapter.
+For a Kimi Code membership, use `scripts/tasks/engineering-generation/generate-engineering.mjs`; it delegates provider protocol handling to `scripts/adapters/kimi-code-engineer.mjs`. Configure `KIMI_CODE_BASE_URL=https://api.kimi.com/coding/v1` and model ID `k3`. Do not use a Kimi Code key with the Moonshot Open Platform endpoint. Keep provider-specific tool calling and long-context options inside the adapter.
 
 Fallback: use the active coding agent or local templates against the same contract. Record the generator used.
 

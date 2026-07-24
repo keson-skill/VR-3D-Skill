@@ -16,6 +16,7 @@ import {
 } from "../../lib/cli.mjs";
 import { checkStageReadiness } from "../../orchestration/check-stage-readiness.mjs";
 import { validateRevision } from "../../validation/validate-revision.mjs";
+import { evaluateDesignProposal } from "./evaluate-design-proposal.mjs";
 
 function printHelp() {
   process.stdout.write(`Usage:
@@ -121,6 +122,7 @@ Do not change the measured envelope, structural edit policies, room topology, lo
         ],
         warnings: [],
       };
+  const designValidation = evaluateDesignProposal(spatialJson, result.spatialJson);
   if (options["validation-report"]) {
     await writeJson(options["validation-report"], revisionValidation);
   }
@@ -138,12 +140,17 @@ Do not change the measured envelope, structural edit policies, room topology, lo
       errors: revisionValidation.errors.length,
       warnings: revisionValidation.warnings.length,
     },
+    design_validation: {
+      valid: designValidation.valid,
+      errors: designValidation.errors.length,
+      warnings: designValidation.warnings.length,
+    },
   };
   if (options.metadata) {
     await writeJson(options.metadata, metadata);
   }
   printJson(metadata);
-  if (!revisionValidation.valid) {
+  if (!revisionValidation.valid || !designValidation.valid) {
     process.exitCode = 2;
   }
 }

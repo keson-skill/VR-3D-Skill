@@ -17,6 +17,7 @@
     "p3:acceptance": "node scripts/validation/run-p3-acceptance.mjs --output examples/p3-acceptance/automated-evidence.json",
     "p4:fixtures": "node scripts/tests/fixtures/generate-p4-fixtures.mjs",
     "p4:acceptance": "node scripts/validation/run-p4-acceptance.mjs --output examples/p4-acceptance/automated-evidence.json",
+    "p4:audit": "node scripts/validation/run-p4-performance-audit.mjs --output examples/p4-acceptance/performance-audit.json",
     "review:spatial": "node scripts/serve-viewer.mjs --directory assets/spatial-review --port 4174",
     "approval:key": "node scripts/approval/create-approval-key.mjs",
     "approve:spatial": "node scripts/approval/approve-spatial-json.mjs",

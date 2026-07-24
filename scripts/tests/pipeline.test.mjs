@@ -8,6 +8,7 @@ import { checkStageReadiness } from "../orchestration/check-stage-readiness.mjs"
 import { buildAssetManifest } from "../processing/build-asset-manifest.mjs";
 import { createAssetBrief } from "../tasks/asset-generation/create-asset-brief.mjs";
 import { validateRevision } from "../validation/validate-revision.mjs";
+import { evaluateDesignProposal } from "../tasks/design-planning/evaluate-design-proposal.mjs";
 import { validateSpatialJson } from "../validation/validate-spatial-json.mjs";
 import { verifyXrConfig } from "../runtime/verify-xr-config.mjs";
 import {
@@ -214,6 +215,36 @@ test("rejects an opening outside its host wall", () => {
   const report = validateSpatialJson(document);
   assert.equal(report.valid, false);
   assert.ok(report.errors.some((error) => error.code === "opening.outside_wall"));
+});
+
+test("validates two explainable P5 layouts and distinguishes real assets from proxies", () => {
+  const document = validSpatialJson();
+  document.assets[0].source = "catalog";
+  const object = structuredClone(document.design_objects[0]);
+  const { asset_id: _proxyAssetId, ...proxyObject } = object;
+  const proposal = {
+    base_revision: document.project.revision,
+    recommended_alternative_id: "family-layout",
+    design_alternatives: [
+      {
+        id: "family-layout",
+        explanation: { zoning: "Keep the sofa in the social zone and protect the door path.", tradeoff: "More seating, less open floor." },
+        score: { circulation: 0.9, budget: 0.8 },
+        design_objects: [object],
+      },
+      {
+        id: "open-layout",
+        explanation: { zoning: "Retain the social zone with a compact furniture arrangement.", tradeoff: "Less storage." },
+        score: { circulation: 0.95, budget: 0.85 },
+        design_objects: [proxyObject],
+      },
+    ],
+  };
+  const report = evaluateDesignProposal(document, proposal);
+  assert.equal(report.valid, true, JSON.stringify(report.errors));
+  assert.deepEqual(report.alternatives[0].real_assets, ["object-sofa"]);
+  assert.deepEqual(report.alternatives[1].proxy_assets, ["object-sofa"]);
+  assert.equal(report.warnings.some((warning) => warning.code === "design.proxy_assets"), true);
 });
 
 test("validates stable-ID revision operations and rejects array indexes", () => {

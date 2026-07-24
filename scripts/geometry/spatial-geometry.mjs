@@ -210,6 +210,39 @@ export function convexPolygonsOverlap(left, right, tolerance = DEFAULT_TOLERANCE
   return true;
 }
 
+function clipLineIntersection(start, end, clipStart, clipEnd) {
+  const direction = subtract2d(end, start);
+  const clipDirection = subtract2d(clipEnd, clipStart);
+  const denominator = cross2d(direction, clipDirection);
+  if (Math.abs(denominator) <= DEFAULT_TOLERANCE) return [...end];
+  const ratio = cross2d(subtract2d(clipStart, start), clipDirection) / denominator;
+  return addScaled(start, direction, ratio);
+}
+
+export function convexPolygonIntersectionArea(subject, clip) {
+  let output = subject.map((point) => [...point]);
+  const clipOrientation = polygonSignedArea(clip) >= 0 ? 1 : -1;
+  for (let index = 0; index < clip.length && output.length; index += 1) {
+    const clipStart = clip[index];
+    const clipEnd = clip[(index + 1) % clip.length];
+    const input = output;
+    output = [];
+    const inside = (point) =>
+      clipOrientation * orientation(clipStart, clipEnd, point) >= -DEFAULT_TOLERANCE;
+    for (let cursor = 0; cursor < input.length; cursor += 1) {
+      const current = input[cursor];
+      const previous = input[(cursor - 1 + input.length) % input.length];
+      const currentInside = inside(current);
+      const previousInside = inside(previous);
+      if (currentInside !== previousInside) {
+        output.push(clipLineIntersection(previous, current, clipStart, clipEnd));
+      }
+      if (currentInside) output.push(current);
+    }
+  }
+  return output.length >= 3 ? Math.abs(polygonSignedArea(output)) : 0;
+}
+
 function interpolate(start, end, distance) {
   const length = distance2d(start, end);
   const ratio = length === 0 ? 0 : distance / length;
@@ -219,32 +252,277 @@ function interpolate(start, end, distance) {
   ];
 }
 
-function wallBox(wall, startOffset, endOffset, bottom, top, floorElevation) {
-  const start = interpolate(wall.start, wall.end, startOffset);
-  const end = interpolate(wall.start, wall.end, endOffset);
-  const center = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
-  const angle = Math.atan2(end[1] - start[1], end[0] - start[0]);
+function cross2d(left, right) {
+  return left[0] * right[1] - left[1] * right[0];
+}
+
+function subtract2d(left, right) {
+  return [left[0] - right[0], left[1] - right[1]];
+}
+
+function addScaled(point, vector, scalar) {
+  return [point[0] + vector[0] * scalar, point[1] + vector[1] * scalar];
+}
+
+function normalize2d(vector) {
+  const length = Math.hypot(vector[0], vector[1]);
+  return length > DEFAULT_TOLERANCE
+    ? [vector[0] / length, vector[1] / length]
+    : [0, 0];
+}
+
+function dot2d(left, right) {
+  return left[0] * right[0] + left[1] * right[1];
+}
+
+function perpendicular(vector) {
+  return [-vector[1], vector[0]];
+}
+
+function lineIntersection(pointA, directionA, pointB, directionB) {
+  const denominator = cross2d(directionA, directionB);
+  if (Math.abs(denominator) <= DEFAULT_TOLERANCE) return null;
+  const delta = subtract2d(pointB, pointA);
+  const ratio = cross2d(delta, directionB) / denominator;
+  return addScaled(pointA, directionA, ratio);
+}
+
+function wallJunctions(walls) {
+  const junctions = new Map();
+  for (const wall of walls) {
+    for (const [point, atStart] of [[wall.start, true], [wall.end, false]]) {
+      const key = pointKey(point);
+      if (!junctions.has(key)) junctions.set(key, []);
+      junctions.get(key).push({ wall, atStart });
+    }
+  }
+  return junctions;
+}
+
+function hasHostedOpening(wall, openings) {
+  return openings.some(
+    (opening) => opening.host_wall_id === (wall.source_wall_id || wall.id),
+  );
+}
+
+function splitWallAtEndpointJunctions(wall, allWalls) {
+  const length = distance2d(wall.start, wall.end);
+  const offsets = [0, length];
+  for (const other of allWalls) {
+    for (const point of [other.start, other.end]) {
+      if (
+        distance2d(point, wall.start) <= DEFAULT_TOLERANCE ||
+        distance2d(point, wall.end) <= DEFAULT_TOLERANCE ||
+        !onSegment(wall.start, wall.end, point)
+      ) {
+        continue;
+      }
+      offsets.push(distance2d(wall.start, point));
+    }
+  }
+  const sortedOffsets = offsets
+    .sort((left, right) => left - right)
+    .filter((offset, index, values) =>
+      index === 0 || offset - values[index - 1] > DEFAULT_TOLERANCE,
+    );
+  if (sortedOffsets.length === 2) return [wall];
+  const direction = normalize2d(subtract2d(wall.end, wall.start));
+  return sortedOffsets.slice(0, -1).map((startOffset, index) => {
+    const endOffset = sortedOffsets[index + 1];
+    return {
+      ...wall,
+      id: `${wall.id}@${startOffset.toFixed(5)}-${endOffset.toFixed(5)}`,
+      source_wall_id: wall.source_wall_id || wall.id,
+      opening_offset_origin: (wall.opening_offset_origin || 0) + startOffset,
+      start: addScaled(wall.start, direction, startOffset),
+      end: addScaled(wall.start, direction, endOffset),
+    };
+  });
+}
+
+function splitWallsAtEndpointJunctions(walls, allWalls) {
+  return walls.flatMap((wall) => splitWallAtEndpointJunctions(wall, allWalls));
+}
+
+function wallSegmentKey(wall) {
+  const start = pointKey(wall.start);
+  const end = pointKey(wall.end);
+  return start < end ? `${start}|${end}` : `${end}|${start}`;
+}
+
+function deduplicateWallSegments(walls, openings) {
+  const deduplicated = new Map();
+  for (const wall of walls) {
+    const key = wallSegmentKey(wall);
+    const current = deduplicated.get(key);
+    if (
+      !current ||
+      (hasHostedOpening(wall, openings) && !hasHostedOpening(current, openings)) ||
+      (hasHostedOpening(wall, openings) === hasHostedOpening(current, openings) &&
+        wall.id.localeCompare(current.id) < 0)
+    ) {
+      deduplicated.set(key, wall);
+    }
+  }
+  return [...deduplicated.values()];
+}
+
+function outgoingWallDirection(entry) {
+  return normalize2d(
+    entry.atStart
+      ? subtract2d(entry.wall.end, entry.wall.start)
+      : subtract2d(entry.wall.start, entry.wall.end),
+  );
+}
+
+function squareSection(wall, atStart, center, jointType = "cap") {
+  const direction = outgoingWallDirection({ wall, atStart });
+  const normal = perpendicular(direction);
+  const half = wall.thickness / 2;
   return {
-    shape: "box",
+    positive: addScaled(center, atStart ? normal : [-normal[0], -normal[1]], half),
+    negative: addScaled(center, atStart ? normal : [-normal[0], -normal[1]], -half),
+    mitered: false,
+    joint_type: jointType,
+  };
+}
+
+function throughPair(entries) {
+  const candidates = [];
+  for (let left = 0; left < entries.length; left += 1) {
+    for (let right = left + 1; right < entries.length; right += 1) {
+      const leftDirection = outgoingWallDirection(entries[left]);
+      const rightDirection = outgoingWallDirection(entries[right]);
+      if (
+        Math.abs(cross2d(leftDirection, rightDirection)) <= DEFAULT_TOLERANCE &&
+        dot2d(leftDirection, rightDirection) < -1 + DEFAULT_TOLERANCE
+      ) {
+        candidates.push([entries[left], entries[right]]);
+      }
+    }
+  }
+  return candidates.sort((left, right) => {
+    const leftKey = left.map((entry) => entry.wall.id).sort().join("|");
+    const rightKey = right.map((entry) => entry.wall.id).sort().join("|");
+    return leftKey.localeCompare(rightKey);
+  })[0] || null;
+}
+
+function endpointSection(wall, atStart, junctions) {
+  const anchor = atStart ? wall.start : wall.end;
+  const direction = outgoingWallDirection({ wall, atStart });
+  const normal = perpendicular(direction);
+  const half = wall.thickness / 2;
+  const entries = junctions.get(pointKey(anchor)) || [];
+  const fallback = squareSection(wall, atStart, anchor);
+  if (entries.length < 2) return fallback;
+  if (entries.length > 2) {
+    const pair = throughPair(entries);
+    if (!pair) return squareSection(wall, atStart, anchor, "unresolved");
+    if (pair.some((entry) => entry.wall.id === wall.id)) {
+      return squareSection(wall, atStart, anchor, "through");
+    }
+    const hostThickness = Math.max(pair[0].wall.thickness, pair[1].wall.thickness);
+    return squareSection(
+      wall,
+      atStart,
+      addScaled(anchor, direction, hostThickness / 2),
+      "butt",
+    );
+  }
+  const neighborEntry = entries.find((entry) => entry.wall.id !== wall.id);
+  if (!neighborEntry) return fallback;
+  const neighbor = neighborEntry.wall;
+  const neighborDirection = outgoingWallDirection(neighborEntry);
+  const turn = cross2d(direction, neighborDirection);
+  if (Math.abs(turn) <= DEFAULT_TOLERANCE) return fallback;
+  const neighborNormal = perpendicular(neighborDirection);
+  const intersections = [];
+  for (const sign of [1, -1]) {
+    const point = lineIntersection(
+      addScaled(anchor, normal, sign * half),
+      direction,
+      addScaled(anchor, neighborNormal, -sign * neighbor.thickness / 2),
+      neighborDirection,
+    );
+    if (!point || distance2d(anchor, point) > Math.max(wall.thickness, neighbor.thickness) * 4) {
+      return fallback;
+    }
+    intersections.push({ sign, point });
+  }
+  const outwardPositive = intersections.find((item) => item.sign === 1).point;
+  const outwardNegative = intersections.find((item) => item.sign === -1).point;
+  return atStart
+    ? { positive: outwardPositive, negative: outwardNegative, mitered: true, joint_type: "miter" }
+    : { positive: outwardNegative, negative: outwardPositive, mitered: true, joint_type: "miter" };
+}
+
+function offsetSection(wall, offset, junctions) {
+  const length = distance2d(wall.start, wall.end);
+  if (offset <= DEFAULT_TOLERANCE) return endpointSection(wall, true, junctions);
+  if (offset >= length - DEFAULT_TOLERANCE) return endpointSection(wall, false, junctions);
+  const center = interpolate(wall.start, wall.end, offset);
+  const normal = perpendicular(normalize2d(subtract2d(wall.end, wall.start)));
+  return {
+    positive: addScaled(center, normal, wall.thickness / 2),
+    negative: addScaled(center, normal, -wall.thickness / 2),
+    mitered: false,
+    joint_type: "segment",
+  };
+}
+
+function wallPrism(
+  wall,
+  startOffset,
+  endOffset,
+  bottom,
+  top,
+  floorElevation,
+  junctions,
+) {
+  const start = offsetSection(wall, startOffset, junctions);
+  const end = offsetSection(wall, endOffset, junctions);
+  return {
+    shape: "extruded_polygon",
     name: `${wall.id}-${startOffset.toFixed(3)}-${bottom.toFixed(3)}`,
     category: "shell",
     kind: "wall",
-    source_id: wall.id,
-    translation: [
-      center[0],
-      floorElevation + bottom + (top - bottom) / 2,
-      center[1],
+    source_id: wall.source_wall_id || wall.id,
+    footprint: [
+      start.negative,
+      end.negative,
+      end.positive,
+      start.positive,
     ],
-    rotation_y_radians: -angle,
-    scale: [endOffset - startOffset, top - bottom, wall.thickness],
+    bottom_elevation: floorElevation + bottom,
+    top_elevation: floorElevation + top,
+    mitered_start: start.mitered,
+    mitered_end: end.mitered,
+    junction_start: start.joint_type,
+    junction_end: end.joint_type,
     material_id: wall.material_id || "wall_default",
   };
 }
 
-export function buildWallPrimitives(wall, openings, floorElevation = 0) {
+export function buildWallPrimitives(
+  wall,
+  openings,
+  floorElevation = 0,
+  junctions = new Map(),
+) {
   const length = distance2d(wall.start, wall.end);
   const wallOpenings = openings
-    .filter((opening) => opening.host_wall_id === wall.id)
+    .filter((opening) => opening.host_wall_id === (wall.source_wall_id || wall.id))
+    .map((opening) => {
+      const openingOffsetOrigin = wall.opening_offset_origin || 0;
+      const start = Math.max(0, opening.offset - openingOffsetOrigin);
+      const end = Math.min(
+        length,
+        opening.offset + opening.width - openingOffsetOrigin,
+      );
+      return { ...opening, offset: start, width: Math.max(0, end - start) };
+    })
+    .filter((opening) => opening.width > DEFAULT_TOLERANCE)
     .sort((left, right) => left.offset - right.offset);
   const boundaries = new Set([0, length]);
   for (const opening of wallOpenings) {
@@ -265,7 +543,15 @@ export function buildWallPrimitives(wall, openings, floorElevation = 0) {
     );
     if (!opening) {
       primitives.push(
-        wallBox(wall, startOffset, endOffset, 0, wall.height, floorElevation),
+        wallPrism(
+          wall,
+          startOffset,
+          endOffset,
+          0,
+          wall.height,
+          floorElevation,
+          junctions,
+        ),
       );
       continue;
     }
@@ -273,18 +559,27 @@ export function buildWallPrimitives(wall, openings, floorElevation = 0) {
     const openingTop = Math.min(wall.height, sill + opening.height);
     if (sill > DEFAULT_TOLERANCE) {
       primitives.push(
-        wallBox(wall, startOffset, endOffset, 0, sill, floorElevation),
+        wallPrism(
+          wall,
+          startOffset,
+          endOffset,
+          0,
+          sill,
+          floorElevation,
+          junctions,
+        ),
       );
     }
     if (openingTop < wall.height - DEFAULT_TOLERANCE) {
       primitives.push(
-        wallBox(
+        wallPrism(
           wall,
           startOffset,
           endOffset,
           openingTop,
           wall.height,
           floorElevation,
+          junctions,
         ),
       );
     }
@@ -389,16 +684,26 @@ export function buildArchitecturalPrimitives(elements = []) {
 
 export function compileScenePrimitives(document) {
   const floorElevation = document.envelope?.floor_elevation || 0;
+  const openings = document.envelope?.openings || [];
   const wallMap = new Map(
     (document.envelope?.walls || []).map((wall) => [wall.id, wall]),
   );
   const primitives = [];
-  for (const wall of wallMap.values()) {
+  const renderableWalls = deduplicateWallSegments(
+    splitWallsAtEndpointJunctions(
+      [...wallMap.values()],
+      [...wallMap.values()],
+    ),
+    openings,
+  );
+  const junctions = wallJunctions(renderableWalls);
+  for (const wall of renderableWalls) {
     primitives.push(
       ...buildWallPrimitives(
         wall,
-        document.envelope?.openings || [],
+        openings,
         floorElevation,
+        junctions,
       ),
     );
   }
@@ -460,4 +765,52 @@ export function compileScenePrimitives(document) {
     });
   }
   return primitives;
+}
+
+export function validateWallPrimitiveTopology(primitives) {
+  const walls = primitives.filter(
+    (primitive) =>
+      primitive.shape === "extruded_polygon" &&
+      primitive.category === "shell" &&
+      primitive.kind === "wall",
+  );
+  const errors = [];
+  for (const wall of walls) {
+    if (wall.junction_start === "unresolved" || wall.junction_end === "unresolved") {
+      errors.push({
+        code: "wall.junction_unresolved",
+        wall: wall.name,
+        junction_start: wall.junction_start,
+        junction_end: wall.junction_end,
+      });
+    }
+  }
+  for (let left = 0; left < walls.length; left += 1) {
+    for (let right = left + 1; right < walls.length; right += 1) {
+      const first = walls[left];
+      const second = walls[right];
+      const verticalOverlap =
+        Math.min(first.top_elevation, second.top_elevation) -
+        Math.max(first.bottom_elevation, second.bottom_elevation);
+      if (verticalOverlap <= DEFAULT_TOLERANCE) continue;
+      const footprintOverlap = convexPolygonIntersectionArea(
+        first.footprint,
+        second.footprint,
+      );
+      if (footprintOverlap > DEFAULT_TOLERANCE) {
+        errors.push({
+          code: "wall.volume_overlap",
+          first: first.name,
+          second: second.name,
+          footprint_overlap_area: Number(footprintOverlap.toFixed(9)),
+          vertical_overlap: Number(verticalOverlap.toFixed(9)),
+        });
+      }
+    }
+  }
+  return {
+    valid: errors.length === 0,
+    wall_count: walls.length,
+    errors,
+  };
 }

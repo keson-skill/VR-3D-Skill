@@ -5,7 +5,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildGlb } from "../builders/glb-writer.mjs";
-import { compileScenePrimitives } from "../geometry/spatial-geometry.mjs";
+import {
+  compileScenePrimitives,
+  validateWallPrimitiveTopology,
+} from "../geometry/spatial-geometry.mjs";
 import { canonicalJsonSha256, parseArgs, printJson, sha256, writeJson } from "../lib/cli.mjs";
 import { comparePlanRender } from "./compare-plan-render.mjs";
 import { renderSceneTopView } from "./render-scene-top-view.mjs";
@@ -35,6 +38,9 @@ export async function runP3Acceptance(fixturesFile = DEFAULT_FIXTURES) {
       const glb = spatialValidation.valid
         ? buildGlb(fixture.spatial, primitives)
         : Buffer.alloc(0);
+      const topology = spatialValidation.valid
+        ? validateWallPrimitiveTopology(primitives)
+        : { valid: false, errors: [{ code: "p3.spatial_invalid" }] };
       const glbValidation = spatialValidation.valid
         ? validateGlbBytes(glb, { expectedProject: fixture.spatial.project })
         : { valid: false, errors: [{ code: "p3.spatial_invalid" }], summary: {} };
@@ -69,6 +75,11 @@ export async function runP3Acceptance(fixturesFile = DEFAULT_FIXTURES) {
         id: fixture.id,
         spatial_valid: spatialValidation.valid,
         glb_valid: glbValidation.valid,
+        wall_topology_valid: topology.valid,
+        wall_topology: {
+          wall_count: topology.wall_count || 0,
+          errors: topology.errors,
+        },
         expected_counts_valid: expectedCounts,
         scene_sha256: sha256(glb),
         primitives_sha256: canonicalJsonSha256(primitives),
@@ -81,6 +92,7 @@ export async function runP3Acceptance(fixturesFile = DEFAULT_FIXTURES) {
       fixture_count: samples.length,
       spatial_errors: samples.filter((sample) => !sample.spatial_valid).length,
       glb_errors: samples.filter((sample) => !sample.glb_valid).length,
+      wall_topology_errors: samples.filter((sample) => !sample.wall_topology_valid).length,
       count_errors: samples.filter((sample) => !sample.expected_counts_valid).length,
       minimum_alignment_f1: Math.min(
         ...samples.map((sample) => sample.alignment?.metrics?.f1 ?? 0),
@@ -93,6 +105,7 @@ export async function runP3Acceptance(fixturesFile = DEFAULT_FIXTURES) {
       aggregate.fixture_count >= 20 &&
       aggregate.spatial_errors === 0 &&
       aggregate.glb_errors === 0 &&
+      aggregate.wall_topology_errors === 0 &&
       aggregate.count_errors === 0 &&
       aggregate.minimum_alignment_f1 >= 0.84 &&
       aggregate.minimum_alignment_iou >= 0.72;

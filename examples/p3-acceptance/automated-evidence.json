@@ -7,23 +7,29 @@
     "fixture_count": 20,
     "spatial_errors": 0,
     "glb_errors": 0,
+    "wall_topology_errors": 0,
     "count_errors": 0,
-    "minimum_alignment_f1": 0.944305,
-    "minimum_alignment_iou": 0.894487
+    "minimum_alignment_f1": 0.938824,
+    "minimum_alignment_iou": 0.884702
   },
   "samples": [
     {
       "id": "p3-01-rectangle",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "89e1195191cab63d521d4312b449741354c68b8f72c15a9eb59cb9a16ce2555a",
-      "primitives_sha256": "cca84d492d0443954eb5a66d8a4ad444b8c407a8e295c795898697ff49680f89",
+      "scene_sha256": "0c216f254caeb9bdd3b117e0f5a214616bc963e311f9992b738fc38f41d7e56f",
+      "primitives_sha256": "762f0de8170281179cce86764d29f04bfcd6a96d9c9e6fd78696d00e5baf7272",
       "primitive_count": 6,
       "glb": {
         "nodes": 6,
-        "meshes": 3,
-        "triangles": 16
+        "meshes": 6,
+        "triangles": 52
       },
       "alignment": {
         "schema_version": "1.0",
@@ -48,10 +54,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.988502,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.994218,
+          "intersection_over_union": 0.988502
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -65,14 +71,19 @@
       "id": "p3-02-door",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 6,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "b0a7cafaea53f69521adf7881a0b6a3a22ecfa2a714d84a0b03a1ecc6d453ab6",
-      "primitives_sha256": "3e32cd9200bb22fcf2d2f9c6e78366dbf38228e606c85f14742cb9def2840e71",
+      "scene_sha256": "5f042287da36e099b2e2d78036b4b9d5ee03737a91df0f9ffcdc04c323e60b5a",
+      "primitives_sha256": "e1a9a29c463fede37111116b950f772f066f8223cbef6412c47a33bf65f9266f",
       "primitive_count": 9,
       "glb": {
         "nodes": 9,
-        "meshes": 4,
-        "triangles": 28
+        "meshes": 9,
+        "triangles": 88
       },
       "alignment": {
         "schema_version": "1.0",
@@ -97,10 +108,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 0.949935,
+          "precision": 0.939013,
           "recall": 1,
-          "f1": 0.974325,
-          "intersection_over_union": 0.949935
+          "f1": 0.968547,
+          "intersection_over_union": 0.939013
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -114,14 +125,19 @@
       "id": "p3-03-window",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "000e7ba536f664a9aaae490d27018cdb2cee2c7280677100a615802d1d2a5435",
-      "primitives_sha256": "c58721b9a6dc231ed90536fba56ab2951342d949a9d0573ad88b2368916b045e",
+      "scene_sha256": "173afd9e0247e4c282b2d72d7779a9fbd5f146946e697f88d144da9ea3619ab2",
+      "primitives_sha256": "cea2a860bb76b482be9e1d292594e838133719393be3de8ddef8ed622ec23340",
       "primitive_count": 10,
       "glb": {
         "nodes": 10,
-        "meshes": 4,
-        "triangles": 28
+        "meshes": 10,
+        "triangles": 100
       },
       "alignment": {
         "schema_version": "1.0",
@@ -146,10 +162,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 0.894487,
+          "precision": 0.884702,
           "recall": 1,
-          "f1": 0.944305,
-          "intersection_over_union": 0.894487
+          "f1": 0.938824,
+          "intersection_over_union": 0.884702
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -163,14 +179,19 @@
       "id": "p3-04-l-room",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 6,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "94dd47b2e3d66663493bdd51932431be038241ce1c702ab7495d0abfb2066797",
-      "primitives_sha256": "3bfba6897e32be86d1aaf368a6c3ae3955a1a9ce31e3703568e5018aad6295f3",
+      "scene_sha256": "d340871b15af12b64a9991e68b5f4a7818e201527c726f09390af7de57d33003",
+      "primitives_sha256": "d8e23e35edfe7b276687ed6ad50005d22993d616d2222fbd8a275f886666084a",
       "primitive_count": 8,
       "glb": {
         "nodes": 8,
-        "meshes": 3,
-        "triangles": 20
+        "meshes": 8,
+        "triangles": 80
       },
       "alignment": {
         "schema_version": "1.0",
@@ -195,10 +216,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.985082,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.992485,
+          "intersection_over_union": 0.985082
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -212,14 +233,19 @@
       "id": "p3-05-u-room",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 8,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "61d3acea21dc50e7a7af4882b1ef82c9593beeeff314e2ad360e10dbfa58d324",
-      "primitives_sha256": "39d452824400f0075653b48769b23174d81fbf9d20195d9e4b8508bd09b6e6b8",
+      "scene_sha256": "8dbdccb0085a241746afe2a4ea59454a442fb96d73e769bfcd9f32f697c1e4d8",
+      "primitives_sha256": "52e3f055fd247afbab41eb4626365acf611d3e97b9647a128fc4d1deca0cb5ee",
       "primitive_count": 10,
       "glb": {
         "nodes": 10,
-        "meshes": 3,
-        "triangles": 24
+        "meshes": 10,
+        "triangles": 108
       },
       "alignment": {
         "schema_version": "1.0",
@@ -244,10 +270,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.951839,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.975325,
+          "intersection_over_union": 0.951839
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -261,14 +287,19 @@
       "id": "p3-06-two-room-vertical",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "bda7fa616c7e536781a2b41f4d4fd92a66d8831223099e727f164de67005ebfc",
-      "primitives_sha256": "6bb8e6ae577e90e88adb2903d80c19fc8b22c4b9d52850daaf6a3e4944631c05",
+      "scene_sha256": "dfa6da57b1bad272bd6de55517973ba0106356e1294cd742e76b936e602e9937",
+      "primitives_sha256": "1be54d9bf5831d048dea822e26662d9fc1d089e54f87f8daaa745c1518963f61",
       "primitive_count": 11,
       "glb": {
         "nodes": 11,
-        "meshes": 5,
-        "triangles": 20
+        "meshes": 11,
+        "triangles": 92
       },
       "alignment": {
         "schema_version": "1.0",
@@ -293,10 +324,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.990799,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.995378,
+          "intersection_over_union": 0.990799
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -310,14 +341,19 @@
       "id": "p3-07-two-room-horizontal",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "66b23f07958c261f438358e1960a5b48b0db5b554aa1d649a4abb33291b6c44a",
-      "primitives_sha256": "b0aa65a01b31baa36ce0011fb97dd2db4432a0e4393554a32ca10331ad97122e",
+      "scene_sha256": "ee7f8a8d1e738eba98954c305fbe62d8e24851c1dd2fad1cd0e24d1c49b24fc2",
+      "primitives_sha256": "ca72dab9fa350ebee2b56585b2506ce3309f642df095d49bb6b272409f2cd609",
       "primitive_count": 11,
       "glb": {
         "nodes": 11,
-        "meshes": 5,
-        "triangles": 20
+        "meshes": 11,
+        "triangles": 92
       },
       "alignment": {
         "schema_version": "1.0",
@@ -342,10 +378,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.992124,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.996046,
+          "intersection_over_union": 0.992124
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -359,14 +395,19 @@
       "id": "p3-08-three-room-t",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 10,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "e622210d637c899510b019081d4c4fab0cd4d4bc620635367529326eee885a16",
-      "primitives_sha256": "6743421184def1f375feb32de046ccd139aff992b4364476f5f7cd3ed572b187",
-      "primitive_count": 17,
+      "scene_sha256": "56414513c6370fce6ce233fb7b0af4605afb9312fccc4053b4e0efb4605e11a4",
+      "primitives_sha256": "3cb6e5fd0b2f765465fddea27dc06b1391ac1968be439c00ba36b6f1db95d818",
+      "primitive_count": 16,
       "glb": {
-        "nodes": 17,
-        "meshes": 7,
-        "triangles": 24
+        "nodes": 16,
+        "meshes": 16,
+        "triangles": 132
       },
       "alignment": {
         "schema_version": "1.0",
@@ -391,10 +432,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.991226,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.995594,
+          "intersection_over_union": 0.991226
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -408,14 +449,19 @@
       "id": "p3-09-four-room-grid",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 12,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "2f962f06d4dc618d639a8e5e84722845729a1f5366f7310e12adbc2145748678",
-      "primitives_sha256": "244294432a2439a70fdb9b2cfb35a029b30f9b668475541b669712afa13a49df",
+      "scene_sha256": "e0b2b2d9f9456bceb0deb582ed2c6ab5f13c3be82dab539d4c318ca5707b3910",
+      "primitives_sha256": "a83d00cc8a3e27525fe611a46c03b489ba9bff38b9d5089a7b8fadf4948d084a",
       "primitive_count": 20,
       "glb": {
         "nodes": 20,
-        "meshes": 9,
-        "triangles": 28
+        "meshes": 20,
+        "triangles": 160
       },
       "alignment": {
         "schema_version": "1.0",
@@ -440,10 +486,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.993808,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.996895,
+          "intersection_over_union": 0.993808
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -457,14 +503,19 @@
       "id": "p3-10-corridor-living",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 8,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "d9866c8d8f7e8bb51153865abf873631d80d54d0c76e071186849d903aa37cf1",
-      "primitives_sha256": "7bd719e1add14333019f14bcab80683ccc77e7ad7d14ad670f40fc4b5cf1d8d5",
+      "scene_sha256": "bbb994fedad1a8bfde4262f3435b6de5146a01aeb204f77d84a1bfb33c225328",
+      "primitives_sha256": "b1a64c8450d6d1ca5abdaec99d671354d0b2c6cb2c41bffb09e788da4c7fbde1",
       "primitive_count": 12,
       "glb": {
         "nodes": 12,
-        "meshes": 5,
-        "triangles": 20
+        "meshes": 12,
+        "triangles": 104
       },
       "alignment": {
         "schema_version": "1.0",
@@ -489,10 +540,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.956557,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.977796,
+          "intersection_over_union": 0.956557
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -506,14 +557,19 @@
       "id": "p3-11-slanted-pentagon",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 5,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "9caaa70fdc1bd236678ba1b5baa4f684aeff445454ee56b221e1f1c46f2c85d0",
-      "primitives_sha256": "47995908fb94db7ca05fa230e841b5fdabf8087ae97c753ac6d6a3dbae2d4ee2",
+      "scene_sha256": "2e817abc380a151dd0c0a58a108f8f4514294d01aa2cfe5964038798bb56e1bf",
+      "primitives_sha256": "36f5783d803ab140d2bf5a6a469f5d3afe735123c02f5f8c7f0593a69bdd9e05",
       "primitive_count": 7,
       "glb": {
         "nodes": 7,
-        "meshes": 3,
-        "triangles": 18
+        "meshes": 7,
+        "triangles": 66
       },
       "alignment": {
         "schema_version": "1.0",
@@ -538,10 +594,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.988704,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.99432,
+          "intersection_over_union": 0.988704
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -555,14 +611,19 @@
       "id": "p3-12-level-change",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "914ab24f3392d056d5aa92d219bedca06acb0a5568a7958f7a9a8ca9304f6be2",
-      "primitives_sha256": "0b6a3f2732e358d81dcbb1d48352f029eeaab06b44f3489e00e93406d1104c4c",
+      "scene_sha256": "c73541bb5a6d0b708ac08e6b9361d8b63ba27c1787e21bedc00ecd08d0ebcb36",
+      "primitives_sha256": "1e8cc426873f4ea51851caa7878267ec481eae1abf900f123acb3090fca291d6",
       "primitive_count": 11,
       "glb": {
         "nodes": 11,
-        "meshes": 5,
-        "triangles": 20
+        "meshes": 11,
+        "triangles": 92
       },
       "alignment": {
         "schema_version": "1.0",
@@ -587,10 +648,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.990799,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.995378,
+          "intersection_over_union": 0.990799
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -604,14 +665,19 @@
       "id": "p3-13-column",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "769cad4d43faf54289e47532c0b95e3e32a256f43e017cf7391414730e9dc0cc",
-      "primitives_sha256": "ed0a8a9a770e52092b71bd196d513a7443b5780f542189fa976ebf876b696aa4",
+      "scene_sha256": "3ede7abc3d170953d7f5242114a6fe822500ebb1764d669c7e59451c488ecf9f",
+      "primitives_sha256": "64f20054f58aca83ecbcbfe7665ef81f29b1e6d09110965ce58ed7844be68320",
       "primitive_count": 7,
       "glb": {
         "nodes": 7,
-        "meshes": 3,
-        "triangles": 16
+        "meshes": 7,
+        "triangles": 64
       },
       "alignment": {
         "schema_version": "1.0",
@@ -636,10 +702,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.989583,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.994764,
+          "intersection_over_union": 0.989583
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -653,14 +719,19 @@
       "id": "p3-14-beam",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "4d4dd79ce710b00f39adb6bd467997d652547841c2c23d3744130bbb439a80f3",
-      "primitives_sha256": "8b213b9563b56cfc3795ec09083c3bd05404e37857f49802dc5b9f4ce4c18c11",
+      "scene_sha256": "1051b48c733ca3886a1e7ef491f113563d12d8861b6e52281fa43fc4dab766f9",
+      "primitives_sha256": "3333d368f401443e1ec8cd3fefbc3a4793f8abb380fc3585d8e4a7ef7c15e27a",
       "primitive_count": 7,
       "glb": {
         "nodes": 7,
-        "meshes": 3,
-        "triangles": 16
+        "meshes": 7,
+        "triangles": 64
       },
       "alignment": {
         "schema_version": "1.0",
@@ -685,10 +756,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.989061,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.9945,
+          "intersection_over_union": 0.989061
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -702,14 +773,19 @@
       "id": "p3-15-stair",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "1db7acf8dd9ca8c96f96db2ee7662d6d50d0e371d3a8f1b31f5a78eb320fe37f",
-      "primitives_sha256": "18c93265b1789a83f9006fc5cde7f56e4fe6905a7d6fd301c1a1cf6a1fa4f8b6",
+      "scene_sha256": "e3e5d3107e2ef6a750fe45bdfd02e2c12a946f2aca6c474991c26c9259913274",
+      "primitives_sha256": "d98d16010fc8575f1dcb7d9cafa8762875b972b0eccabe9d4eccb75712050d9c",
       "primitive_count": 12,
       "glb": {
         "nodes": 12,
-        "meshes": 3,
-        "triangles": 16
+        "meshes": 7,
+        "triangles": 64
       },
       "alignment": {
         "schema_version": "1.0",
@@ -734,10 +810,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.990055,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.995003,
+          "intersection_over_union": 0.990055
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -751,14 +827,19 @@
       "id": "p3-16-structure-combined",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "bde34fab9fd122c9b9146e4077424c6e605d95c2a7cf1fd836ebb797fcfaab36",
-      "primitives_sha256": "2766b4fc1a81a59939b493d4375686b89388d7806199e36218e8f4c79e9f82f1",
+      "scene_sha256": "c403a6b70ab41f9641f8eece034b3cdf56f3698016f3f265f6b8d454f9c35303",
+      "primitives_sha256": "0c8d2c87250db347c5bb556ae37d50ebc95d130e25d9cdd008c46de1b41a36c6",
       "primitive_count": 13,
       "glb": {
         "nodes": 13,
-        "meshes": 3,
-        "triangles": 16
+        "meshes": 7,
+        "triangles": 64
       },
       "alignment": {
         "schema_version": "1.0",
@@ -783,10 +864,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.947241,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.972906,
+          "intersection_over_union": 0.947241
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -800,14 +881,19 @@
       "id": "p3-17-concave-two-room",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 10,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "edd8e3c58314230fda41731b9f121e8e878ae48b2ebcc893b766b9c32dbf5351",
-      "primitives_sha256": "98c16d910d271b6740b465a47380f898d5a2a03040ea05291e0e8e9aefd26885",
+      "scene_sha256": "aa288aa0da187fbca2aeb62cdfab8535ca2e15a87aa85c84f290d9b57be9baa7",
+      "primitives_sha256": "e35e9da8cd2523ed693813b6b4b18d9e87689b7701cfb5f23757b41c79d06313",
       "primitive_count": 14,
       "glb": {
         "nodes": 14,
-        "meshes": 5,
-        "triangles": 24
+        "meshes": 14,
+        "triangles": 132
       },
       "alignment": {
         "schema_version": "1.0",
@@ -832,10 +918,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.987142,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.993529,
+          "intersection_over_union": 0.987142
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -849,14 +935,19 @@
       "id": "p3-18-narrow-openings",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 5,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "739dd804c4af5612ba43493a11ebe08757880cdfe1f3ccc7828c505c3b2adf20",
-      "primitives_sha256": "6953abd64fd79296a43a22bfa4220abcbef6084967a0f5b41eb4c1e4525fd884",
+      "scene_sha256": "b43d3e1ac0b0986884678772f41ed200a2463001477d742544c19f68375af5ae",
+      "primitives_sha256": "193ea3d5f339639845efc9fd26ca59243621745cef0a3bcb3365a7269489fe63",
       "primitive_count": 7,
       "glb": {
         "nodes": 7,
-        "meshes": 3,
-        "triangles": 16
+        "meshes": 7,
+        "triangles": 64
       },
       "alignment": {
         "schema_version": "1.0",
@@ -881,10 +972,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.989663,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.994805,
+          "intersection_over_union": 0.989663
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -898,14 +989,19 @@
       "id": "p3-19-unequal-heights",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 10,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "fe73bf9aecc46fac1d14f821c23dec1f16c1445cc737625d2364712d32068412",
-      "primitives_sha256": "b1db5f89709b28ebac0e2dc2d6b50ef404c4ccf993c7edb93a0d187644c344dd",
-      "primitive_count": 17,
+      "scene_sha256": "15b534f480163a4e9820f459d8369e2fe2a08d8b03dbad27f35d6e0e7ff32e55",
+      "primitives_sha256": "06296b968b213119d7da470b7ff3e4952e202d8ca4c96932c1e45ed0fc6e47e4",
+      "primitive_count": 16,
       "glb": {
-        "nodes": 17,
-        "meshes": 7,
-        "triangles": 24
+        "nodes": 16,
+        "meshes": 16,
+        "triangles": 132
       },
       "alignment": {
         "schema_version": "1.0",
@@ -930,10 +1026,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
-          "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "precision": 0.964887,
+          "recall": 0.999927,
+          "f1": 0.982095,
+          "intersection_over_union": 0.964819
         },
         "thresholds": {
           "minimum_f1": 0.84,
@@ -947,14 +1043,19 @@
       "id": "p3-20-complex-shared",
       "spatial_valid": true,
       "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 16,
+        "errors": []
+      },
       "expected_counts_valid": true,
-      "scene_sha256": "4bb6e742711dec2f88c665f915aeea3461ba373736c1e3c53578b818d8115397",
-      "primitives_sha256": "b6b113aa4885db70a2be05c7a1ad1ce920670ade887d091debfd7d46db8ec25d",
-      "primitive_count": 27,
+      "scene_sha256": "a7c39dcfed5ab1f716f4a6bc8b2162a2a56faf212185be52bd800529f7752ffb",
+      "primitives_sha256": "2ebcd7629a9dc54b0e87bcc85afa85f08b7187366f9b312c84f6dbe68df9310f",
+      "primitive_count": 26,
       "glb": {
-        "nodes": 27,
-        "meshes": 11,
-        "triangles": 32
+        "nodes": 26,
+        "meshes": 26,
+        "triangles": 212
       },
       "alignment": {
         "schema_version": "1.0",
@@ -979,10 +1080,10 @@
           "search_radius_pixels": 2
         },
         "metrics": {
-          "precision": 1,
+          "precision": 0.995101,
           "recall": 1,
-          "f1": 1,
-          "intersection_over_union": 1
+          "f1": 0.997545,
+          "intersection_over_union": 0.995101
         },
         "thresholds": {
           "minimum_f1": 0.84,

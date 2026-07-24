@@ -9,7 +9,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { buildGlb } from "../builders/glb-writer.mjs";
-import { compileScenePrimitives } from "../geometry/spatial-geometry.mjs";
+import {
+  compileScenePrimitives,
+  validateWallPrimitiveTopology,
+} from "../geometry/spatial-geometry.mjs";
 import { createViewerServer } from "../serve-viewer.mjs";
 import { buildViewableScene } from "../tasks/scene-generation/build-viewable-scene.mjs";
 import { createTestApprovalContext } from "./helpers/p2-approval.mjs";
@@ -22,6 +25,16 @@ async function loadExample() {
       "utf8",
     ),
   );
+}
+
+async function loadP3Fixture(id) {
+  const suite = JSON.parse(
+    await readFile(
+      new URL("../../examples/p3-acceptance/fixtures.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  return suite.fixtures.find((fixture) => fixture.id === id).spatial;
 }
 
 function triangleNormalY(glb, meshName) {
@@ -44,6 +57,62 @@ function triangleNormalY(glb, meshName) {
   const a = [second[0] - first[0], second[1] - first[1], second[2] - first[2]];
   const b = [third[0] - first[0], third[1] - first[1], third[2] - first[2]];
   return a[2] * b[0] - a[0] * b[2];
+}
+
+function polygonArea(points) {
+  let area = 0;
+  for (let index = 0; index < points.length; index += 1) {
+    const next = points[(index + 1) % points.length];
+    area += points[index][0] * next[1] - points[index][1] * next[0];
+  }
+  return area / 2;
+}
+
+function lineIntersection(start, end, clipStart, clipEnd) {
+  const direction = [end[0] - start[0], end[1] - start[1]];
+  const clipDirection = [clipEnd[0] - clipStart[0], clipEnd[1] - clipStart[1]];
+  const denominator = direction[0] * clipDirection[1] - direction[1] * clipDirection[0];
+  const offset = [clipStart[0] - start[0], clipStart[1] - start[1]];
+  const ratio = (offset[0] * clipDirection[1] - offset[1] * clipDirection[0]) / denominator;
+  return [start[0] + direction[0] * ratio, start[1] + direction[1] * ratio];
+}
+
+function convexIntersectionArea(subject, clip) {
+  let output = subject;
+  for (let index = 0; index < clip.length; index += 1) {
+    const clipStart = clip[index];
+    const clipEnd = clip[(index + 1) % clip.length];
+    const input = output;
+    output = [];
+    for (let cursor = 0; cursor < input.length; cursor += 1) {
+      const current = input[cursor];
+      const previous = input[(cursor - 1 + input.length) % input.length];
+      const cross = (point) =>
+        (clipEnd[0] - clipStart[0]) * (point[1] - clipStart[1]) -
+        (clipEnd[1] - clipStart[1]) * (point[0] - clipStart[0]);
+      const currentInside = cross(current) >= -1e-9;
+      const previousInside = cross(previous) >= -1e-9;
+      if (currentInside !== previousInside) {
+        output.push(lineIntersection(previous, current, clipStart, clipEnd));
+      }
+      if (currentInside) output.push(current);
+    }
+  }
+  return output.length >= 3 ? Math.abs(polygonArea(output)) : 0;
+}
+
+function samePoint(left, right) {
+  return Math.hypot(left[0] - right[0], left[1] - right[1]) < 1e-9;
+}
+
+function sharesOppositeEdge(left, right) {
+  return left.some((point, index) => {
+    const next = left[(index + 1) % left.length];
+    return right.some((candidate, candidateIndex) => {
+      const candidateNext = right[(candidateIndex + 1) % right.length];
+      return samePoint(point, candidateNext) && samePoint(next, candidate);
+    });
+  });
 }
 
 test("builds a deterministic GLB and self-contained Web viewer", async () => {
@@ -156,6 +225,49 @@ test("writes upward-facing floors and downward-facing ceilings", async () => {
   const glb = buildGlb(document, compileScenePrimitives(document));
   assert.ok(triangleNormalY(glb, "room-living-floor") > 0);
   assert.ok(triangleNormalY(glb, "room-living-ceiling") < 0);
+});
+
+test("mitered wall prisms meet without overlap at ordinary corners", async () => {
+  const document = await loadExample();
+  document.envelope.openings = [];
+  const walls = compileScenePrimitives(document).filter(
+    (primitive) => primitive.kind === "wall",
+  );
+  assert.equal(walls.length, 4);
+  assert.ok(walls.every((primitive) => primitive.shape === "extruded_polygon"));
+  assert.ok(walls.every((primitive) => primitive.mitered_start));
+  assert.ok(walls.every((primitive) => primitive.mitered_end));
+  for (let left = 0; left < walls.length; left += 1) {
+    for (let right = left + 1; right < walls.length; right += 1) {
+      const intersectionArea = convexIntersectionArea(
+        walls[left].footprint,
+        walls[right].footprint,
+      );
+      assert.ok(
+        intersectionArea < 1e-9,
+        `${walls[left].name} overlaps ${walls[right].name}: ${intersectionArea}`,
+      );
+    }
+  }
+  for (const [left, right] of [[0, 1], [1, 2], [2, 3], [3, 0]]) {
+    assert.ok(
+      sharesOppositeEdge(walls[left].footprint, walls[right].footprint),
+      `${walls[left].name} and ${walls[right].name} leave a crack`,
+    );
+  }
+});
+
+test("T and X wall junctions use through and butt joints without wall-volume overlap", async () => {
+  for (const fixtureId of ["p3-08-three-room-t", "p3-09-four-room-grid", "p3-20-complex-shared"]) {
+    const primitives = compileScenePrimitives(await loadP3Fixture(fixtureId));
+    const topology = validateWallPrimitiveTopology(primitives);
+    assert.equal(topology.valid, true, `${fixtureId}: ${JSON.stringify(topology.errors)}`);
+    const wallJoints = primitives
+      .filter((primitive) => primitive.kind === "wall")
+      .flatMap((primitive) => [primitive.junction_start, primitive.junction_end]);
+    assert.ok(wallJoints.includes("through"), `${fixtureId} lacks a through joint`);
+    assert.ok(wallJoints.includes("butt"), `${fixtureId} lacks a butt joint`);
+  }
 });
 
 test("shell mode omits furniture proxies", async () => {

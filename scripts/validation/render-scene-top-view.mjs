@@ -81,6 +81,11 @@ function boxFootprint(primitive) {
   });
 }
 
+function primitiveFootprint(primitive) {
+  if (primitive.shape === "extruded_polygon") return primitive.footprint;
+  return boxFootprint(primitive);
+}
+
 export async function renderSceneTopView(
   document,
   output,
@@ -106,12 +111,12 @@ export async function renderSceneTopView(
     : fitTransform(document, outputWidth, outputHeight, Number(padding));
   const walls = compiled.filter(
     (primitive) =>
-      primitive.shape === "box" &&
+      (primitive.shape === "box" || primitive.shape === "extruded_polygon") &&
       primitive.category === "shell" &&
       primitive.kind === "wall",
   );
   const wallSvg = walls.map((primitive) => {
-    const points = boxFootprint(primitive)
+    const points = primitiveFootprint(primitive)
       .map((point) => transformPoint(meterToPixel, point).join(","))
       .join(" ");
     return `<polygon points="${points}" fill="#111111"/>`;

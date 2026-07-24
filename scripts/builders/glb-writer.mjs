@@ -139,6 +139,61 @@ function polygonGeometry(primitive) {
   };
 }
 
+function extrudedPolygonGeometry(primitive) {
+  const points = primitive.footprint;
+  if (!Array.isArray(points) || points.length < 3) {
+    throw new Error("Extruded polygon requires a footprint with at least three points.");
+  }
+  const bottom = primitive.bottom_elevation;
+  const top = primitive.top_elevation;
+  if (!Number.isFinite(bottom) || !Number.isFinite(top) || top <= bottom) {
+    throw new Error("Extruded polygon requires finite elevations with top above bottom.");
+  }
+  const positions = [];
+  const normals = [];
+  const uvs = [];
+  const indices = [];
+  const appendVertex = (position, normal, uv) => {
+    positions.push(...position);
+    normals.push(...normal);
+    uvs.push(...uv);
+    return positions.length / 3 - 1;
+  };
+  const appendTriangle = (left, middle, right) => indices.push(left, middle, right);
+  const faceTriangles = triangulate(points);
+  const topVertices = points.map(([x, z]) => appendVertex([x, top, z], [0, 1, 0], [x, z]));
+  for (let index = 0; index < faceTriangles.length; index += 3) {
+    appendTriangle(
+      topVertices[faceTriangles[index]],
+      topVertices[faceTriangles[index + 2]],
+      topVertices[faceTriangles[index + 1]],
+    );
+  }
+  const bottomVertices = points.map(([x, z]) => appendVertex([x, bottom, z], [0, -1, 0], [x, z]));
+  for (let index = 0; index < faceTriangles.length; index += 3) {
+    appendTriangle(
+      bottomVertices[faceTriangles[index]],
+      bottomVertices[faceTriangles[index + 1]],
+      bottomVertices[faceTriangles[index + 2]],
+    );
+  }
+  for (let index = 0; index < points.length; index += 1) {
+    const current = points[index];
+    const next = points[(index + 1) % points.length];
+    const edge = [next[0] - current[0], next[1] - current[1]];
+    const length = Math.hypot(edge[0], edge[1]) || 1;
+    const normal = [edge[1] / length, 0, -edge[0] / length];
+    const base = positions.length / 3;
+    appendVertex([current[0], bottom, current[1]], normal, [0, 0]);
+    appendVertex([current[0], top, current[1]], normal, [0, top - bottom]);
+    appendVertex([next[0], top, next[1]], normal, [length, top - bottom]);
+    appendVertex([next[0], bottom, next[1]], normal, [length, 0]);
+    appendTriangle(base, base + 1, base + 2);
+    appendTriangle(base, base + 2, base + 3);
+  }
+  return { positions, normals, uvs, indices };
+}
+
 function minMax(values, stride) {
   const min = Array(stride).fill(Number.POSITIVE_INFINITY);
   const max = Array(stride).fill(Number.NEGATIVE_INFINITY);
@@ -270,6 +325,12 @@ export function buildGlb(document, primitives) {
         );
       }
       mesh = cubeMeshes.get(primitive.material_id);
+    } else if (primitive.shape === "extruded_polygon") {
+      mesh = addGeometry(
+        extrudedPolygonGeometry(primitive),
+        primitive.material_id,
+        primitive.name,
+      );
     } else {
       mesh = addGeometry(
         polygonGeometry(primitive),

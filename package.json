@@ -24,6 +24,8 @@
     "p6:acceptance": "node scripts/validation/run-p6-acceptance.mjs --output examples/p6-acceptance/automated-evidence.json",
     "p7:fixtures": "node scripts/tests/fixtures/generate-p7-fixtures.mjs",
     "p7:acceptance": "node scripts/validation/run-p7-acceptance.mjs --output examples/p7-acceptance/automated-evidence.json",
+    "p8:fixtures": "node scripts/tests/fixtures/generate-p8-fixtures.mjs",
+    "p8:acceptance": "node scripts/validation/run-p8-acceptance.mjs --output examples/p8-acceptance/automated-evidence.json",
     "review:spatial": "node scripts/serve-viewer.mjs --directory assets/spatial-review --port 4174",
     "approval:key": "node scripts/approval/create-approval-key.mjs",
     "approve:spatial": "node scripts/approval/approve-spatial-json.mjs",

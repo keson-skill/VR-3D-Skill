@@ -63,7 +63,7 @@ Read [interior-design-workflow.md](references/interior-design-workflow.md) for s
 6. **Generate assets.** Reuse catalog assets first. Generate only missing furniture or decor, request real dimensions, normalize pivots and scale, and export GLB when targeting the web.
 7. **Compile the viewable scene.** Run the fixed `build-viewable-scene.mjs` task against approved Spatial JSON. Generate a deterministic GLB and static Three.js viewer. Represent unresolved furniture assets with dimensionally correct proxies. Do not ask a model to rewrite the viewer per job.
 8. **Render and interact.** Serve the viewer over HTTP and verify orbit, top, first-person, furniture visibility, desktop fallback, and WebXR. Add Blender panorama or high-fidelity rendering only after the deterministic scene passes. Compare a normalized top-view render against the source plan before delivery.
-9. **Apply revisions incrementally.** Convert user changes into explicit JSON Patch-like operations, re-run affected validations, and preserve revision history.
+9. **Apply revisions incrementally.** Let the revision-planning task translate natural language into a scoped stable-ID contract, but never apply raw model output. Validate and apply it with the deterministic revision engine, persist the version/diff/inverse/hash-chain audit, invalidate stale approvals, obtain reapproval, and regenerate only the dependency plan.
 
 Use the contract in [spatial-json-contract.md](references/spatial-json-contract.md). Validate the contract before any downstream generation. If geometry conflicts with source measurements, stop and surface the conflict rather than choosing silently.
 

@@ -96,7 +96,7 @@ Return one JSON object with:
 - design_brief with budget, occupants, activities, must_keep_ids, minimum_clearance_meters;
 - design_alternatives with explainable zoning, furniture footprints, clearances, materials, lighting, cost/risk notes, and scores;
 - recommended_alternative_id;
-- a proposed revision_patch using stable target IDs and durable JSON Pointer paths.
+- a proposed revision_patch with explicit scope.target_ids/scope.paths, stable target IDs, durable JSON Pointer paths, must-preserve rules, and deterministic gates to revalidate.
 
 Do not change the measured envelope, structural edit policies, room topology, locked openings, or required circulation. This is a proposal only; do not mark it approved.`;
 
@@ -108,6 +108,16 @@ Do not change the measured envelope, structural edit policies, room topology, lo
     prompt,
     timeoutMs: Number(process.env.REALMROUTER_TIMEOUT_MS || 120000),
   });
+  if (result.spatialJson?.revision_patch) {
+    result.spatialJson.revision_patch.provenance = {
+      actor_type: "model",
+      actor_id: result.model,
+      created_at: new Date().toISOString(),
+      ...(result.requestId ? { request_id: result.requestId } : {}),
+    };
+    result.spatialJson.revision_patch.rollback_reference =
+      spatialJson.project.revision;
+  }
   await writeJson(options.output, result.spatialJson);
 
   const revisionValidation = result.spatialJson?.revision_patch

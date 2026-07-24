@@ -304,6 +304,7 @@ test("validates stable-ID revision operations and rejects array indexes", () => 
     revision_id: "rev-002",
     base_revision: "rev-001",
     intent: "Change the sofa asset.",
+    scope: { target_ids: ["object-sofa"], paths: [] },
     operations: [
       {
         op: "replace",
@@ -315,6 +316,12 @@ test("validates stable-ID revision operations and rejects array indexes", () => 
     must_preserve_ids: ["wall-01"],
     must_preserve_paths: ["/envelope"],
     revalidate: ["asset_bindings"],
+    provenance: {
+      actor_type: "human",
+      actor_id: "reviewer-001",
+      created_at: "2026-07-24T00:00:00.000Z",
+    },
+    rollback_reference: "rev-001",
   });
   assert.equal(valid.valid, true, JSON.stringify(valid.errors));
 

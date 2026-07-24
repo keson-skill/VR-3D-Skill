@@ -150,6 +150,10 @@ Translate requests such as “change to warm cream,” “replace the sofa,” o
   "revision_id": "rev-004",
   "base_revision": "rev-003",
   "intent": "Create a warmer cream palette and preserve the approved layout.",
+  "scope": {
+    "target_ids": [],
+    "paths": ["/materials/wall_main"]
+  },
   "operations": [
     {
       "op": "replace",
@@ -164,11 +168,17 @@ Translate requests such as “change to warm cream,” “replace the sofa,” o
     "/circulation",
     "/design_objects"
   ],
-  "revalidate": ["materials", "lighting", "performance"]
+  "revalidate": ["materials", "lighting", "performance"],
+  "provenance": {
+    "actor_type": "human",
+    "actor_id": "reviewer-001",
+    "created_at": "2026-07-24T00:00:00.000Z"
+  },
+  "rollback_reference": "rev-003"
 }
 ```
 
-Use RFC 6901 JSON Pointer paths for ID-keyed objects. For an item stored in an array, target its stable ID and use a relative field path; never persist array indexes or wildcards as durable revision targets. Validate affected constraints, regenerate only dependent artifacts, preserve the previous revision, and show the user what changed.
+Use RFC 6901 JSON Pointer paths for ID-keyed objects. For an item stored in an array, target its stable ID and use a relative field path; never persist array indexes or wildcards as durable revision targets. Treat natural-language planning as an untrusted proposal. `validate-revision.mjs` and `apply-revision.mjs` enforce the scope and preservation rules, while `revision-store.mjs` persists immutable snapshots, inverse operations, rollback lineage and a hash-chained audit. Every applied change resets approval to pending. Rerun validation and independent human approval before `regenerate-affected.mjs` executes the affected downstream handlers; unaffected artifact hashes are reused.
 
 ## Failure handling
 

@@ -290,6 +290,7 @@ Every edit should include:
 
 - unique revision ID and base revision;
 - human intent;
+- an explicit allow-list scope of target IDs and durable paths;
 - explicit operations;
 - exact stable IDs and exact JSON Pointer paths that must be preserved;
 - affected artifacts;
@@ -304,6 +305,10 @@ Use RFC 6901 JSON Pointer for `path`. Allow operations only on object keys or ID
   "revision_id": "rev-002",
   "base_revision": "rev-001",
   "intent": "Change only the living-room wall finish to dark walnut.",
+  "scope": {
+    "target_ids": ["surface-wall-01-living"],
+    "paths": ["/materials"]
+  },
   "operations": [
     {
       "op": "add",
@@ -328,8 +333,14 @@ Use RFC 6901 JSON Pointer for `path`. Allow operations only on object keys or ID
     "/circulation",
     "/design_objects"
   ],
-  "revalidate": ["materials", "lighting", "asset_material_bindings", "performance"]
+  "revalidate": ["materials", "lighting", "asset_material_bindings", "performance"],
+  "provenance": {
+    "actor_type": "human",
+    "actor_id": "reviewer-001",
+    "created_at": "2026-07-24T00:00:00.000Z"
+  },
+  "rollback_reference": "rev-001"
 }
 ```
 
-Reject a patch when its base revision is stale, a target ID is missing, a pointer is invalid, or a preserved constraint would be violated. Prefer targeted regeneration over recreating unrelated rooms or assets.
+Reject a patch when its base revision is stale, an operation exceeds `scope`, a target ID is missing, a pointer is invalid, a test precondition fails, or a preserved constraint would be violated. The deterministic engine owns `project.revision` and approval invalidation; model output may not edit `/schema_version`, `/project/id`, `/project/revision`, or `/validation`. Applying a revision must produce a structural diff, an inverse revision, a dependency plan, a pending document that requires reapproval, and a hash-chained audit event. Prefer targeted regeneration over recreating unrelated rooms or assets.

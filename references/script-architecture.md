@@ -17,6 +17,7 @@ scripts/
 ├── processing/     deterministic asset metadata processing
 ├── orchestration/  stage-readiness gates
 ├── runtime/        deterministic XR configuration checks
+├── revisions/      scoped patch application, dependencies, versions, undo, rollback, and audit
 ├── lib/            shared implementation utilities
 └── tests/          offline smoke and contract tests
 ```
@@ -35,6 +36,7 @@ Keep provider names inside `adapters/`; name task directories after stable roles
 | Spatial extraction | `scripts/tasks/spatial-extraction/extract-spatial-json.mjs` | prompt, source manifest, approved images and/or DXF evidence | draft Spatial JSON, provider metadata, structural validation |
 | Local OCR evidence | `scripts/ingest/extract-ocr-evidence.mjs` | normalized image | local Tesseract TSV evidence with boxes and confidence |
 | Design planning | `scripts/tasks/design-planning/propose-design.mjs` | approved Spatial JSON, requirements | design alternatives and proposed revision patch |
+| Revision planning | `scripts/tasks/revision-planning/plan-revision.mjs` | approved Spatial JSON and natural-language change request | validated, scoped stable-ID revision proposal |
 | Visual preview | `scripts/tasks/visual-preview/generate-preview.mjs` | approved Spatial JSON, visual direction | image plus revision-bound metadata |
 | Reference image edit | `scripts/tasks/visual-preview/edit-reference.mjs` | approved reference image, visual direction, design revision ID | edited image plus revision-bound metadata |
 | Engineering generation | `scripts/tasks/engineering-generation/generate-engineering.mjs` | approved Spatial JSON, task, optional asset manifest | reviewable generated text/code plus metadata |
@@ -117,6 +119,27 @@ node scripts/validation/validate-revision.mjs \
   --base spatial.json \
   --revision revision.json \
   --output revision-validation.json
+
+node scripts/revisions/apply-revision.mjs \
+  --base spatial.json \
+  --revision revision.json \
+  --output spatial-revised.json \
+  --diff revision-diff.json \
+  --inverse inverse-revision.json \
+  --audit revision-audit.json
+
+node scripts/revisions/revision-store.mjs \
+  --action apply \
+  --store runs/project-001/revisions \
+  --base spatial.json \
+  --revision revision.json
+
+# After the revised Spatial JSON is independently reapproved:
+node scripts/revisions/regenerate-affected.mjs \
+  --plan dependency-plan.json \
+  --config regeneration-config.json \
+  --output artifact-manifest.json \
+  --approval-verified
 
 node scripts/orchestration/check-stage-readiness.mjs \
   --stage engineering \

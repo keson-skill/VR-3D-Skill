@@ -131,7 +131,11 @@
       "$ref": "#/$defs/xr"
     },
     "render_profiles": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "quality": { "enum": ["draft", "standard", "presentation"] }
+      }
     },
     "assumptions": {
       "type": "array",
@@ -598,7 +602,21 @@
         "id": { "$ref": "#/$defs/stableId" },
         "kind": { "$ref": "#/$defs/nonEmptyString" },
         "position": { "$ref": "#/$defs/vector3" },
-        "intensity": { "type": "number", "minimum": 0 }
+        "intensity": { "type": "number", "minimum": 0 },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "color_temperature_kelvin": { "type": "number", "minimum": 1000, "maximum": 40000 },
+        "range": { "type": "number", "exclusiveMinimum": 0 },
+        "spot": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "innerConeAngle": { "type": "number", "minimum": 0, "maximum": 1.5707963267948966 },
+            "outerConeAngle": { "type": "number", "exclusiveMinimum": 0, "maximum": 1.5707963267948966 }
+          }
+        }
       }
     },
     "xr": {

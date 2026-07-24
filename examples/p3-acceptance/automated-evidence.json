@@ -29,7 +29,9 @@
       "glb": {
         "nodes": 6,
         "meshes": 6,
-        "triangles": 52
+        "triangles": 52,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -83,7 +85,9 @@
       "glb": {
         "nodes": 9,
         "meshes": 9,
-        "triangles": 88
+        "triangles": 88,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -137,7 +141,9 @@
       "glb": {
         "nodes": 10,
         "meshes": 10,
-        "triangles": 100
+        "triangles": 100,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -191,7 +197,9 @@
       "glb": {
         "nodes": 8,
         "meshes": 8,
-        "triangles": 80
+        "triangles": 80,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -245,7 +253,9 @@
       "glb": {
         "nodes": 10,
         "meshes": 10,
-        "triangles": 108
+        "triangles": 108,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -299,7 +309,9 @@
       "glb": {
         "nodes": 11,
         "meshes": 11,
-        "triangles": 92
+        "triangles": 92,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -353,7 +365,9 @@
       "glb": {
         "nodes": 11,
         "meshes": 11,
-        "triangles": 92
+        "triangles": 92,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -407,7 +421,9 @@
       "glb": {
         "nodes": 16,
         "meshes": 16,
-        "triangles": 132
+        "triangles": 132,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -461,7 +477,9 @@
       "glb": {
         "nodes": 20,
         "meshes": 20,
-        "triangles": 160
+        "triangles": 160,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -515,7 +533,9 @@
       "glb": {
         "nodes": 12,
         "meshes": 12,
-        "triangles": 104
+        "triangles": 104,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -569,7 +589,9 @@
       "glb": {
         "nodes": 7,
         "meshes": 7,
-        "triangles": 66
+        "triangles": 66,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -623,7 +645,9 @@
       "glb": {
         "nodes": 11,
         "meshes": 11,
-        "triangles": 92
+        "triangles": 92,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -677,7 +701,9 @@
       "glb": {
         "nodes": 7,
         "meshes": 7,
-        "triangles": 64
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -731,7 +757,9 @@
       "glb": {
         "nodes": 7,
         "meshes": 7,
-        "triangles": 64
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -785,7 +813,9 @@
       "glb": {
         "nodes": 12,
         "meshes": 7,
-        "triangles": 64
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -839,7 +869,9 @@
       "glb": {
         "nodes": 13,
         "meshes": 7,
-        "triangles": 64
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -893,7 +925,9 @@
       "glb": {
         "nodes": 14,
         "meshes": 14,
-        "triangles": 132
+        "triangles": 132,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -947,7 +981,9 @@
       "glb": {
         "nodes": 7,
         "meshes": 7,
-        "triangles": 64
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -1001,7 +1037,9 @@
       "glb": {
         "nodes": 16,
         "meshes": 16,
-        "triangles": 132
+        "triangles": 132,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",
@@ -1055,7 +1093,9 @@
       "glb": {
         "nodes": 26,
         "meshes": 26,
-        "triangles": 212
+        "triangles": 212,
+        "images": 0,
+        "lights": 0
       },
       "alignment": {
         "schema_version": "1.0",

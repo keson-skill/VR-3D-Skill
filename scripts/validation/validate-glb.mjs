@@ -143,6 +143,34 @@ export function validateGlbBytes(bytes, { expectedProject = null } = {}) {
   });
 
   const materials = Array.isArray(gltf.materials) ? gltf.materials : [];
+  const images = Array.isArray(gltf.images) ? gltf.images : [];
+  const textures = Array.isArray(gltf.textures) ? gltf.textures : [];
+  images.forEach((image, index) => {
+    if (
+      !Number.isInteger(image.bufferView) ||
+      !bufferViews[image.bufferView] ||
+      !["image/png", "image/jpeg", "image/webp", "image/ktx2"].includes(image.mimeType)
+    ) {
+      add("gltf.image", `/images/${index}`, "Embedded image requires a valid buffer view and supported MIME type.");
+    }
+  });
+  textures.forEach((texture, index) => {
+    if (!Number.isInteger(texture.source) || !images[texture.source]) {
+      add("gltf.texture", `/textures/${index}`, "Texture must reference a valid embedded image.");
+    }
+  });
+  const validateTextureInfo = (info, path) => {
+    if (info !== undefined && (!Number.isInteger(info?.index) || !textures[info.index])) {
+      add("gltf.material_texture", path, "Material texture reference is invalid.");
+    }
+  };
+  materials.forEach((material, index) => {
+    validateTextureInfo(material?.pbrMetallicRoughness?.baseColorTexture, `/materials/${index}/pbrMetallicRoughness/baseColorTexture`);
+    validateTextureInfo(material?.pbrMetallicRoughness?.metallicRoughnessTexture, `/materials/${index}/pbrMetallicRoughness/metallicRoughnessTexture`);
+    validateTextureInfo(material?.normalTexture, `/materials/${index}/normalTexture`);
+    validateTextureInfo(material?.occlusionTexture, `/materials/${index}/occlusionTexture`);
+    validateTextureInfo(material?.emissiveTexture, `/materials/${index}/emissiveTexture`);
+  });
   let triangles = 0;
   const meshes = Array.isArray(gltf.meshes) ? gltf.meshes : [];
   meshes.forEach((mesh, meshIndex) => {
@@ -181,9 +209,15 @@ export function validateGlbBytes(bytes, { expectedProject = null } = {}) {
     });
   });
   const nodes = Array.isArray(gltf.nodes) ? gltf.nodes : [];
+  const punctualLights = gltf.extensions?.KHR_lights_punctual?.lights || [];
   nodes.forEach((node, index) => {
-    if (!Number.isInteger(node.mesh) || !meshes[node.mesh]) {
+    const punctualLight = node.extensions?.KHR_lights_punctual?.light;
+    const hasLight = Number.isInteger(punctualLight) && punctualLights[punctualLight];
+    if (!hasLight && (!Number.isInteger(node.mesh) || !meshes[node.mesh])) {
       add("gltf.node_mesh", `/nodes/${index}/mesh`, "Node must reference a valid mesh.");
+    }
+    if (node.extensions?.KHR_lights_punctual && !hasLight) {
+      add("gltf.node_light", `/nodes/${index}/extensions/KHR_lights_punctual/light`, "Light node must reference a valid punctual light.");
     }
     for (const key of ["translation", "scale"]) {
       if (node[key] !== undefined && !finiteArray(node[key], 3)) {
@@ -197,9 +231,14 @@ export function validateGlbBytes(bytes, { expectedProject = null } = {}) {
       add("gltf.node_rotation", `/nodes/${index}/rotation`, "Rotation must contain four finite quaternion values.");
     }
   });
+  punctualLights.forEach((light, index) => {
+    if (!(["directional", "point", "spot"].includes(light?.type)) || !finiteArray(light?.color, 3) || !Number.isFinite(light?.intensity) || light.intensity < 0) {
+      add("gltf.punctual_light", `/extensions/KHR_lights_punctual/lights/${index}`, "Punctual light has an invalid type, color, or intensity.");
+    }
+  });
   return {
     valid: errors.length === 0,
     errors,
-    summary: { nodes: nodes.length, meshes: meshes.length, triangles },
+    summary: { nodes: nodes.length, meshes: meshes.length, triangles, images: images.length, lights: punctualLights.length },
   };
 }

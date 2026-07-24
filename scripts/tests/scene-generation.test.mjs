@@ -312,6 +312,59 @@ test("compiles P4 hard finishes and preserves PBR texture-slot metadata", async 
   assert.equal(material.extras.texture_embedding, "deferred_p4_asset_pipeline");
 });
 
+test("P4 embeds local texture assets, records fallback assets, and exports punctual lights", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "vr-3d-p4-assets-"));
+  try {
+    const document = await loadExample();
+    document.materials.p4_finish = {
+      base_color: "#D3C7B8",
+      roughness: 0.7,
+      textures: {
+        base_color: {
+          uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+          mime_type: "image/png",
+          color_space: "srgb",
+          scale_meters: 1,
+        },
+        normal: {
+          uri: "materials/missing-normal.png",
+          mime_type: "image/png",
+          color_space: "linear",
+          scale_meters: 1,
+        },
+      },
+    };
+    document.envelope.walls[0].material_id = "p4_finish";
+    document.lights = [
+      { id: "sun-main", kind: "natural", position: [0, 4, 0], intensity: 1.2, color: "#FFF4E0" },
+      { id: "downlight", kind: "area", position: [2, 2.5, 2], intensity: 45, range: 4 },
+    ];
+    const result = await buildViewableScene(document, {
+      outputDirectory: directory,
+      quality: "draft",
+      ...createTestApprovalContext(document),
+    });
+    const gltf = gltfFromGlb(await readFile(result.sceneFile));
+    const material = gltf.materials.find((item) => item.name === "p4_finish");
+    assert.equal(gltf.images.length, 2);
+    assert.equal(gltf.textures.length, 2);
+    assert.equal(material.pbrMetallicRoughness.baseColorTexture.index >= 0, true);
+    assert.equal(material.normalTexture.index >= 0, true);
+    assert.equal(material.extras.texture_embedding, "p4_glb_embedded");
+    assert.equal(gltf.extensions.KHR_lights_punctual.lights.length, 2);
+    assert.equal(result.manifest.texture_assets.packed, 1);
+    assert.equal(result.manifest.texture_assets.fallback, 1);
+    assert.equal(result.glbValidation.summary.lights, 2);
+    const textureReport = JSON.parse(
+      await readFile(join(directory, "texture-validation-report.json"), "utf8"),
+    );
+    assert.equal(textureReport.quality, "draft");
+    assert.equal(textureReport.assets.find((item) => item.slot === "normal").status, "fallback");
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("shell mode omits furniture proxies", async () => {
   const directory = await mkdtemp(join(tmpdir(), "vr-3d-shell-"));
   try {

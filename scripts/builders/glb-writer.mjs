@@ -1,4 +1,13 @@
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
+import { basename, isAbsolute, resolve } from "node:path";
+import { createHash } from "node:crypto";
+import sharp from "sharp";
+
+export const P4_QUALITY_PROFILES = {
+  draft: { maxTextureSize: 512, webpQuality: 68, lightMultiplier: 0.8 },
+  standard: { maxTextureSize: 1024, webpQuality: 82, lightMultiplier: 1 },
+  presentation: { maxTextureSize: 2048, webpQuality: 90, lightMultiplier: 1.15 },
+};
 
 function align4(value) {
   return (value + 3) & ~3;
@@ -14,6 +23,121 @@ function hexToFactor(value, fallback) {
     Number.parseInt(value.slice(5, 7), 16) / 255,
     1,
   ];
+}
+
+function colorChannels(value, fallback = "#FFFFFF") {
+  const factor = hexToFactor(value, hexToFactor(fallback, [1, 1, 1, 1]));
+  return factor.slice(0, 3).map((channel) => Math.round(channel * 255));
+}
+
+function sha256(bytes) {
+  return createHash("sha256").update(bytes).digest("hex");
+}
+
+function parseDataUri(uri) {
+  const match = /^data:([^;,]+);base64,([A-Za-z0-9+/=]+)$/i.exec(uri || "");
+  return match ? { mimeType: match[1].toLowerCase(), bytes: Buffer.from(match[2], "base64") } : null;
+}
+
+function fallbackColor(material, slot) {
+  if (slot === "base_color") return colorChannels(material?.base_color, "#B0B0B0");
+  if (slot === "emissive") return colorChannels(material?.emissive_color, "#000000");
+  if (slot === "normal") return [128, 128, 255];
+  if (slot === "metallic_roughness") return [0, 178, 178];
+  return [255, 255, 255];
+}
+
+async function makeFallbackTexture(material, slot, quality) {
+  const bytes = await sharp({
+    create: { width: 1, height: 1, channels: 3, background: fallbackColor(material, slot) },
+  })
+    .webp({ quality: quality.webpQuality })
+    .toBuffer();
+  return { bytes, mimeType: "image/webp" };
+}
+
+async function packTexture(bytes, mimeType, quality) {
+  if (mimeType === "image/ktx2") return { bytes, mimeType };
+  const packed = await sharp(bytes, { failOn: "none" })
+    .resize({
+      width: quality.maxTextureSize,
+      height: quality.maxTextureSize,
+      fit: "inside",
+      withoutEnlargement: true,
+    })
+    .webp({ quality: quality.webpQuality })
+    .toBuffer();
+  return { bytes: packed, mimeType: "image/webp" };
+}
+
+/**
+ * Resolves only data URIs and files relative to the approved Spatial JSON.
+ * Network and absolute paths intentionally downgrade to a deterministic fallback,
+ * so a packaged scene has no undeclared runtime asset dependency.
+ */
+export async function prepareTextureAssets(
+  document,
+  { textureDirectory = null, quality = "standard", materialIds = null } = {},
+) {
+  const profile = P4_QUALITY_PROFILES[quality];
+  if (!profile) throw new Error(`Unknown P4 quality profile: ${quality}.`);
+  const allowedMaterialIds = materialIds ? new Set(materialIds) : null;
+  const assets = [];
+  const report = [];
+  for (const [materialId, material] of Object.entries(document.materials || {})) {
+    if (allowedMaterialIds && !allowedMaterialIds.has(materialId)) continue;
+    for (const [slot, texture] of Object.entries(material.textures || {})) {
+      let packed;
+      let status = "packed";
+      let reason = null;
+      let sourceBytes = null;
+      try {
+        const dataUri = parseDataUri(texture.uri);
+        if (dataUri) {
+          sourceBytes = dataUri.bytes;
+          packed = await packTexture(sourceBytes, dataUri.mimeType, profile);
+        } else if (
+          textureDirectory &&
+          !isAbsolute(texture.uri) &&
+          !/^[a-z][a-z0-9+.-]*:/i.test(texture.uri)
+        ) {
+          sourceBytes = await readFile(resolve(textureDirectory, texture.uri));
+          packed = await packTexture(sourceBytes, texture.mime_type, profile);
+        } else {
+          throw new Error("texture URI must be a data URI or a relative local file");
+        }
+      } catch (error) {
+        status = "fallback";
+        reason = error.message;
+        packed = await makeFallbackTexture(material, slot, profile);
+      }
+      const asset = {
+        material_id: materialId,
+        slot,
+        mime_type: packed.mimeType,
+        color_space: texture.color_space,
+        bytes: packed.bytes,
+        status,
+      };
+      assets.push(asset);
+      report.push({
+        material_id: materialId,
+        slot,
+        source_uri: texture.uri,
+        source_filename: basename(texture.uri.split("?")[0]) || null,
+        declared_mime_type: texture.mime_type,
+        packaged_mime_type: packed.mimeType,
+        color_space: texture.color_space,
+        scale_meters: texture.scale_meters,
+        status,
+        reason,
+        source_sha256: sourceBytes ? sha256(sourceBytes) : null,
+        packaged_sha256: sha256(packed.bytes),
+        packaged_bytes: packed.bytes.length,
+      });
+    }
+  }
+  return { assets, report, profile: quality };
 }
 
 const DEFAULT_MATERIALS = {
@@ -210,12 +334,21 @@ function quaternionY(radians) {
   return [0, Math.sin(radians / 2), 0, Math.cos(radians / 2)];
 }
 
-export function buildGlb(document, primitives) {
+export function buildGlb(document, primitives, { textureAssets = [], quality = "standard" } = {}) {
+  const qualityProfile = P4_QUALITY_PROFILES[quality];
+  if (!qualityProfile) throw new Error(`Unknown P4 quality profile: ${quality}.`);
   const materialSource = {
     ...DEFAULT_MATERIALS,
     ...(document.materials || {}),
   };
   const materialIds = [...new Set(primitives.map((item) => item.material_id))];
+  const textureAssetsByMaterial = new Map();
+  for (const asset of textureAssets) {
+    if (!textureAssetsByMaterial.has(asset.material_id)) {
+      textureAssetsByMaterial.set(asset.material_id, []);
+    }
+    textureAssetsByMaterial.get(asset.material_id).push(asset);
+  }
   const materials = materialIds.map((id) => {
     const source = materialSource[id] || DEFAULT_MATERIALS.furniture_proxy;
     const color = hexToFactor(source.base_color, [0.6, 0.6, 0.6, 1]);
@@ -246,7 +379,9 @@ export function buildGlb(document, primitives) {
             extras: {
               texture_slots: source.textures || {},
               texture_budget_bytes: source.texture_budget_bytes || 0,
-              texture_embedding: "deferred_p4_asset_pipeline",
+              texture_embedding: textureAssetsByMaterial.has(id)
+                ? "p4_glb_embedded"
+                : "deferred_p4_asset_pipeline",
             },
           }
         : {}),
@@ -271,6 +406,24 @@ export function buildGlb(document, primitives) {
       typedArray.byteOffset,
       typedArray.byteLength,
     );
+    const index = bufferViews.length;
+    bufferViews.push({
+      buffer: 0,
+      byteOffset,
+      byteLength: buffer.length,
+      ...(target ? { target } : {}),
+    });
+    bufferParts.push(buffer);
+    byteOffset += buffer.length;
+    return index;
+  }
+
+  function appendBuffer(buffer, target) {
+    const padding = align4(byteOffset) - byteOffset;
+    if (padding) {
+      bufferParts.push(Buffer.alloc(padding));
+      byteOffset += padding;
+    }
     const index = bufferViews.length;
     bufferViews.push({
       buffer: 0,
@@ -378,6 +531,75 @@ export function buildGlb(document, primitives) {
     });
   }
 
+  const images = [];
+  const textures = [];
+  const materialTextureTargets = {
+    base_color: ["pbrMetallicRoughness", "baseColorTexture"],
+    metallic_roughness: ["pbrMetallicRoughness", "metallicRoughnessTexture"],
+    normal: ["normalTexture"],
+    occlusion: ["occlusionTexture"],
+    emissive: ["emissiveTexture"],
+  };
+  for (const [materialId, assets] of textureAssetsByMaterial) {
+    const material = materials[materialIndex.get(materialId)];
+    if (!material) continue;
+    const statuses = [];
+    for (const asset of assets) {
+      const target = materialTextureTargets[asset.slot];
+      if (!target || !Buffer.isBuffer(asset.bytes) || asset.bytes.length === 0) continue;
+      const imageIndex = images.push({
+        name: `${materialId}-${asset.slot}`,
+        bufferView: appendBuffer(asset.bytes),
+        mimeType: asset.mime_type,
+      }) - 1;
+      const textureIndex = textures.push({ source: imageIndex, name: `${materialId}-${asset.slot}` }) - 1;
+      const textureInfo = { index: textureIndex };
+      if (target.length === 2) {
+        material[target[0]][target[1]] = textureInfo;
+      } else {
+        material[target[0]] = textureInfo;
+      }
+      statuses.push({ slot: asset.slot, status: asset.status, mime_type: asset.mime_type });
+    }
+    if (statuses.length > 0) {
+      material.extras = {
+        ...(material.extras || {}),
+        texture_embedding: "p4_glb_embedded",
+        texture_asset_status: statuses,
+      };
+    }
+  }
+
+  const punctualLights = [];
+  const lightNodes = [];
+  const kindToType = {
+    directional: "directional",
+    natural: "directional",
+    sunlight: "directional",
+    point: "point",
+    spot: "spot",
+    area: "point",
+  };
+  for (const light of document.lights || []) {
+    const type = kindToType[String(light.kind || "").toLowerCase()] || "point";
+    const lightIndex = punctualLights.push({
+      name: light.id,
+      type,
+      color: hexToFactor(light.color, [1, 1, 1, 1]).slice(0, 3),
+      intensity: light.intensity * qualityProfile.lightMultiplier,
+      ...(Number.isFinite(light.range) && light.range > 0 ? { range: light.range } : {}),
+      ...(type === "spot" && light.spot ? { spot: light.spot } : {}),
+      extras: { source_kind: light.kind, color_temperature_kelvin: light.color_temperature_kelvin || null },
+    }) - 1;
+    lightNodes.push({
+      name: `light-${light.id}`,
+      ...(type !== "directional" ? { translation: light.position } : {}),
+      extensions: { KHR_lights_punctual: { light: lightIndex } },
+      extras: { category: "lighting", source_id: light.id, kind: light.kind },
+    });
+  }
+  nodes.push(...lightNodes);
+
   const binary = Buffer.concat(bufferParts);
   const gltf = {
     asset: {
@@ -398,6 +620,13 @@ export function buildGlb(document, primitives) {
     accessors,
     bufferViews,
     buffers: [{ byteLength: binary.length }],
+    ...(images.length > 0 ? { images, textures } : {}),
+    ...(punctualLights.length > 0
+      ? {
+          extensionsUsed: ["KHR_lights_punctual"],
+          extensions: { KHR_lights_punctual: { lights: punctualLights } },
+        }
+      : {}),
   };
   const json = Buffer.from(JSON.stringify(gltf), "utf8");
   const paddedJson = Buffer.alloc(align4(json.length), 0x20);
@@ -424,6 +653,19 @@ export function buildGlb(document, primitives) {
   ]);
 }
 
-export async function writeGlb(filePath, document, primitives) {
-  await writeFile(filePath, buildGlb(document, primitives));
+export async function writeGlb(
+  filePath,
+  document,
+  primitives,
+  { textureDirectory = null, quality = "standard" } = {},
+) {
+  const materialIds = [...new Set(primitives.map((item) => item.material_id))];
+  const textures = await prepareTextureAssets(document, {
+    textureDirectory,
+    quality,
+    materialIds,
+  });
+  const glb = buildGlb(document, primitives, { textureAssets: textures.assets, quality });
+  await writeFile(filePath, glb);
+  return { bytes: glb.length, textureReport: textures.report, quality: textures.profile };
 }

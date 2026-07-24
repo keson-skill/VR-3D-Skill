@@ -614,6 +614,48 @@ export function validateSpatialJson(
     });
   }
 
+  if (document.lights !== undefined && !Array.isArray(document.lights)) {
+    addError("light.type", "/lights", "lights must be an array.");
+  } else {
+    const supportedKinds = new Set(["natural", "sunlight", "directional", "point", "spot", "area"]);
+    (document.lights || []).forEach((light, index) => {
+      const path = `/lights/${index}`;
+      if (!supportedKinds.has(String(light?.kind || "").toLowerCase())) {
+        addError(
+          "light.kind",
+          `${path}/kind`,
+          "P4 supports natural, sunlight, directional, point, spot, and area lights.",
+        );
+      }
+      if (!isFiniteVector(light?.position, 3)) {
+        addError("light.position", `${path}/position`, "Light position must contain three finite numbers.");
+      }
+      if (!Number.isFinite(light?.intensity) || light.intensity < 0) {
+        addError("light.intensity", `${path}/intensity`, "Light intensity must be finite and non-negative.");
+      }
+      if (
+        light?.spot &&
+        Number.isFinite(light.spot.innerConeAngle) &&
+        Number.isFinite(light.spot.outerConeAngle) &&
+        light.spot.innerConeAngle > light.spot.outerConeAngle
+      ) {
+        addError("light.spot_cone", `${path}/spot`, "Spot inner cone angle cannot exceed outer cone angle.");
+      }
+    });
+  }
+
+  const renderQuality = document.render_profiles?.quality;
+  if (
+    renderQuality !== undefined &&
+    !["draft", "standard", "presentation"].includes(renderQuality)
+  ) {
+    addError(
+      "render_profile.quality",
+      "/render_profiles/quality",
+      "Render quality must be draft, standard, or presentation.",
+    );
+  }
+
   const paths = document.circulation?.paths;
   if (paths !== undefined && !Array.isArray(paths)) {
     addError(

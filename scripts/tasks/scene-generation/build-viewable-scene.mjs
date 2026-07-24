@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { copyFile, mkdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildWebViewer } from "../../builders/build-web-viewer.mjs";
 import { writeGlb } from "../../builders/glb-writer.mjs";
@@ -46,6 +46,7 @@ export async function buildViewableScene(
   {
     outputDirectory,
     mode = "furnished",
+    quality = null,
     sourcePath = null,
     sourceManifest,
     validationReport,
@@ -82,7 +83,11 @@ export async function buildViewableScene(
       (item) => item.category !== "furniture" || item.fixed,
     );
   }
-  await writeGlb(sceneFile, spatialJson, primitives);
+  const effectiveQuality = quality || spatialJson.render_profiles?.quality || "standard";
+  const glbWrite = await writeGlb(sceneFile, spatialJson, primitives, {
+    textureDirectory: sourcePath ? dirname(sourcePath) : outputDirectory,
+    quality: effectiveQuality,
+  });
   const sceneBytes = await readFile(sceneFile);
   const glbValidation = validateGlbBytes(sceneBytes, {
     expectedProject: spatialJson.project,
@@ -103,6 +108,11 @@ export async function buildViewableScene(
     },
     mode,
     mode_label: MODES.get(mode),
+    render_profile: {
+      quality: glbWrite.quality,
+      lighting: "KHR_lights_punctual",
+      texture_packaging: "embedded_glb_with_deterministic_fallback",
+    },
     approval_scope: spatialJson.validation.approved_scope,
     spatial_approval: {
       id: approval.approval_id,
@@ -126,6 +136,12 @@ export async function buildViewableScene(
         .length,
     },
     glb_validation: glbValidation.summary,
+    texture_assets: {
+      report: "./texture-validation-report.json",
+      total: glbWrite.textureReport.length,
+      packed: glbWrite.textureReport.filter((item) => item.status === "packed").length,
+      fallback: glbWrite.textureReport.filter((item) => item.status === "fallback").length,
+    },
     limitations: [
       ...(spatialJson.validation.approved_scope === "visualization_only"
         ? ["Not approved for construction, procurement, or exact layout."]
@@ -140,6 +156,11 @@ export async function buildViewableScene(
     validation,
   );
   await writeJson(join(outputDirectory, "glb-validation-report.json"), glbValidation);
+  await writeJson(join(outputDirectory, "texture-validation-report.json"), {
+    schema_version: "1.0",
+    quality: glbWrite.quality,
+    assets: glbWrite.textureReport,
+  });
   await writeJson(join(outputDirectory, "scene-primitives.json"), {
     schema_version: "1.0",
     spatial_sha256: canonicalJsonSha256(spatialJson),
@@ -170,6 +191,7 @@ export async function buildViewableScene(
     manifest,
     validation,
     glbValidation,
+    textureReport: glbWrite.textureReport,
   };
 }
 
@@ -183,6 +205,7 @@ function printHelp() {
     --approval-trust spatial-approval-trust.json \\
     --output runs/project-001 \\
     [--mode shell|hard-furnishing|furnished]
+    [--quality draft|standard|presentation]
 
 Serve the output over HTTP; opening index.html directly cannot fetch the GLB.
 Example: npx http-server runs/project-001
@@ -198,6 +221,7 @@ async function main() {
     "approval-trust": { type: "string", required: true },
     output: { type: "string", required: true },
     mode: { type: "string", default: "furnished" },
+    quality: { type: "string" },
     help: { type: "boolean" },
   });
   if (options.help) return printHelp();
@@ -218,6 +242,7 @@ async function main() {
   const result = await buildViewableScene(spatialJson, {
     outputDirectory: options.output,
     mode: options.mode,
+    quality: options.quality,
     sourcePath: options["spatial-json"],
     sourceManifest,
     validationReport,

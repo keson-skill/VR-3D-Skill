@@ -40,7 +40,9 @@ Keep provider names inside `adapters/`; name task directories after stable roles
 | Engineering generation | `scripts/tasks/engineering-generation/generate-engineering.mjs` | approved Spatial JSON, task, optional asset manifest | reviewable generated text/code plus metadata |
 | Asset generation preparation | `scripts/tasks/asset-generation/create-asset-brief.mjs` | approved Spatial JSON and design-object ID | provider-neutral asset brief |
 | Human spatial approval | `scripts/approval/approve-spatial-json.mjs` | exact source manifest, approved Spatial JSON, passing validation report, reviewer private key/key ID | hash-bound and Ed25519-signed approval sidecar |
-| Viewable scene | `scripts/tasks/scene-generation/build-viewable-scene.mjs` | approved Spatial JSON, source manifest, validation report, approval sidecar, and reviewer trust store | deterministic GLB, static Three.js/WebXR viewer, approval verification, GLB structural report |
+| Viewable scene | `scripts/tasks/scene-generation/build-viewable-scene.mjs` | approved Spatial JSON, source manifest, validation report, approval sidecar, and reviewer trust store | deterministic GLB, primitive sidecar, static Three.js/WebXR viewer, approval verification, GLB structural report |
+| Compiled-scene top view | `scripts/validation/render-scene-top-view.mjs` | Spatial JSON or compiled primitives | deterministic wall-only top view for source alignment |
+| P3 regression gate | `scripts/validation/run-p3-acceptance.mjs` | 20 fixed Spatial JSON fixtures | Spatial, primitive, GLB, scene hash, and top-view alignment evidence |
 
 External-provider tasks require `--allow-provider`. Treat the flag as confirmation that the user approved the named provider and the exact data selected for that command. Do not add it automatically or call the adapter directly to avoid the check.
 
@@ -141,6 +143,9 @@ node scripts/tasks/scene-generation/build-viewable-scene.mjs \
   --approval-trust spatial-approval-trust.json \
   --output runs/project-001 \
   --mode furnished
+
+npm run p3:fixtures
+npm run p3:acceptance
 
 node scripts/serve-viewer.mjs \
   --directory runs/project-001

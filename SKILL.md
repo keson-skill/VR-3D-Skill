@@ -224,7 +224,7 @@ Deliver the artifacts relevant to the request:
 - normalized `spatial.json` plus its schema version, provenance, assumptions, validation report, source manifest, source-alignment report, and independent approval artifact;
 - design constraints, layout alternatives, and an incremental revision or patch log;
 - asset manifest with source or generation provenance, dimensions, license, format, and optimization status;
-- deterministic `scene.glb`, the static Three.js viewer, source Spatial JSON, validation report, and run command;
+- deterministic `scene.glb`, `scene-primitives.json`, GLB structural report, compiled-scene top-view alignment report, the static Three.js viewer, source Spatial JSON, validation report, and run command;
 - desktop review path, WebXR build or native scene, and required HTTPS, device, browser, or permission notes;
 - customer-facing renders, walkthrough, bill of materials, or proposal only when requested.
 

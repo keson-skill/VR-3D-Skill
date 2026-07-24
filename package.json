@@ -13,6 +13,8 @@
     "doctor": "node scripts/doctor.mjs",
     "p2:fixtures": "node scripts/tests/fixtures/generate-p2-fixtures.mjs",
     "p2:acceptance": "node scripts/validation/run-p2-acceptance.mjs --output examples/p2-acceptance/automated-evidence.json",
+    "p3:fixtures": "node scripts/tests/fixtures/generate-p3-fixtures.mjs",
+    "p3:acceptance": "node scripts/validation/run-p3-acceptance.mjs --output examples/p3-acceptance/automated-evidence.json",
     "review:spatial": "node scripts/serve-viewer.mjs --directory assets/spatial-review --port 4174",
     "approval:key": "node scripts/approval/create-approval-key.mjs",
     "approve:spatial": "node scripts/approval/approve-spatial-json.mjs",

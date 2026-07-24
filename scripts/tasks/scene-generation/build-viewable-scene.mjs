@@ -7,6 +7,7 @@ import { buildWebViewer } from "../../builders/build-web-viewer.mjs";
 import { writeGlb } from "../../builders/glb-writer.mjs";
 import { compileScenePrimitives } from "../../geometry/spatial-geometry.mjs";
 import {
+  canonicalJsonSha256,
   parseArgs,
   printJson,
   readJson,
@@ -113,6 +114,7 @@ export async function buildViewableScene(
     },
     scene: "./scene.glb",
     scene_sha256: sha256(sceneBytes),
+    scene_primitives: "./scene-primitives.json",
     bounds: sceneBounds(spatialJson),
     xr: spatialJson.xr || null,
     counts: {
@@ -138,6 +140,11 @@ export async function buildViewableScene(
     validation,
   );
   await writeJson(join(outputDirectory, "glb-validation-report.json"), glbValidation);
+  await writeJson(join(outputDirectory, "scene-primitives.json"), {
+    schema_version: "1.0",
+    spatial_sha256: canonicalJsonSha256(spatialJson),
+    primitives,
+  });
   await writeJson(join(outputDirectory, "validation-report.json"), validation);
   await writeJson(join(outputDirectory, "source-manifest.json"), sourceManifest);
   await writeJson(

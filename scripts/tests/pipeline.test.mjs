@@ -11,6 +11,7 @@ import { validateRevision } from "../validation/validate-revision.mjs";
 import { evaluateDesignProposal } from "../tasks/design-planning/evaluate-design-proposal.mjs";
 import { resolveAssets } from "../tasks/asset-generation/resolve-assets.mjs";
 import { buildRuntimeContract } from "../runtime/build-runtime-contract.mjs";
+import { buildBlenderRenderPlan } from "../tasks/blender/build-render-plan.mjs";
 import { validateSpatialJson } from "../validation/validate-spatial-json.mjs";
 import { verifyXrConfig } from "../runtime/verify-xr-config.mjs";
 import {
@@ -285,6 +286,16 @@ test("P6 builds room navigation, collision, interaction, accessibility, and XR l
   assert.ok(contract.interaction.operations.includes("undo"));
   assert.ok(contract.lifecycle.includes("reconnecting"));
   assert.equal(contract.accessibility.live_status, true);
+});
+
+test("P7 builds deterministic multi-camera, equirectangular panorama, color, and checkpoint plans", () => {
+  const plan = buildBlenderRenderPlan(validSpatialJson(), { scene: "scene.glb", outputDirectory: "render" });
+  assert.ok(plan.cameras.length >= 2);
+  assert.equal(plan.panorama.width / plan.panorama.height, 2);
+  assert.equal(plan.panorama.projection, "EQUIRECTANGULAR");
+  assert.equal(plan.color_management.view_transform, "AgX");
+  assert.equal(plan.checkpoint_file, "render-checkpoint.json");
+  assert.equal(plan.plan_sha256.length, 64);
 });
 
 test("validates stable-ID revision operations and rejects array indexes", () => {

@@ -38,9 +38,21 @@ function checkSyntax(file) {
   });
 }
 
+function checkPythonSyntax(file) {
+  return new Promise((resolve, reject) => {
+    const source = "import pathlib,sys; compile(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'), sys.argv[1], 'exec')";
+    const child = spawn("python3", ["-c", source, file], { stdio: ["ignore", "pipe", "pipe"] });
+    let stderr = "";
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => code === 0 ? resolve() : reject(new Error(`${file}\n${stderr.trim()}`)));
+  });
+}
+
 const files = await collectScripts(new URL(".", import.meta.url).pathname);
 files.push(new URL("../assets/web-viewer/app.js", import.meta.url).pathname);
 for (const file of files) {
   await checkSyntax(file);
 }
-process.stdout.write(`Syntax OK: ${files.length} scripts\n`);
+await checkPythonSyntax(new URL("./blender/render_scene.py", import.meta.url).pathname);
+process.stdout.write(`Syntax OK: ${files.length} JavaScript files and 1 Blender Python script\n`);

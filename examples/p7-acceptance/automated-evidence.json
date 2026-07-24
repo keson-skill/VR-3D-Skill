@@ -1,0 +1,158 @@
+{
+  "schema_version": "1.0",
+  "stage": "P7",
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 20,
+    "plan_errors": 0,
+    "implementation_marker_errors": 0,
+    "missing_markers": []
+  },
+  "blender_execution": {
+    "status": "not_available_in_ci",
+    "recovery": "Atomic render-checkpoint.json history supports failed reruns and completed-plan reuse.",
+    "production_manifest": "Records the real Blender version and SHA-256 for every generated deliverable."
+  },
+  "samples": [
+    {
+      "id": "p7-01-rectangle",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "cccffbb3440bd4140dd6b8c70b18be90bfaef5bfb8fe060e2afe539d783a5bd1",
+      "plan_contract_sha256": "e38e79af4834c6bdc621bd702aab0d2b29efcfbcb49b2f0e009a8ea6168547ac"
+    },
+    {
+      "id": "p7-02-door",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "a0585aee5c0e17f2b3153b69f23f4b9b1d1dc2f41220819dd4b14711df954d85",
+      "plan_contract_sha256": "e350f628bf087f5660f6610051e4802bb108473bc22ef1b747311d4f1593d07d"
+    },
+    {
+      "id": "p7-03-window",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "e74499d6b90be1f51b1d462223a95d925a1621d191a4da347479f5563a6caf65",
+      "plan_contract_sha256": "5d9489148694e769ab0095274b4e8d4c547433e4b919a753e2c70baff67c7707"
+    },
+    {
+      "id": "p7-04-l-room",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "d7b256fccf03963448b472a95b6e244bc2aadcd3dc1218f708f300b1e2fea252",
+      "plan_contract_sha256": "1fe49ff4684686e05bc960a6e265370cd6e20b27291046b430f6de8250ca9e2c"
+    },
+    {
+      "id": "p7-05-u-room",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "fcf3327faf5c34cab44b18c0cac48622fa5ac80bfce28e7ffddf5a5dfe696013",
+      "plan_contract_sha256": "a51722e6f4e73904ec43002fd35c3df600c324828d9b45823f3c3a2f0f9cb4ca"
+    },
+    {
+      "id": "p7-06-two-room-vertical",
+      "valid": true,
+      "cameras": 3,
+      "plan_sha256": "a1dd8418a52627116b9c44edd62e5407dd1b9dcaef7a3b74c5683b4d384de432",
+      "plan_contract_sha256": "06b58c6c301370f368dfe419a896e3c730f1170595bdfc8779469a23d7dbdacb"
+    },
+    {
+      "id": "p7-07-two-room-horizontal",
+      "valid": true,
+      "cameras": 3,
+      "plan_sha256": "85b0a68b1a2b15717a5efc24f4fa4aeb6d40c3d2c2779f42bc507d19bdcf119e",
+      "plan_contract_sha256": "9e055526da758f57de56a6ac76da9df0eb61b150d8a24bd600ddfb71c23af082"
+    },
+    {
+      "id": "p7-08-three-room-t",
+      "valid": true,
+      "cameras": 4,
+      "plan_sha256": "9ccd66d01dc0b025fe5f54e4ea9a641c7985fea93dffcd4b761d7b7e6b589f0f",
+      "plan_contract_sha256": "a78f9d8d29b5af8f013db16fdbf704912e4cbd1744412409637ab3b2ddb17dad"
+    },
+    {
+      "id": "p7-09-four-room-grid",
+      "valid": true,
+      "cameras": 5,
+      "plan_sha256": "7f44861d22c5472bcbc51a082df8d1855dbcdfdcf45559b47e8bcaf141ad9baa",
+      "plan_contract_sha256": "42666d2578ca43b494aa9674f2d17c33c71c80ee00c1046a8a3780a1796523a1"
+    },
+    {
+      "id": "p7-10-corridor-living",
+      "valid": true,
+      "cameras": 3,
+      "plan_sha256": "4167d3b654c552c18ed29e916bcf29d0ca5c8913f9b8d0593544f7361377e149",
+      "plan_contract_sha256": "80bbb9c03e010c7453008960e2278b6db2c7dfbd6a8669b06e78b3312a484730"
+    },
+    {
+      "id": "p7-11-slanted-pentagon",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "afb2e0c25321eb5a213362838aa83e63596081a25bc0eb51bb318fd00bc764d1",
+      "plan_contract_sha256": "a8b26894a5647aa792831f3bb9efe20aa60f79764b71cda6e1864d6fd1fb1c94"
+    },
+    {
+      "id": "p7-12-level-change",
+      "valid": true,
+      "cameras": 3,
+      "plan_sha256": "03effb7f06f9a7e5a40781e0276889636d16fa749c9a6c2212286b21e16a342f",
+      "plan_contract_sha256": "d45e2451f6313b75c8d661a3c84f28e7a94260094d8a37943a0f7996f53d13ae"
+    },
+    {
+      "id": "p7-13-column",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "0aa7d598e5377aa076b5e8c1590dcbb73b8eea2be800c9321176b557b50264b6",
+      "plan_contract_sha256": "f84736bc71206470e6c9640d09a8aa6b596dd8dbac51f36f5a12190f01e59927"
+    },
+    {
+      "id": "p7-14-beam",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "a66116744eed3aa245118fc83c40df516ca20da97cacd12bca8223c36f47dc8e",
+      "plan_contract_sha256": "2436377addeebfc759b3c30558aa124312748c835d483f45b75561119b298ebc"
+    },
+    {
+      "id": "p7-15-stair",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "7aced87ccdc5527ba8bcf8cdbd4f651bd7671dbbd778bb1746b62fb05fe52850",
+      "plan_contract_sha256": "0cb8b898c5570c572a1cb232be76fa831c82e6c6479bf24439cad483216c5ac5"
+    },
+    {
+      "id": "p7-16-structure-combined",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "383e989dfa9da6ba84fdb186616b52d64f3ed5c4308326cc8bbbd5bc4f788910",
+      "plan_contract_sha256": "8bc3481e1d31c3c848fea7ed5b20858b2378f95898e825d1c473ce5dab4429c3"
+    },
+    {
+      "id": "p7-17-concave-two-room",
+      "valid": true,
+      "cameras": 3,
+      "plan_sha256": "8588afb78282c58b39a2d847f706ad4660dcefe0ba745eefa2951f3b3595bcc6",
+      "plan_contract_sha256": "38659ee74cd0f204db27d973afd4f25419c72d8bea3906ec417924f81c49ea01"
+    },
+    {
+      "id": "p7-18-narrow-openings",
+      "valid": true,
+      "cameras": 2,
+      "plan_sha256": "47e51fb4f25aa8883dbd57baddce534797d4ac1ba48cbbe20857ef168e9453ca",
+      "plan_contract_sha256": "f693015b444f5be93be7143f24614cb860b04c18004219792b453fb721c8ed0f"
+    },
+    {
+      "id": "p7-19-unequal-heights",
+      "valid": true,
+      "cameras": 4,
+      "plan_sha256": "d3dd5674b17336f3607b056c7ed569ae609373e9a76d573860801de5fb1bf37b",
+      "plan_contract_sha256": "f40f78356f0139a5b3464898b270a79ef00649fa0c7983bbc519bf9ee1b844b2"
+    },
+    {
+      "id": "p7-20-complex-shared",
+      "valid": true,
+      "cameras": 6,
+      "plan_sha256": "69014c9220b35048700057e2a5e3e10f81cbf6a17112612e55174f92544b79a2",
+      "plan_contract_sha256": "a03dcdb128dca1d8ccfad8e717df439de66d128494a48b8e974fda5ef64aaf5d"
+    }
+  ]
+}

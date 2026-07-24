@@ -1,0 +1,6587 @@
+{
+  "schema_version": "1.0",
+  "fixtures": [
+    {
+      "id": "p7-01-rectangle",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-01-rectangle",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-01-rectangle",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                5,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                5,
+                0
+              ],
+              "end": [
+                5,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                5,
+                4
+              ],
+              "end": [
+                0,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                4
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-1",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-1",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-1",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "presentation",
+          "webxr": {
+            "quality_tier": "quality",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-1",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-02-door",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-02-door",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-02-door",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                5,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                5,
+                0
+              ],
+              "end": [
+                5,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                5,
+                4
+              ],
+              "end": [
+                0,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                4
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": [
+            {
+              "id": "opening-p3-02-door",
+              "kind": "hinged_door",
+              "host_wall_id": "wall-1",
+              "offset": 0.7,
+              "width": 0.9,
+              "height": 2.1,
+              "sill_height": 0
+            }
+          ]
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-2",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-2",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-2",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-2",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                2.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.35,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-03-window",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-03-window",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-03-window",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                6,
+                4
+              ],
+              "end": [
+                0,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                4
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": [
+            {
+              "id": "opening-p3-03-window",
+              "kind": "window",
+              "host_wall_id": "wall-3",
+              "offset": 1.2,
+              "width": 2.1,
+              "height": 1.2,
+              "sill_height": 0.9
+            }
+          ]
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-3",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-3",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-3",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-3",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-04-l-room",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-04-l-room",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-04-l-room",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                6,
+                2
+              ],
+              "end": [
+                3,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                3,
+                2
+              ],
+              "end": [
+                3,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                3,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4",
+              "wall-5",
+              "wall-6"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-4",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-4",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-4",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "presentation",
+          "webxr": {
+            "quality_tier": "quality",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-4",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-05-u-room",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-05-u-room",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-05-u-room",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                7,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                7,
+                0
+              ],
+              "end": [
+                7,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                7,
+                5
+              ],
+              "end": [
+                5,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                5,
+                5
+              ],
+              "end": [
+                5,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                5,
+                2
+              ],
+              "end": [
+                2,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                2,
+                2
+              ],
+              "end": [
+                2,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                2,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-8",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4",
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-8"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-5",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-5",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-5",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-5",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-06-two-room-vertical",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-06-two-room-vertical",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-06-two-room-vertical",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                3,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                3,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                3,
+                4
+              ],
+              "end": [
+                0,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                4
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                6,
+                4
+              ],
+              "end": [
+                3,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-2"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-6",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-6",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-6",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-6",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-07-two-room-horizontal",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-07-two-room-horizontal",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-07-two-room-horizontal",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                2.5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                6,
+                2.5
+              ],
+              "end": [
+                0,
+                2.5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                2.5
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                6,
+                2.5
+              ],
+              "end": [
+                6,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                6,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                2.5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-3",
+              "wall-5",
+              "wall-6",
+              "wall-7"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-7",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-7",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-7",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "presentation",
+          "webxr": {
+            "quality_tier": "quality",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-7",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-08-three-room-t",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-08-three-room-t",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-08-three-room-t",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                2,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                2,
+                0
+              ],
+              "end": [
+                2,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                2,
+                2
+              ],
+              "end": [
+                0,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                2
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                2,
+                0
+              ],
+              "end": [
+                4,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                4,
+                0
+              ],
+              "end": [
+                4,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                4,
+                2
+              ],
+              "end": [
+                2,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-8",
+              "start": [
+                0,
+                2
+              ],
+              "end": [
+                4,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-9",
+              "start": [
+                4,
+                2
+              ],
+              "end": [
+                4,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-10",
+              "start": [
+                4,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-11",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-2"
+            ]
+          },
+          {
+            "id": "room-3",
+            "name": "Room 3",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-8",
+              "wall-9",
+              "wall-10",
+              "wall-11"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-8",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-8",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-8",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-8",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2",
+            "room-3"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-09-four-room-grid",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-09-four-room-grid",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-09-four-room-grid",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                3,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                3,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                3,
+                3
+              ],
+              "end": [
+                0,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                3
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                6,
+                3
+              ],
+              "end": [
+                3,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-8",
+              "start": [
+                3,
+                3
+              ],
+              "end": [
+                3,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-9",
+              "start": [
+                3,
+                6
+              ],
+              "end": [
+                0,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-10",
+              "start": [
+                0,
+                6
+              ],
+              "end": [
+                0,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-11",
+              "start": [
+                6,
+                3
+              ],
+              "end": [
+                6,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-12",
+              "start": [
+                6,
+                6
+              ],
+              "end": [
+                3,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-2"
+            ]
+          },
+          {
+            "id": "room-3",
+            "name": "Room 3",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-3",
+              "wall-8",
+              "wall-9",
+              "wall-10"
+            ]
+          },
+          {
+            "id": "room-4",
+            "name": "Room 4",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-7",
+              "wall-11",
+              "wall-12",
+              "wall-8"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-9",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-9",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-9",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-9",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2",
+            "room-3",
+            "room-4"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-10-corridor-living",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-10-corridor-living",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-10-corridor-living",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                2,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                2,
+                0
+              ],
+              "end": [
+                2,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                2,
+                6
+              ],
+              "end": [
+                0,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                6
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                2,
+                0
+              ],
+              "end": [
+                7,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                7,
+                0
+              ],
+              "end": [
+                7,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                7,
+                4
+              ],
+              "end": [
+                2,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-8",
+              "start": [
+                2,
+                4
+              ],
+              "end": [
+                2,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-8"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-10",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-10",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-10",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "presentation",
+          "webxr": {
+            "quality_tier": "quality",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-10",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-11-slanted-pentagon",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-11-slanted-pentagon",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-11-slanted-pentagon",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                4,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                4,
+                0
+              ],
+              "end": [
+                5,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                5,
+                2
+              ],
+              "end": [
+                4,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                4,
+                4
+              ],
+              "end": [
+                0,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                0,
+                4
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4",
+              "wall-5"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-11",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-11",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-11",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-11",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-12-level-change",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-12-level-change",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-12-level-change",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                3,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                3,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                3,
+                4
+              ],
+              "end": [
+                0,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                4
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                6,
+                4
+              ],
+              "end": [
+                3,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ],
+            "floor_elevation": 0,
+            "ceiling_elevation": 2.8
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-2"
+            ],
+            "floor_elevation": 0.3,
+            "ceiling_elevation": 3.4
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-12",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-12",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-12",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-12",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-13-column",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-13-column",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-13-column",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                5,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                5,
+                0
+              ],
+              "end": [
+                5,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                5,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": [],
+          "architectural_elements": [
+            {
+              "id": "column-01",
+              "kind": "column",
+              "dimensions": [
+                0.35,
+                2.8,
+                0.35
+              ],
+              "transform": {
+                "position": [
+                  1.1,
+                  1.4,
+                  1.1
+                ]
+              }
+            }
+          ]
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-13",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-13",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-13",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "presentation",
+          "webxr": {
+            "quality_tier": "quality",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-13",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-14-beam",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-14-beam",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-14-beam",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                6,
+                4
+              ],
+              "end": [
+                0,
+                4
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                4
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": [],
+          "architectural_elements": [
+            {
+              "id": "beam-01",
+              "kind": "beam",
+              "dimensions": [
+                3.5,
+                0.35,
+                0.35
+              ],
+              "transform": {
+                "position": [
+                  3,
+                  2.55,
+                  1
+                ]
+              }
+            }
+          ]
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-14",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-14",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-14",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-14",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-15-stair",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-15-stair",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-15-stair",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                6,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                6,
+                0
+              ],
+              "end": [
+                6,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                6,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": [],
+          "architectural_elements": [
+            {
+              "id": "stair-01",
+              "kind": "stair",
+              "dimensions": [
+                1.1,
+                1.2,
+                1.8
+              ],
+              "transform": {
+                "position": [
+                  4.6,
+                  0,
+                  2.4
+                ]
+              },
+              "step_count": 6
+            }
+          ]
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-15",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-15",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-15",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-15",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-16-structure-combined",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-16-structure-combined",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-16-structure-combined",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                7,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                7,
+                0
+              ],
+              "end": [
+                7,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                7,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": [],
+          "architectural_elements": [
+            {
+              "id": "column-02",
+              "kind": "column",
+              "dimensions": [
+                0.3,
+                2.8,
+                0.3
+              ],
+              "transform": {
+                "position": [
+                  1,
+                  1.4,
+                  1
+                ]
+              }
+            },
+            {
+              "id": "beam-02",
+              "kind": "beam",
+              "dimensions": [
+                2,
+                0.3,
+                0.3
+              ],
+              "transform": {
+                "position": [
+                  4,
+                  2.5,
+                  1
+                ]
+              }
+            },
+            {
+              "id": "stair-02",
+              "kind": "stair",
+              "dimensions": [
+                1,
+                1,
+                1.5
+              ],
+              "transform": {
+                "position": [
+                  5.5,
+                  0,
+                  3.5
+                ]
+              },
+              "step_count": 5
+            }
+          ]
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-16",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-16",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-16",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "presentation",
+          "webxr": {
+            "quality_tier": "quality",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-16",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-17-concave-two-room",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-17-concave-two-room",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-17-concave-two-room",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                5,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                5,
+                0
+              ],
+              "end": [
+                5,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                5,
+                2
+              ],
+              "end": [
+                2,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                2,
+                2
+              ],
+              "end": [
+                2,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                2,
+                5
+              ],
+              "end": [
+                0,
+                5
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                0,
+                5
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                2,
+                2
+              ],
+              "end": [
+                6,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-8",
+              "start": [
+                6,
+                2
+              ],
+              "end": [
+                6,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-9",
+              "start": [
+                6,
+                6
+              ],
+              "end": [
+                2,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-10",
+              "start": [
+                2,
+                6
+              ],
+              "end": [
+                2,
+                2
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4",
+              "wall-5",
+              "wall-6"
+            ]
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-7",
+              "wall-8",
+              "wall-9",
+              "wall-10"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-17",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-17",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-17",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-17",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-18-narrow-openings",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-18-narrow-openings",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-18-narrow-openings",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                8,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                8,
+                0
+              ],
+              "end": [
+                8,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                8,
+                3
+              ],
+              "end": [
+                0,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                3
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": [
+            {
+              "id": "opening-p3-18-narrow-openings",
+              "kind": "open_passage",
+              "host_wall_id": "wall-1",
+              "offset": 2.2,
+              "width": 1.1,
+              "height": 2.8,
+              "sill_height": 0
+            }
+          ]
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-18",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-18",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-18",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-18",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    },
+    {
+      "id": "p7-19-unequal-heights",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-19-unequal-heights",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-19-unequal-heights",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                3,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                3,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                3,
+                3
+              ],
+              "end": [
+                0,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                3
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                7,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                7,
+                0
+              ],
+              "end": [
+                7,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                7,
+                3
+              ],
+              "end": [
+                3,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-8",
+              "start": [
+                0,
+                3
+              ],
+              "end": [
+                7,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-9",
+              "start": [
+                7,
+                3
+              ],
+              "end": [
+                7,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-10",
+              "start": [
+                7,
+                6
+              ],
+              "end": [
+                0,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-11",
+              "start": [
+                0,
+                6
+              ],
+              "end": [
+                0,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ],
+            "floor_elevation": 0,
+            "ceiling_elevation": 2.6
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-2"
+            ],
+            "floor_elevation": 0,
+            "ceiling_elevation": 3.1
+          },
+          {
+            "id": "room-3",
+            "name": "Room 3",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-8",
+              "wall-9",
+              "wall-10",
+              "wall-11"
+            ],
+            "floor_elevation": 0.2,
+            "ceiling_elevation": 2.9
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#D8C7B5",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-19",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-19",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-19",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "presentation",
+          "webxr": {
+            "quality_tier": "quality",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-19",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2",
+            "room-3"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 30
+        }
+      }
+    },
+    {
+      "id": "p7-20-complex-shared",
+      "spatial": {
+        "schema_version": "1.0",
+        "project": {
+          "id": "p3-20-complex-shared",
+          "revision": "p7-fixture-001",
+          "units": "meters",
+          "up_axis": "Y",
+          "forward_axis": "-Z",
+          "handedness": "right",
+          "origin": [
+            0,
+            0,
+            0
+          ]
+        },
+        "sources": [
+          {
+            "id": "source-p3-20-complex-shared",
+            "type": "synthetic_p3_geometry"
+          }
+        ],
+        "extraction": {
+          "source_kind": "manual",
+          "method": "p3-regression-fixture",
+          "scale": {
+            "status": "trusted",
+            "meters_per_source_unit": 1
+          },
+          "topology_confidence": 1,
+          "coordinate_transform": {
+            "source_space": "meters",
+            "target_space": "spatial-meters-xz",
+            "matrix_3x3": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "envelope": {
+          "floor_elevation": 0,
+          "ceiling_height": 2.8,
+          "walls": [
+            {
+              "id": "wall-1",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                2,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-2",
+              "start": [
+                2,
+                0
+              ],
+              "end": [
+                2,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-3",
+              "start": [
+                2,
+                3
+              ],
+              "end": [
+                0,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-4",
+              "start": [
+                0,
+                3
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-5",
+              "start": [
+                2,
+                0
+              ],
+              "end": [
+                5,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-6",
+              "start": [
+                5,
+                0
+              ],
+              "end": [
+                5,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-7",
+              "start": [
+                5,
+                3
+              ],
+              "end": [
+                2,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-8",
+              "start": [
+                5,
+                0
+              ],
+              "end": [
+                8,
+                0
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-9",
+              "start": [
+                8,
+                0
+              ],
+              "end": [
+                8,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-10",
+              "start": [
+                8,
+                3
+              ],
+              "end": [
+                5,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-11",
+              "start": [
+                0,
+                3
+              ],
+              "end": [
+                4,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-12",
+              "start": [
+                4,
+                3
+              ],
+              "end": [
+                4,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-13",
+              "start": [
+                4,
+                6
+              ],
+              "end": [
+                0,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-14",
+              "start": [
+                0,
+                6
+              ],
+              "end": [
+                0,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-15",
+              "start": [
+                4,
+                3
+              ],
+              "end": [
+                8,
+                3
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-16",
+              "start": [
+                8,
+                3
+              ],
+              "end": [
+                8,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            },
+            {
+              "id": "wall-17",
+              "start": [
+                8,
+                6
+              ],
+              "end": [
+                4,
+                6
+              ],
+              "thickness": 0.2,
+              "height": 2.8,
+              "structural_role": "unknown",
+              "edit_policy": "review_required"
+            }
+          ],
+          "openings": []
+        },
+        "rooms": [
+          {
+            "id": "room-1",
+            "name": "Room 1",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-1",
+              "wall-2",
+              "wall-3",
+              "wall-4"
+            ]
+          },
+          {
+            "id": "room-2",
+            "name": "Room 2",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-5",
+              "wall-6",
+              "wall-7",
+              "wall-2"
+            ]
+          },
+          {
+            "id": "room-3",
+            "name": "Room 3",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-8",
+              "wall-9",
+              "wall-10",
+              "wall-6"
+            ]
+          },
+          {
+            "id": "room-4",
+            "name": "Room 4",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-11",
+              "wall-12",
+              "wall-13",
+              "wall-14"
+            ]
+          },
+          {
+            "id": "room-5",
+            "name": "Room 5",
+            "type": "generic",
+            "boundary_wall_ids": [
+              "wall-15",
+              "wall-16",
+              "wall-17",
+              "wall-12"
+            ]
+          }
+        ],
+        "assumptions": [],
+        "unresolved_questions": [],
+        "validation": {
+          "status": "pending",
+          "approved_scope": null,
+          "checks": []
+        },
+        "materials": {
+          "finish_paint": {
+            "base_color": "#B8C5BF",
+            "roughness": 0.68,
+            "metalness": 0,
+            "texture_budget_bytes": 4096,
+            "textures": {
+              "base_color": {
+                "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl5L9sAAAAASUVORK5CYII=",
+                "mime_type": "image/png",
+                "color_space": "srgb",
+                "scale_meters": 1
+              },
+              "normal": {
+                "uri": "missing/finish-normal.png",
+                "mime_type": "image/png",
+                "color_space": "linear",
+                "scale_meters": 1
+              }
+            }
+          }
+        },
+        "material_overrides": {
+          "wall_default": "finish_paint"
+        },
+        "hard_finishes": [
+          {
+            "id": "baseboard-20",
+            "kind": "baseboard",
+            "host_wall_id": "wall-1",
+            "material_id": "finish_paint",
+            "height": 0.1,
+            "depth": 0.018
+          }
+        ],
+        "lights": [
+          {
+            "id": "sun-20",
+            "kind": "natural",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "intensity": 1.1,
+            "color": "#FFF1D8"
+          },
+          {
+            "id": "lamp-20",
+            "kind": "area",
+            "position": [
+              1,
+              2.4,
+              1
+            ],
+            "intensity": 35,
+            "range": 4
+          }
+        ],
+        "render_profiles": {
+          "quality": "standard",
+          "webxr": {
+            "quality_tier": "balanced",
+            "target_asset_format": "glb",
+            "target_fps": 72,
+            "max_pixel_ratio": 1.5
+          }
+        },
+        "assets": [
+          {
+            "id": "catalog-chair",
+            "kind": "chair",
+            "uri": "catalog/chair.glb",
+            "format": "glb",
+            "source": "licensed_catalog",
+            "license": "commercial",
+            "units": "meters",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "pivot": "bottom_center",
+            "forward_axis": "-Z",
+            "optimized": true,
+            "collision_proxy": true
+          }
+        ],
+        "design_objects": [
+          {
+            "id": "chair-20",
+            "kind": "chair",
+            "room_id": "room-1",
+            "asset_id": "catalog-chair",
+            "dimensions": [
+              0.4,
+              0.8,
+              0.4
+            ],
+            "transform": {
+              "position": [
+                0.4,
+                0,
+                0.4
+              ],
+              "rotation_euler_degrees": [
+                0,
+                0,
+                0
+              ],
+              "scale": [
+                1,
+                1,
+                1
+              ]
+            }
+          }
+        ],
+        "xr": {
+          "spawn": [
+            0.85,
+            0,
+            0.35
+          ],
+          "boundary_room_ids": [
+            "room-1",
+            "room-2",
+            "room-3",
+            "room-4",
+            "room-5"
+          ],
+          "navigation": "teleport",
+          "snap_turn_degrees": 45
+        }
+      }
+    }
+  ]
+}

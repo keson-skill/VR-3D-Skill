@@ -10,6 +10,8 @@ const DEFAULT_REASONING_EFFORT = "high";
 const DEFAULT_IMAGE_SIZE = "1536x1024";
 const DEFAULT_IMAGE_QUALITY = "medium";
 const DEFAULT_TIMEOUT_MS = 120000;
+const DEFAULT_MAX_RETRIES = 3;
+const DEFAULT_RETRY_DELAY_MS = 500;
 const ALLOWED_REASONING_EFFORTS = new Set([
   "none",
   "low",
@@ -112,7 +114,26 @@ function safeUpstreamMessage(payload, statusText, apiKey) {
   return String(message).replaceAll(apiKey.trim(), "[REDACTED]");
 }
 
-async function request({
+function safeNetworkMessage(error, apiKey) {
+  const cause = error?.cause;
+  const code = cause?.code || error?.code || null;
+  const message = cause?.message || error?.message || "Unknown network error";
+  const suffix = code ? ` (${code})` : "";
+  return `${String(message).replaceAll(apiKey.trim(), "[REDACTED]")}${suffix}`;
+}
+
+function isRetryable(error) {
+  if (!Number.isInteger(error?.status)) {
+    return true;
+  }
+  return error.status === 408 || error.status === 409 || error.status === 425 || error.status === 429 || error.status >= 500;
+}
+
+function wait(delayMs) {
+  return new Promise((resolve) => setTimeout(resolve, delayMs));
+}
+
+async function requestOnce({
   endpoint,
   apiKey,
   method = "GET",
@@ -128,10 +149,10 @@ async function request({
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  let timeout;
 
   try {
-    const response = await fetchImpl(endpoint, {
+    const fetchPromise = Promise.resolve(fetchImpl(endpoint, {
       method,
       headers: {
         Authorization: `Bearer ${apiKey.trim()}`,
@@ -140,7 +161,18 @@ async function request({
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal: controller.signal,
+    }));
+    const timeoutPromise = new Promise((_, reject) => {
+      timeout = setTimeout(() => {
+        controller.abort();
+        const error = new Error(
+          `RealmRouter request exceeded ${timeoutMs} ms without a response.`,
+        );
+        error.code = "ETIMEDOUT";
+        reject(error);
+      }, timeoutMs);
     });
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
 
     const raw = await response.text();
     let payload;
@@ -168,20 +200,67 @@ async function request({
   }
 }
 
+async function request({
+  endpoint,
+  apiKey,
+  method = "GET",
+  body,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  maxRetries = DEFAULT_MAX_RETRIES,
+  retryDelayMs = DEFAULT_RETRY_DELAY_MS,
+  fetchImpl = globalThis.fetch,
+}) {
+  if (!Number.isInteger(maxRetries) || maxRetries < 0 || maxRetries > 8) {
+    throw new Error("REALMROUTER_MAX_RETRIES must be an integer from 0 to 8.");
+  }
+
+  let lastError;
+  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    try {
+      const result = await requestOnce({
+        endpoint,
+        apiKey,
+        method,
+        body,
+        timeoutMs,
+        fetchImpl,
+      });
+      return { ...result, attempts: attempt + 1 };
+    } catch (error) {
+      lastError = error;
+      if (!isRetryable(error) || attempt === maxRetries) {
+        break;
+      }
+      await wait(retryDelayMs * 2 ** attempt);
+    }
+  }
+
+  if (!Number.isInteger(lastError?.status)) {
+    throw new Error(
+      `RealmRouter network request failed after ${maxRetries + 1} attempts: ${safeNetworkMessage(lastError, apiKey)}.`,
+    );
+  }
+  throw lastError;
+}
+
 export async function discoverModels({
   apiKey,
   baseUrl = DEFAULT_BASE_URL,
   timeoutMs = DEFAULT_TIMEOUT_MS,
+  maxRetries = DEFAULT_MAX_RETRIES,
+  retryDelayMs = DEFAULT_RETRY_DELAY_MS,
   fetchImpl = globalThis.fetch,
 }) {
   const failures = [];
 
   for (const endpoint of buildModelEndpointCandidates(baseUrl)) {
     try {
-      const { payload } = await request({
+      const { payload, attempts } = await request({
         endpoint,
         apiKey,
         timeoutMs,
+        maxRetries,
+        retryDelayMs,
         fetchImpl,
       });
       const hasCatalogShape =
@@ -192,7 +271,7 @@ export async function discoverModels({
         failures.push(`${endpoint} returned no recognized model catalog.`);
         continue;
       }
-      return { endpoint, modelIds: extractModelIds(payload) };
+      return { endpoint, modelIds: extractModelIds(payload), attempts };
     } catch (error) {
       failures.push(error.message);
       if (error.status && error.status !== 404) {
@@ -212,6 +291,8 @@ export async function generateSpatialJson({
   prompt,
   imageDataUrls = [],
   timeoutMs = DEFAULT_TIMEOUT_MS,
+  maxRetries = DEFAULT_MAX_RETRIES,
+  retryDelayMs = DEFAULT_RETRY_DELAY_MS,
   fetchImpl = globalThis.fetch,
 }) {
   if (!ALLOWED_REASONING_EFFORTS.has(reasoningEffort)) {
@@ -223,7 +304,7 @@ export async function generateSpatialJson({
     throw new Error("A non-empty spatial prompt is required.");
   }
 
-  const { payload } = await request({
+  const { payload, attempts } = await request({
     endpoint: buildEndpoint(baseUrl, "/chat/completions"),
     apiKey,
     method: "POST",
@@ -253,6 +334,8 @@ export async function generateSpatialJson({
       stream: false,
     },
     timeoutMs,
+    maxRetries,
+    retryDelayMs,
     fetchImpl,
   });
 
@@ -261,6 +344,7 @@ export async function generateSpatialJson({
     model: payload.model || model,
     requestId: payload.id || null,
     usage: payload.usage || null,
+    attempts,
   };
 }
 
@@ -272,6 +356,8 @@ export async function generateImage({
   size = DEFAULT_IMAGE_SIZE,
   quality = DEFAULT_IMAGE_QUALITY,
   timeoutMs = DEFAULT_TIMEOUT_MS,
+  maxRetries = DEFAULT_MAX_RETRIES,
+  retryDelayMs = DEFAULT_RETRY_DELAY_MS,
   fetchImpl = globalThis.fetch,
 }) {
   if (!prompt?.trim()) {
@@ -283,12 +369,14 @@ export async function generateImage({
     );
   }
 
-  const { payload } = await request({
+  const { payload, attempts } = await request({
     endpoint: buildEndpoint(baseUrl, "/images/generations"),
     apiKey,
     method: "POST",
     body: { model, prompt: prompt.trim(), size, quality },
     timeoutMs,
+    maxRetries,
+    retryDelayMs,
     fetchImpl,
   });
 
@@ -299,6 +387,7 @@ export async function generateImage({
       sourceUrl: null,
       model: payload.model || model,
       requestId: payload.id || null,
+      attempts,
     };
   }
   if (typeof result?.url === "string" && result.url) {
@@ -311,6 +400,7 @@ export async function generateImage({
       sourceUrl: result.url,
       model: payload.model || model,
       requestId: payload.id || null,
+      attempts,
     };
   }
   throw new Error("RealmRouter Images returned neither b64_json nor a URL.");
@@ -350,16 +440,17 @@ function parseArgs(argv) {
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node --env-file=.env scripts/realmrouter-openai.mjs check
-  node --env-file=.env scripts/realmrouter-openai.mjs models
-  node --env-file=.env scripts/realmrouter-openai.mjs spatial --prompt-file TASK.md [--input-image plan.png] --output spatial.json
-  node --env-file=.env scripts/realmrouter-openai.mjs image --prompt-file PROMPT.md --output preview.png [--size 1536x1024] [--quality medium]
+  node --env-file=.env scripts/adapters/realmrouter-openai.mjs check
+  node --env-file=.env scripts/adapters/realmrouter-openai.mjs models
+  node --env-file=.env scripts/adapters/realmrouter-openai.mjs spatial --prompt-file TASK.md [--input-image plan.png] --output spatial.json
+  node --env-file=.env scripts/adapters/realmrouter-openai.mjs image --prompt-file PROMPT.md --output preview.png [--size 1536x1024] [--quality medium]
 
 The adapter reads REALMROUTER_SPATIAL_API_KEY, REALMROUTER_IMAGE_API_KEY,
 REALMROUTER_BASE_URL,
 REALMROUTER_SPATIAL_MODEL, REALMROUTER_IMAGE_MODEL,
 REALMROUTER_SPATIAL_REASONING_EFFORT, REALMROUTER_IMAGE_SIZE,
 REALMROUTER_IMAGE_QUALITY, and REALMROUTER_TIMEOUT_MS.
+Set REALMROUTER_MAX_RETRIES (0-8, default 3) for transient network or upstream retries.
 It never prints the API key.
 `);
 }
@@ -426,9 +517,15 @@ async function main() {
   const timeoutMs = Number(
     process.env.REALMROUTER_TIMEOUT_MS || DEFAULT_TIMEOUT_MS,
   );
+  const maxRetries = Number(
+    process.env.REALMROUTER_MAX_RETRIES || DEFAULT_MAX_RETRIES,
+  );
 
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
     throw new Error("REALMROUTER_TIMEOUT_MS must be a positive number.");
+  }
+  if (!Number.isInteger(maxRetries) || maxRetries < 0 || maxRetries > 8) {
+    throw new Error("REALMROUTER_MAX_RETRIES must be an integer from 0 to 8.");
   }
 
   if (options.command === "check") {
@@ -445,6 +542,7 @@ async function main() {
           imageSize,
           imageQuality,
           timeoutMs,
+          maxRetries,
           spatialApiKeyPresent: Boolean(spatialApiKey),
           imageApiKeyPresent: Boolean(imageApiKey),
         },
@@ -460,8 +558,8 @@ async function main() {
 
   if (options.command === "models") {
     const [spatialCatalog, imageCatalog] = await Promise.all([
-      discoverModels({ apiKey: spatialApiKey, baseUrl, timeoutMs }),
-      discoverModels({ apiKey: imageApiKey, baseUrl, timeoutMs }),
+      discoverModels({ apiKey: spatialApiKey, baseUrl, timeoutMs, maxRetries }),
+      discoverModels({ apiKey: imageApiKey, baseUrl, timeoutMs, maxRetries }),
     ]);
     const available = {
       [spatialModel]: spatialCatalog.modelIds.includes(spatialModel),
@@ -478,6 +576,10 @@ async function main() {
           discoveredModelCounts: {
             spatial: spatialCatalog.modelIds.length,
             image: imageCatalog.modelIds.length,
+          },
+          attempts: {
+            spatial: spatialCatalog.attempts,
+            image: imageCatalog.attempts,
           },
           note:
             "Catalog presence does not prove invocation permission; the token group and balance must also allow the endpoint.",
@@ -506,6 +608,7 @@ async function main() {
       prompt,
       imageDataUrls,
       timeoutMs,
+      maxRetries,
     });
     await writeFile(
       options.outputFile,
@@ -518,6 +621,7 @@ async function main() {
         model: result.model,
         requestId: result.requestId,
         usage: result.usage,
+        attempts: result.attempts,
       })}\n`,
     );
     return;
@@ -536,6 +640,7 @@ async function main() {
       size: imageSize,
       quality: imageQuality,
       timeoutMs,
+      maxRetries,
     });
     await writeFile(options.outputFile, result.bytes);
     process.stdout.write(
@@ -544,6 +649,7 @@ async function main() {
         model: result.model,
         requestId: result.requestId,
         bytes: result.bytes.length,
+        attempts: result.attempts,
       })}\n`,
     );
     return;
@@ -563,6 +669,6 @@ if (isDirectRun) {
         ? "RealmRouter request timed out."
         : error?.message || String(error);
     process.stderr.write(`${message}\n`);
-    process.exitCode = 1;
+    process.exit(1);
   });
 }

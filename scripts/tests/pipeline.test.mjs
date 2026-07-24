@@ -10,6 +10,7 @@ import { createAssetBrief } from "../tasks/asset-generation/create-asset-brief.m
 import { validateRevision } from "../validation/validate-revision.mjs";
 import { evaluateDesignProposal } from "../tasks/design-planning/evaluate-design-proposal.mjs";
 import { resolveAssets } from "../tasks/asset-generation/resolve-assets.mjs";
+import { buildRuntimeContract } from "../runtime/build-runtime-contract.mjs";
 import { validateSpatialJson } from "../validation/validate-spatial-json.mjs";
 import { verifyXrConfig } from "../runtime/verify-xr-config.mjs";
 import {
@@ -273,6 +274,17 @@ test("P5 resolves only licensed dimensionally compatible catalog assets and reco
   assert.equal(result.valid, true);
   assert.equal(result.resolved[0].representation, "real_asset");
   assert.equal(result.resolved[1].representation, "proxy");
+});
+
+test("P6 builds room navigation, collision, interaction, accessibility, and XR lifecycle contracts", () => {
+  const contract = buildRuntimeContract(validSpatialJson());
+  assert.equal(contract.valid, true, JSON.stringify(contract.errors));
+  assert.equal(contract.rooms.length, 1);
+  assert.equal(contract.obstacles.length, 1);
+  assert.ok(contract.interaction.operations.includes("measure"));
+  assert.ok(contract.interaction.operations.includes("undo"));
+  assert.ok(contract.lifecycle.includes("reconnecting"));
+  assert.equal(contract.accessibility.live_status, true);
 });
 
 test("validates stable-ID revision operations and rejects array indexes", () => {

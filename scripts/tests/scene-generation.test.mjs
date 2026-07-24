@@ -156,6 +156,7 @@ test("builds a deterministic GLB and self-contained Web viewer", async () => {
       "vendor/jsm/utils/BufferGeometryUtils.js",
       "approval-verification-report.json",
       "glb-validation-report.json",
+      "runtime-contract.json",
       "scene-primitives.json",
       "validation-report.json",
       "source-manifest.json",

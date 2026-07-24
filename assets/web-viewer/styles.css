@@ -81,7 +81,8 @@ h1 {
 }
 
 button,
-label {
+label,
+select {
   border: 1px solid rgb(255 255 255 / 12%);
   border-radius: 10px;
   background: #252a2c;
@@ -91,8 +92,28 @@ label {
 }
 
 button {
+  min-height: 44px;
   padding: 9px 11px;
   cursor: pointer;
+}
+
+select {
+  min-height: 44px;
+  padding: 8px;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 3px solid #a9e8d2;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
 }
 
 button:hover,

@@ -39,6 +39,7 @@ function checkSyntax(file) {
 }
 
 const files = await collectScripts(new URL(".", import.meta.url).pathname);
+files.push(new URL("../assets/web-viewer/app.js", import.meta.url).pathname);
 for (const file of files) {
   await checkSyntax(file);
 }

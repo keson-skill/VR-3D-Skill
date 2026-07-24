@@ -16,6 +16,7 @@ import {
 } from "../../lib/cli.mjs";
 import { validateSpatialJson } from "../../validation/validate-spatial-json.mjs";
 import { validateGlbBytes } from "../../validation/validate-glb.mjs";
+import { buildRuntimeContract } from "../../runtime/build-runtime-contract.mjs";
 
 const MODES = new Map([
   ["shell", "毛坯房"],
@@ -128,6 +129,7 @@ export async function buildViewableScene(
     scene_primitives: "./scene-primitives.json",
     bounds: sceneBounds(spatialJson),
     xr: spatialJson.xr || null,
+    runtime_contract: "./runtime-contract.json",
     counts: {
       primitives: primitives.length,
       rooms: spatialJson.rooms.length,
@@ -157,6 +159,8 @@ export async function buildViewableScene(
     validation,
   );
   await writeJson(join(outputDirectory, "glb-validation-report.json"), glbValidation);
+  const runtimeContract = buildRuntimeContract(spatialJson);
+  await writeJson(join(outputDirectory, "runtime-contract.json"), runtimeContract);
   await writeJson(join(outputDirectory, "texture-validation-report.json"), {
     schema_version: "1.0",
     quality: glbWrite.quality,
@@ -193,6 +197,7 @@ export async function buildViewableScene(
     validation,
     glbValidation,
     textureReport: glbWrite.textureReport,
+    runtimeContract,
   };
 }
 

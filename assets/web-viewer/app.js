@@ -40,7 +40,13 @@ const state = {
   mode: "orbit",
   model: null,
   manifest: null,
+  runtime: null,
   keys: new Set(),
+  selected: null,
+  history: [],
+  measuring: false,
+  measureStart: null,
+  annotations: [],
 };
 
 const projectName = document.querySelector("#project-name");
@@ -55,6 +61,24 @@ const modeButtons = [
 
 function setStatus(message) {
   status.textContent = message;
+}
+
+function pointInPolygon(point, polygon) {
+  let inside = false;
+  for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index++) {
+    const [xi, zi] = polygon[index];
+    const [xj, zj] = polygon[previous];
+    if ((zi > point[1]) !== (zj > point[1]) && point[0] < ((xj - xi) * (point[1] - zi)) / (zj - zi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+function canStandAt(position, excludedId = null) {
+  if (!state.runtime) return true;
+  const point = [position.x, position.z];
+  const inRoom = state.runtime.rooms.some((room) => pointInPolygon(point, room.polygon));
+  const inObstacle = state.runtime.obstacles.some((obstacle) => obstacle.id !== excludedId && pointInPolygon(point, obstacle.footprint));
+  return inRoom && !inObstacle;
 }
 
 function boundsCenter(bounds) {
@@ -130,16 +154,61 @@ document.querySelector("#furniture-toggle").addEventListener("change", (event) =
 document.querySelector("#opening-toggle").addEventListener("change", (event) => {
   setCategoryVisible("opening", event.target.checked);
 });
+document.querySelector("#room-select").addEventListener("change", (event) => {
+  const room = state.runtime?.rooms.find((item) => item.id === event.target.value);
+  if (!room) return;
+  camera.position.set(room.navigation_point[0], room.floor_elevation + 1.65, room.navigation_point[1]);
+  orbit.target.set(room.navigation_point[0], room.floor_elevation + 1, room.navigation_point[1]);
+  orbit.update();
+  setStatus(`已跳转到 ${room.name}`);
+});
+document.querySelector("#measure-button").addEventListener("click", (event) => {
+  state.measuring = !state.measuring;
+  state.measureStart = null;
+  event.currentTarget.setAttribute("aria-pressed", String(state.measuring));
+  setStatus(state.measuring ? "测量模式：依次点击两个表面点" : "已退出测量模式");
+});
+document.querySelector("#annotate-button").addEventListener("click", () => {
+  if (!state.selected) return setStatus("请先选择家具");
+  state.annotations.push({ source_id: state.selected.userData.source_id, created_at: new Date().toISOString() });
+  setStatus(`已为 ${state.selected.userData.source_id} 添加注释标记`);
+});
+function editSelected(kind) {
+  if (!state.selected) return setStatus("请先选择可编辑家具");
+  state.history.push({ object: state.selected, position: state.selected.position.clone(), rotation: state.selected.rotation.clone() });
+  if (kind === "left") state.selected.position.x -= 0.1;
+  if (kind === "right") state.selected.position.x += 0.1;
+  if (kind === "rotate") state.selected.rotation.y += Math.PI / 12;
+  if (!canStandAt(state.selected.position, state.selected.userData.source_id)) {
+    const previous = state.history.pop();
+    state.selected.position.copy(previous.position);
+    state.selected.rotation.copy(previous.rotation);
+    return setStatus("无效位置：超出房间或与障碍物冲突");
+  }
+  setStatus(`已${kind === "rotate" ? "旋转" : "移动"} ${state.selected.userData.source_id}`);
+}
+document.querySelector("#move-left-button").addEventListener("click", () => editSelected("left"));
+document.querySelector("#move-right-button").addEventListener("click", () => editSelected("right"));
+document.querySelector("#rotate-button").addEventListener("click", () => editSelected("rotate"));
+document.querySelector("#undo-button").addEventListener("click", () => {
+  const previous = state.history.pop();
+  if (!previous) return setStatus("没有可撤销操作");
+  previous.object.position.copy(previous.position);
+  previous.object.rotation.copy(previous.rotation);
+  setStatus("已撤销上一步");
+});
 window.addEventListener("keydown", (event) => state.keys.add(event.code));
 window.addEventListener("keyup", (event) => state.keys.delete(event.code));
 
 function updateWalk(deltaSeconds) {
   if (state.mode !== "walk" || !walk.isLocked) return;
   const speed = 2.2 * deltaSeconds;
+  const previous = camera.position.clone();
   if (state.keys.has("KeyW")) walk.moveForward(speed);
   if (state.keys.has("KeyS")) walk.moveForward(-speed);
   if (state.keys.has("KeyA")) walk.moveRight(-speed);
   if (state.keys.has("KeyD")) walk.moveRight(speed);
+  if (!canStandAt(camera.position)) camera.position.copy(previous);
   camera.position.y = Math.max(1.65, camera.position.y);
 }
 
@@ -147,6 +216,10 @@ async function load() {
   const manifestResponse = await fetch("./scene-manifest.json");
   if (!manifestResponse.ok) throw new Error("无法读取 scene-manifest.json");
   state.manifest = await manifestResponse.json();
+  const runtimeResponse = await fetch(state.manifest.runtime_contract);
+  if (!runtimeResponse.ok) throw new Error("无法读取 runtime-contract.json");
+  state.runtime = await runtimeResponse.json();
+  if (!state.runtime.valid) throw new Error(`运行时合同无效：${state.runtime.errors[0]?.message}`);
   projectName.textContent = state.manifest.project.name || state.manifest.project.id;
   projectMeta.textContent = `${state.manifest.mode_label} · ${state.manifest.project.revision}`;
   if (state.manifest.approval_scope === "visualization_only") {
@@ -162,10 +235,49 @@ async function load() {
     }
   });
   scene.add(state.model);
+  const roomSelect = document.querySelector("#room-select");
+  state.runtime.rooms.forEach((room) => roomSelect.add(new Option(room.name, room.id)));
   resetCamera();
   setStatus("场景已加载");
   document.body.appendChild(VRButton.createButton(renderer));
 }
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+canvas.addEventListener("click", (event) => {
+  pointer.x = (event.offsetX / canvas.clientWidth) * 2 - 1;
+  pointer.y = -(event.offsetY / canvas.clientHeight) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hit = raycaster.intersectObject(state.model, true)[0];
+  if (!hit) return;
+  if (state.measuring) {
+    if (!state.measureStart) {
+      state.measureStart = hit.point.clone();
+      return setStatus("已记录测量起点，请点击终点");
+    }
+    const distance = state.measureStart.distanceTo(hit.point);
+    state.measureStart = null;
+    return setStatus(`测量结果：${distance.toFixed(3)} 米`);
+  }
+  let target = hit.object;
+  while (target && !target.userData?.source_id) target = target.parent;
+  if (target?.userData?.category === "furniture" && target.userData.fixed !== true) {
+    state.selected = target;
+    setStatus(`已选择 ${target.userData.source_id}`);
+  }
+});
+
+renderer.xr.addEventListener("sessionstart", () => setStatus("XR 会话已进入"));
+renderer.xr.addEventListener("sessionend", () => setStatus("XR 会话已退出，可重新进入"));
+for (const index of [0, 1]) {
+  const controller = renderer.xr.getController(index);
+  controller.addEventListener("connected", () => setStatus(`XR 控制器 ${index + 1} 已连接`));
+  controller.addEventListener("disconnected", () => setStatus(`XR 控制器 ${index + 1} 断开，正在 reconnecting`));
+  scene.add(controller);
+}
+document.addEventListener("visibilitychange", () => setStatus(document.hidden ? "场景已暂停" : "场景已恢复"));
+window.addEventListener("blur", () => setStatus("窗口失焦，输入已暂停"));
+window.addEventListener("focus", () => setStatus("窗口已恢复"));
 
 function resize() {
   const width = canvas.clientWidth;

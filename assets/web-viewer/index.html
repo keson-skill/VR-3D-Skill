@@ -27,11 +27,18 @@
           <button id="walk-button">第一视角</button>
           <button id="top-button">俯视户型</button>
           <button id="reset-button">重置视角</button>
+          <select id="room-select" aria-label="跳转房间"><option value="">跳转房间</option></select>
+          <button id="measure-button" aria-pressed="false">测量</button>
+          <button id="annotate-button">添加注释</button>
+          <button id="move-left-button">左移</button>
+          <button id="move-right-button">右移</button>
+          <button id="rotate-button">旋转</button>
+          <button id="undo-button">撤销</button>
           <label><input id="furniture-toggle" type="checkbox" checked /> 家具</label>
           <label><input id="opening-toggle" type="checkbox" checked /> 门窗</label>
         </div>
         <p id="scope-warning" class="warning" hidden></p>
-        <p id="status" class="status">准备中</p>
+        <p id="status" class="status" role="status" aria-live="polite">准备中</p>
       </section>
       <section class="help">
         <span>旋转：拖动</span>

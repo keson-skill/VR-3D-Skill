@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "stage": "P6",
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 20,
+    "runtime_errors": 0,
+    "viewer_marker_errors": 0,
+    "missing_markers": []
+  },
+  "samples": [
+    {
+      "id": "p6-01-rectangle",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "38dd4bec759a146c14b5cd5303c537faac72e10740b4dfa4cae1149b9f33771a",
+      "errors": []
+    },
+    {
+      "id": "p6-02-door",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "4055f48d69fa83573feaf7dfa9ad80a2d7a2976a2074af2fd863e496543023f2",
+      "errors": []
+    },
+    {
+      "id": "p6-03-window",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "93eed546ebc119b43aecf1d2e66441756c22442446d19d5ebcd10560ea0aeebd",
+      "errors": []
+    },
+    {
+      "id": "p6-04-l-room",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "08657642b508d89b62f958fabdccf6b4364140730b2c6299da5c745c58fff90c",
+      "errors": []
+    },
+    {
+      "id": "p6-05-u-room",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "22d8e1c88fa6a0d91806a4eac21ad85f98c82197dcb028fe1c7be3b2f5313cbf",
+      "errors": []
+    },
+    {
+      "id": "p6-06-two-room-vertical",
+      "valid": true,
+      "rooms": 2,
+      "obstacles": 1,
+      "contract_sha256": "759492dd3d20617a1bc533c9b5530993de6821b2a633053248bbcc7b24ae889d",
+      "errors": []
+    },
+    {
+      "id": "p6-07-two-room-horizontal",
+      "valid": true,
+      "rooms": 2,
+      "obstacles": 1,
+      "contract_sha256": "302edd9d8625b73c319142bba42c839e33f61e8cd77eadc73e436427b00d5700",
+      "errors": []
+    },
+    {
+      "id": "p6-08-three-room-t",
+      "valid": true,
+      "rooms": 3,
+      "obstacles": 1,
+      "contract_sha256": "0088c31ab4a39de3ed145c05b69dad5a8b12fd4667cc355eeb0eff507e414018",
+      "errors": []
+    },
+    {
+      "id": "p6-09-four-room-grid",
+      "valid": true,
+      "rooms": 4,
+      "obstacles": 1,
+      "contract_sha256": "f7ecc0de573c1629ab0361629d743e07c05f67580211bf340d207d49bb09478e",
+      "errors": []
+    },
+    {
+      "id": "p6-10-corridor-living",
+      "valid": true,
+      "rooms": 2,
+      "obstacles": 1,
+      "contract_sha256": "0498f1fa9b4b890a296cf7f3a0e30e8abc56ddf4db19f95f12f70f38150b1591",
+      "errors": []
+    },
+    {
+      "id": "p6-11-slanted-pentagon",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "6dbfeabca0ad37de6bf3f54fe2cf1e614ffdaf2813ea9e9d33f7ee10ebbb13d7",
+      "errors": []
+    },
+    {
+      "id": "p6-12-level-change",
+      "valid": true,
+      "rooms": 2,
+      "obstacles": 1,
+      "contract_sha256": "9d9038e4d8a80272f4831c416ca79035ef4262745ec1e09200b72b7f58111ad2",
+      "errors": []
+    },
+    {
+      "id": "p6-13-column",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "6cddb80985f77643b214fbc8c28aab26acc11e76dc93179a4819adf5adbe4457",
+      "errors": []
+    },
+    {
+      "id": "p6-14-beam",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "57e512b05d69a89a96fd55cbe896a57b91ae8d8b5703c4a47858ed2e91f53b87",
+      "errors": []
+    },
+    {
+      "id": "p6-15-stair",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "3e4b69211661faea0e797bc01dcc1a9f60cf6b4703a291999166765b8fbfadc7",
+      "errors": []
+    },
+    {
+      "id": "p6-16-structure-combined",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "14c965ebdb76487ac903ef00bb295a47037cb0869eda3e3d89c88df749a4567f",
+      "errors": []
+    },
+    {
+      "id": "p6-17-concave-two-room",
+      "valid": true,
+      "rooms": 2,
+      "obstacles": 1,
+      "contract_sha256": "7c437802862ac9846d24f8f032b6b37fdd047030db5c9fa677f6fa5ff9466d28",
+      "errors": []
+    },
+    {
+      "id": "p6-18-narrow-openings",
+      "valid": true,
+      "rooms": 1,
+      "obstacles": 1,
+      "contract_sha256": "d47b1d10af4c8b4fd8a9e5457dce08334e0f85e8ac65869e850b6a75e60b6a03",
+      "errors": []
+    },
+    {
+      "id": "p6-19-unequal-heights",
+      "valid": true,
+      "rooms": 3,
+      "obstacles": 1,
+      "contract_sha256": "ee11248165f338527275758ca81957b0b6b0a267cd05878e39280fbf32c302a3",
+      "errors": []
+    },
+    {
+      "id": "p6-20-complex-shared",
+      "valid": true,
+      "rooms": 5,
+      "obstacles": 1,
+      "contract_sha256": "72aef4f6ba2c43164656c3c336a1b9bbf9c56d9f9e4ca1808c6fd801ffc776e1",
+      "errors": []
+    }
+  ],
+  "device_validation": {
+    "status": "contract_only",
+    "statement": "Physical headset and controller performance was not fabricated; run P10 device qualification on target hardware."
+  }
+}

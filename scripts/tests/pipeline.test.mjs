@@ -9,6 +9,7 @@ import { buildAssetManifest } from "../processing/build-asset-manifest.mjs";
 import { createAssetBrief } from "../tasks/asset-generation/create-asset-brief.mjs";
 import { validateRevision } from "../validation/validate-revision.mjs";
 import { evaluateDesignProposal } from "../tasks/design-planning/evaluate-design-proposal.mjs";
+import { resolveAssets } from "../tasks/asset-generation/resolve-assets.mjs";
 import { validateSpatialJson } from "../validation/validate-spatial-json.mjs";
 import { verifyXrConfig } from "../runtime/verify-xr-config.mjs";
 import {
@@ -245,6 +246,21 @@ test("validates two explainable P5 layouts and distinguishes real assets from pr
   assert.deepEqual(report.alternatives[0].real_assets, ["object-sofa"]);
   assert.deepEqual(report.alternatives[1].proxy_assets, ["object-sofa"]);
   assert.equal(report.warnings.some((warning) => warning.code === "design.proxy_assets"), true);
+});
+
+test("P5 resolves only licensed dimensionally compatible catalog assets and records proxies", () => {
+  const result = resolveAssets([
+    { id: "sofa", kind: "sofa", dimensions: [2, 0.8, 0.9] },
+    { id: "chair", kind: "chair", dimensions: [0.6, 0.8, 0.6] },
+  ], {
+    assets: [
+      { id: "catalog-sofa", kind: "sofa", uri: "catalog/sofa.glb", license: "commercial", dimensions: [2.02, 0.8, 0.91] },
+      { id: "bad-chair", kind: "chair", uri: "catalog/chair.glb", license: "forbidden", dimensions: [0.6, 0.8, 0.6] },
+    ],
+  });
+  assert.equal(result.valid, true);
+  assert.equal(result.resolved[0].representation, "real_asset");
+  assert.equal(result.resolved[1].representation, "proxy");
 });
 
 test("validates stable-ID revision operations and rejects array indexes", () => {

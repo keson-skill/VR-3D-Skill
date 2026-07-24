@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 import { pathToFileURL } from "node:url";
-import { generateImage } from "../../adapters/realmrouter-openai.mjs";
+import {
+  assertModelAvailable,
+  generateImage,
+} from "../../adapters/realmrouter-openai.mjs";
 import {
   parseArgs,
   printJson,
@@ -37,7 +40,7 @@ function buildLockedVisualContext(spatialJson) {
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node --env-file=.env scripts/tasks/visual-preview/generate-preview.mjs --spatial-json approved-spatial.json --prompt-file visual-direction.md --output preview.png --metadata preview.json [--size 1536x1024] [--quality medium] --allow-provider
+  node --env-file=.env scripts/tasks/visual-preview/generate-preview.mjs --spatial-json approved-spatial.json --prompt-file visual-direction.md --output preview.png --metadata preview.json [--size 1536x1024] [--quality high] --allow-provider
 `);
 }
 
@@ -70,6 +73,14 @@ async function main() {
   }
 
   const lockedContext = buildLockedVisualContext(spatialJson);
+  await assertModelAvailable({
+    apiKey: process.env.REALMROUTER_IMAGE_API_KEY || "",
+    baseUrl: process.env.REALMROUTER_BASE_URL,
+    model: process.env.REALMROUTER_IMAGE_MODEL,
+    routeLabel: "image",
+    timeoutMs: Number(process.env.REALMROUTER_TIMEOUT_MS || 120000),
+    maxRetries: Number(process.env.REALMROUTER_MAX_RETRIES || 3),
+  });
   const prompt = `${visualDirection.trim()}
 
 Locked approved scene context:

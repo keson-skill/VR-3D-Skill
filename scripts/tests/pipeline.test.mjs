@@ -10,7 +10,11 @@ import { createAssetBrief } from "../tasks/asset-generation/create-asset-brief.m
 import { validateRevision } from "../validation/validate-revision.mjs";
 import { validateSpatialJson } from "../validation/validate-spatial-json.mjs";
 import { verifyXrConfig } from "../runtime/verify-xr-config.mjs";
-import { generateSpatialJson } from "../adapters/realmrouter-openai.mjs";
+import {
+  assertModelAvailable,
+  editImage,
+  generateSpatialJson,
+} from "../adapters/realmrouter-openai.mjs";
 
 function validSpatialJson() {
   return {
@@ -270,4 +274,65 @@ test("bounds a hanging RealmRouter request with a hard timeout", async () => {
     }),
     /exceeded 5 ms/,
   );
+});
+
+test("rejects a configured model that is absent from the token-visible catalog", async () => {
+  await assert.rejects(
+    assertModelAvailable({
+      apiKey: "test-key",
+      model: "gpt-5.6-sol",
+      routeLabel: "spatial",
+      maxRetries: 0,
+      fetchImpl: async () =>
+        new Response(JSON.stringify({ data: [{ id: "gpt-5.5" }] }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+    }),
+    /spatial model gpt-5.6-sol is not available.*gpt-5.5/,
+  );
+});
+
+test("accepts a configured model that is present in the token-visible catalog", async () => {
+  const catalog = await assertModelAvailable({
+    apiKey: "test-key",
+    model: "gpt-5.5",
+    routeLabel: "spatial",
+    maxRetries: 0,
+    fetchImpl: async () =>
+      new Response(JSON.stringify({ data: [{ id: "gpt-5.5" }] }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+  });
+  assert.deepEqual(catalog.modelIds, ["gpt-5.5"]);
+});
+
+test("sends reference image edits as multipart data", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "vr-3d-skill-edit-"));
+  try {
+    const inputImage = join(directory, "reference.png");
+    await writeFile(inputImage, "not-a-real-png", "utf8");
+    let request;
+    const result = await editImage({
+      apiKey: "test-key",
+      model: "gpt-image-2",
+      prompt: "Keep the room geometry and improve lighting.",
+      inputImage,
+      maxRetries: 0,
+      fetchImpl: async (endpoint, options) => {
+        request = { endpoint, options };
+        return new Response(
+          JSON.stringify({ data: [{ b64_json: Buffer.from("image-bytes").toString("base64") }] }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        );
+      },
+    });
+    assert.equal(request.endpoint, "https://realmrouter.cn/v1/images/edits");
+    assert.ok(request.options.body instanceof FormData);
+    assert.equal(request.options.headers["Content-Type"], undefined);
+    assert.deepEqual(result.bytes, Buffer.from("image-bytes"));
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });

@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 import { pathToFileURL } from "node:url";
-import { generateSpatialJson } from "../../adapters/realmrouter-openai.mjs";
+import {
+  assertModelAvailable,
+  generateSpatialJson,
+} from "../../adapters/realmrouter-openai.mjs";
 import {
   imageFileToDataUrl,
   parseArgs,
@@ -27,6 +30,7 @@ async function main() {
   const options = parseArgs(process.argv.slice(2), {
     "prompt-file": { type: "string", required: true },
     "source-manifest": { type: "string", required: true },
+    "ocr-evidence": { type: "string" },
     "input-image": { type: "array" },
     output: { type: "string", required: true },
     metadata: { type: "string" },
@@ -40,20 +44,34 @@ async function main() {
   }
   requireProviderApproval(options);
 
-  const [task, sourceManifest, imageDataUrls] = await Promise.all([
+  const [task, sourceManifest, imageDataUrls, ocrEvidence] = await Promise.all([
     readText(options["prompt-file"], "spatial extraction task"),
     readJson(options["source-manifest"], "source manifest"),
     Promise.all(options["input-image"].map(imageFileToDataUrl)),
+    options["ocr-evidence"]
+      ? readJson(options["ocr-evidence"], "OCR evidence")
+      : Promise.resolve(null),
   ]);
   if (!Array.isArray(sourceManifest.sources) || sourceManifest.sources.length === 0) {
     throw new Error("Source manifest must contain at least one source.");
   }
 
   const providerManifest = sanitizeSourceManifestForProvider(sourceManifest);
+  await assertModelAvailable({
+    apiKey: process.env.REALMROUTER_SPATIAL_API_KEY || "",
+    baseUrl: process.env.REALMROUTER_BASE_URL,
+    model: process.env.REALMROUTER_SPATIAL_MODEL,
+    routeLabel: "spatial",
+    timeoutMs: Number(process.env.REALMROUTER_TIMEOUT_MS || 120000),
+    maxRetries: Number(process.env.REALMROUTER_MAX_RETRIES || 3),
+  });
   const prompt = `${task.trim()}
 
 Source manifest:
 ${JSON.stringify(providerManifest, null, 2)}
+
+Local OCR evidence (treat as evidence, not ground truth):
+${JSON.stringify(ocrEvidence || { entries: [] }, null, 2)}
 
 Return a draft Spatial JSON matching the contract. Separate measured, parsed, observed, and inferred facts. Keep unresolved dimension conflicts explicit.`;
 

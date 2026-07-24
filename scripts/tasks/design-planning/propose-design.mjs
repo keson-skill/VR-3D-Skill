@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 import { pathToFileURL } from "node:url";
-import { generateSpatialJson } from "../../adapters/realmrouter-openai.mjs";
+import {
+  assertModelAvailable,
+  generateSpatialJson,
+} from "../../adapters/realmrouter-openai.mjs";
 import {
   parseArgs,
   printJson,
@@ -51,6 +54,14 @@ async function main() {
   }
 
   const providerSpatial = sanitizeSpatialForProvider(spatialJson);
+  await assertModelAvailable({
+    apiKey: process.env.REALMROUTER_SPATIAL_API_KEY || "",
+    baseUrl: process.env.REALMROUTER_BASE_URL,
+    model: process.env.REALMROUTER_SPATIAL_MODEL,
+    routeLabel: "spatial",
+    timeoutMs: Number(process.env.REALMROUTER_TIMEOUT_MS || 120000),
+    maxRetries: Number(process.env.REALMROUTER_MAX_RETRIES || 3),
+  });
   const prompt = `Create editable interior-design alternatives for the approved spatial contract below.
 
 User requirements:

@@ -54,12 +54,13 @@ Inputs:
 Actions:
 
 - preserve originals and revisions;
+- preprocess raster plans locally and run optional local Tesseract OCR; keep OCR boxes, confidence, and source hashes as evidence;
 - detect file coordinate systems and drawing scales;
 - extract explicit dimensions, orientation, room labels, and scale anchors;
 - distinguish observed facts, user-provided facts, and inferences;
 - redact or obtain approval before sending sensitive project data externally.
 
-Output: normalized sources plus a source manifest. If no reliable scale anchor exists, ask for one or keep the scene explicitly unscaled.
+Output: normalized sources, OCR evidence, and a source manifest. If no reliable scale anchor exists, ask for one or keep the scene explicitly unscaled.
 
 ## Stage 2: spatial understanding
 
@@ -99,7 +100,7 @@ Output: design objects and constraints added to the spatial contract. Keep recom
 
 ## Stage 5: visual preview
 
-After the spatial contract and design proposal pass validation, generate optional customer-facing preview images from the approved revision. Pass locked geometry, furniture placement, circulation, materials, lighting intent, camera intent, and only approved reference images. Record the design revision, model, request ID, prompt provenance, and output hash.
+After the spatial contract and design proposal pass validation, generate optional customer-facing preview images from the approved revision. Use generation for text-directed previews and the guarded reference-edit task when an approved source image or mask must be preserved. Pass locked geometry, furniture placement, circulation, materials, lighting intent, camera intent, and only approved reference images. Record the design revision, model, request ID, prompt provenance, and output hash.
 
 Use the preview to compare visual direction and collect human feedback. Never treat it as a geometry, dimension, collision, or construction source. Apply accepted feedback as an explicit design patch, revalidate it, and generate a new preview from the new revision.
 
@@ -166,6 +167,7 @@ Use RFC 6901 JSON Pointer paths for ID-keyed objects. For an item stored in an a
 ## Failure handling
 
 - Missing or conflicting dimensions: block exact-layout claims and request a measurement.
+- OCR unavailable or low-confidence: preserve the image, continue only as `visualization_only`, and ask for a scale anchor or manual dimension confirmation.
 - Provider unavailable: retain the approved contract and use proxies or a configured fallback.
 - Asset invalid or oversized: keep a placeholder, log validation failure, and retry without losing design IDs.
 - Unsupported WebXR: preserve desktop review and explain device or secure-context requirements.

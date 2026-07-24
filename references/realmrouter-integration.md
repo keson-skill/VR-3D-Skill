@@ -6,14 +6,14 @@ Use RealmRouter as an OpenAI-compatible gateway only after the user approves tha
 
 | Role | Environment model | Endpoint |
 |---|---|---|
-| Spatial reasoning and `Spatial JSON` | `REALMROUTER_SPATIAL_MODEL=gpt-5.6-sol` | `POST /v1/chat/completions` |
+| Spatial reasoning and `Spatial JSON` | `REALMROUTER_SPATIAL_MODEL=gpt-5.5` | `POST /v1/chat/completions` |
 | Visual preview generation | `REALMROUTER_IMAGE_MODEL=gpt-image-2` | `POST /v1/images/generations` |
 
 RealmRouter documents `https://realmrouter.cn` as the client-facing OpenAI-compatible Base URL. The current model details expose the raw API endpoints under `/v1`. Keep the configured Base URL at the documented root; the bundled raw HTTP adapter adds `/v1` before the endpoint.
 
 The adapter retries retryable network failures and `408`, `409`, `425`, `429`, and `5xx` responses with bounded exponential backoff. Configure `REALMROUTER_MAX_RETRIES` from `0` to `8` (default `3`); terminal diagnostics include the safe network error category but never the API key.
 
-The current public model details expose `gpt-5.6-sol` through Chat Completions, not Responses. Do not route this gateway deployment through `/responses`. RealmRouter lists `gpt-5.6-sol`, `gpt-5.6-terra`, and `gpt-5.6-luna`; it does not list a generic `gpt-5.6` deployment ID.
+Use the Chat Completions endpoint for the token-visible spatial model; do not assume `/responses` support. Model catalog visibility is token-specific, so use the preflight check instead of hard-coding a gateway-wide availability claim.
 
 References:
 
@@ -28,7 +28,7 @@ References:
 1. Revoke any token pasted into chat, logs, screenshots, shell history, or an issue.
 2. Create a replacement RealmRouter token.
 3. Create separate least-privilege tokens because the current model details place the two models in disjoint groups:
-   - `gpt-5.6-sol`: `GPT-plus`, `GPT-plus 特惠`, `GPT-pro`, or `default`;
+   - `gpt-5.5`: the token-visible `GPT-plus` group used by this Skill;
    - `gpt-image-2`: `GPT-image`.
 4. Add the replacements only to the ignored local `.env`:
 
@@ -36,8 +36,10 @@ References:
 REALMROUTER_SPATIAL_API_KEY=
 REALMROUTER_IMAGE_API_KEY=
 REALMROUTER_BASE_URL=https://realmrouter.cn
-REALMROUTER_SPATIAL_MODEL=gpt-5.6-sol
+REALMROUTER_SPATIAL_MODEL=gpt-5.5
 REALMROUTER_IMAGE_MODEL=gpt-image-2
+REALMROUTER_SPATIAL_REASONING_EFFORT=xhigh
+REALMROUTER_IMAGE_QUALITY=high
 ```
 
 5. Never reuse these gateway tokens in browser code or commit them to Git.
@@ -65,16 +67,23 @@ node scripts/ingest/build-source-manifest.mjs \
   --input approved-plan.png \
   --output source-manifest.json
 
+node scripts/processing/preprocess-plan-image.mjs \
+  --input approved-plan.png --output normalized-plan.png
+
+node scripts/ingest/extract-ocr-evidence.mjs \
+  --input normalized-plan.png --output ocr-evidence.json
+
 node --env-file=.env scripts/tasks/spatial-extraction/extract-spatial-json.mjs \
   --prompt-file SPATIAL_TASK.md \
   --source-manifest source-manifest.json \
-  --input-image approved-plan.png \
+  --input-image normalized-plan.png \
+  --ocr-evidence ocr-evidence.json \
   --output spatial-draft.json \
   --validation-report spatial-validation.json \
   --allow-provider
 ```
 
-Repeat `--input-image` for multiple approved PNG, JPEG, or WebP views. The task uses the Chat Completions adapter because that is the endpoint shown for `gpt-5.6-sol` in the current RealmRouter model details. It rejects non-JSON model output, preserves the draft, and emits deterministic validation results before approval.
+Repeat `--input-image` for multiple approved PNG, JPEG, or WebP views. The task uses Chat Completions, preflights the configured model against the token-visible catalog, rejects non-JSON model output, preserves the draft, and emits deterministic validation results before approval.
 
 ## Call the image route
 
@@ -91,7 +100,7 @@ node --env-file=.env scripts/tasks/visual-preview/generate-preview.mjs \
 
 Use low quality for disposable drafts and medium or high only after the design direction is approved. Record the design revision, model ID, request ID, prompt provenance, and output hash. Never use the image as a source of dimensions, topology, collision, or construction facts.
 
-The high-level task refuses unapproved Spatial JSON and records the required metadata automatically. RealmRouter documents edits and variations as multipart uploads. The bundled adapter intentionally implements generation only; add edits as a separate reviewed path when reference-image handling, masking, privacy approval, and retention controls are defined.
+The high-level task refuses unapproved Spatial JSON and records the required metadata automatically. Reference edits use the guarded `scripts/tasks/visual-preview/edit-reference.mjs` task, which sends an approved image and optional mask through `/v1/images/edits` and requires the approved design revision ID. Keep image-edit approval separate from geometry approval.
 
 ## Interpret failures
 

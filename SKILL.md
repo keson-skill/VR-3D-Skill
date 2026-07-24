@@ -43,14 +43,14 @@ Read [model-routing.md](references/model-routing.md) before adding provider call
 
 Read [interior-design-workflow.md](references/interior-design-workflow.md) for stage inputs, outputs, and failure handling.
 
-1. **Ingest and normalize.** Preserve originals, fingerprint inputs, extract explicit measurements, set units and axes, and mark inferred values.
-2. **Understand space.** Detect walls, openings, rooms, fixed equipment, usable zones, circulation, and scale anchors. Emit `Spatial JSON`.
+1. **Ingest and normalize.** Preserve originals, fingerprint inputs, run local raster preprocessing and Tesseract OCR when available, extract explicit measurements, set units and axes, and mark inferred values. Treat OCR as evidence, never as geometry truth.
+2. **Understand space.** Send the approved image plus local OCR/geometry evidence to the configured spatial model (`gpt-5.5` by default). Detect walls, openings, rooms, fixed equipment, usable zones, circulation, and scale anchors. Emit `Spatial JSON`.
 3. **Validate before designing.** Check wall topology, opening placement, room closure, dimensional consistency, accessible paths, unresolved low-confidence facts, and the approval scope (`visualization_only` or `construction_ready`).
 4. **Propose design.** Add functional zoning, furniture footprints, ergonomic clearances, materials, lighting, and style intent without overwriting measured geometry.
-5. **Preview visually.** After design approval, use GPT Image 2 for visual comparison and human review. Bind every image to a design revision and never feed inferred image geometry back into the spatial contract.
+5. **Preview visually.** After design approval, use GPT Image 2 for generation or the reference-edit task for approved source images. Bind every image to a design revision and never feed inferred image geometry back into the spatial contract.
 6. **Generate assets.** Reuse catalog assets first. Generate only missing furniture or decor, request real dimensions, normalize pivots and scale, and export GLB when targeting the web.
 7. **Generate engineering artifacts.** Produce deterministic scene code or Blender scripts from the approved `Spatial JSON` and asset manifest. Use Kimi Code only as a coding specialist through the documented adapter, review its output before applying it, and keep generated code reproducible.
-8. **Render and interact.** Provide desktop inspection first, then WebXR or native VR. Use Unreal or Twinmotion when high-fidelity offline output is required.
+8. **Render and interact.** Provide desktop inspection first, then WebXR or native VR. Compare a normalized top-view render against the source plan before delivery using `scripts/validation/compare-plan-render.mjs`. Use Unreal or Twinmotion when high-fidelity offline output is required.
 9. **Apply revisions incrementally.** Convert user changes into explicit JSON Patch-like operations, re-run affected validations, and preserve revision history.
 
 Use the contract in [spatial-json-contract.md](references/spatial-json-contract.md). Validate the contract before any downstream generation. If geometry conflicts with source measurements, stop and surface the conflict rather than choosing silently.

@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "fixtures": [
+    {
+      "id": "dxf-01-meters",
+      "dxf": "dxf/dxf-01-meters.dxf",
+      "source_manifest": "dxf/dxf-01-meters.source-manifest.json",
+      "expected": {
+        "width_meters": 4,
+        "height_meters": 3,
+        "opening_width_meters": 0.8999999999999999,
+        "room_count": 1,
+        "endpoint_tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-02-millimeters",
+      "dxf": "dxf/dxf-02-millimeters.dxf",
+      "source_manifest": "dxf/dxf-02-millimeters.source-manifest.json",
+      "expected": {
+        "width_meters": 5,
+        "height_meters": 3.5,
+        "opening_width_meters": 1.2,
+        "room_count": 1,
+        "endpoint_tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-03-centimeters",
+      "dxf": "dxf/dxf-03-centimeters.dxf",
+      "source_manifest": "dxf/dxf-03-centimeters.source-manifest.json",
+      "expected": {
+        "width_meters": 4.5,
+        "height_meters": 4,
+        "opening_width_meters": 0.9,
+        "room_count": 1,
+        "endpoint_tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-04-feet",
+      "dxf": "dxf/dxf-04-feet.dxf",
+      "source_manifest": "dxf/dxf-04-feet.source-manifest.json",
+      "expected": {
+        "width_meters": 4.8768,
+        "height_meters": 3.6576000000000004,
+        "opening_width_meters": 0.9144000000000001,
+        "room_count": 2,
+        "endpoint_tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-05-inches",
+      "dxf": "dxf/dxf-05-inches.dxf",
+      "source_manifest": "dxf/dxf-05-inches.source-manifest.json",
+      "expected": {
+        "width_meters": 4.572,
+        "height_meters": 3.6576,
+        "opening_width_meters": 1.2191999999999998,
+        "room_count": 1,
+        "endpoint_tolerance_meters": 0.001
+      }
+    }
+  ]
+}

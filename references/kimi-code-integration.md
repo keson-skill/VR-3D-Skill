@@ -1,6 +1,6 @@
 # Kimi Code integration
 
-Use this adapter only for engineering-agent work such as generating or reviewing Three.js, Blender Python, scene configuration, tests, and repository changes from an approved `Spatial JSON`.
+Use this adapter only for optional engineering work such as extending or reviewing the fixed scene compiler, Three.js viewer, Blender Python path, tests, and repository changes from an approved `Spatial JSON`. Do not use it to regenerate the whole viewer for each interior job; `build-viewable-scene.mjs` is the default production path.
 
 ## Keep the two Kimi services separate
 

@@ -1,0 +1,1137 @@
+{
+  "schema_version": "1.0",
+  "stage": "P3",
+  "fixture_set": "examples/p3-acceptance/fixtures.json",
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 20,
+    "spatial_errors": 0,
+    "glb_errors": 0,
+    "wall_topology_errors": 0,
+    "count_errors": 0,
+    "minimum_alignment_f1": 0.938824,
+    "minimum_alignment_iou": 0.884702
+  },
+  "samples": [
+    {
+      "id": "p3-01-rectangle",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "0c216f254caeb9bdd3b117e0f5a214616bc963e311f9992b738fc38f41d7e56f",
+      "primitives_sha256": "762f0de8170281179cce86764d29f04bfcd6a96d9c9e6fd78696d00e5baf7272",
+      "primitive_count": 6,
+      "glb": {
+        "nodes": 6,
+        "meshes": 6,
+        "triangles": 52,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.988502,
+          "recall": 1,
+          "f1": 0.994218,
+          "intersection_over_union": 0.988502
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-02-door",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 6,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "5f042287da36e099b2e2d78036b4b9d5ee03737a91df0f9ffcdc04c323e60b5a",
+      "primitives_sha256": "e1a9a29c463fede37111116b950f772f066f8223cbef6412c47a33bf65f9266f",
+      "primitive_count": 9,
+      "glb": {
+        "nodes": 9,
+        "meshes": 9,
+        "triangles": 88,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.939013,
+          "recall": 1,
+          "f1": 0.968547,
+          "intersection_over_union": 0.939013
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-03-window",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "173afd9e0247e4c282b2d72d7779a9fbd5f146946e697f88d144da9ea3619ab2",
+      "primitives_sha256": "cea2a860bb76b482be9e1d292594e838133719393be3de8ddef8ed622ec23340",
+      "primitive_count": 10,
+      "glb": {
+        "nodes": 10,
+        "meshes": 10,
+        "triangles": 100,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.884702,
+          "recall": 1,
+          "f1": 0.938824,
+          "intersection_over_union": 0.884702
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-04-l-room",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 6,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "d340871b15af12b64a9991e68b5f4a7818e201527c726f09390af7de57d33003",
+      "primitives_sha256": "d8e23e35edfe7b276687ed6ad50005d22993d616d2222fbd8a275f886666084a",
+      "primitive_count": 8,
+      "glb": {
+        "nodes": 8,
+        "meshes": 8,
+        "triangles": 80,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.985082,
+          "recall": 1,
+          "f1": 0.992485,
+          "intersection_over_union": 0.985082
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-05-u-room",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 8,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "8dbdccb0085a241746afe2a4ea59454a442fb96d73e769bfcd9f32f697c1e4d8",
+      "primitives_sha256": "52e3f055fd247afbab41eb4626365acf611d3e97b9647a128fc4d1deca0cb5ee",
+      "primitive_count": 10,
+      "glb": {
+        "nodes": 10,
+        "meshes": 10,
+        "triangles": 108,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.951839,
+          "recall": 1,
+          "f1": 0.975325,
+          "intersection_over_union": 0.951839
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-06-two-room-vertical",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "dfa6da57b1bad272bd6de55517973ba0106356e1294cd742e76b936e602e9937",
+      "primitives_sha256": "1be54d9bf5831d048dea822e26662d9fc1d089e54f87f8daaa745c1518963f61",
+      "primitive_count": 11,
+      "glb": {
+        "nodes": 11,
+        "meshes": 11,
+        "triangles": 92,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.990799,
+          "recall": 1,
+          "f1": 0.995378,
+          "intersection_over_union": 0.990799
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-07-two-room-horizontal",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "ee7f8a8d1e738eba98954c305fbe62d8e24851c1dd2fad1cd0e24d1c49b24fc2",
+      "primitives_sha256": "ca72dab9fa350ebee2b56585b2506ce3309f642df095d49bb6b272409f2cd609",
+      "primitive_count": 11,
+      "glb": {
+        "nodes": 11,
+        "meshes": 11,
+        "triangles": 92,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.992124,
+          "recall": 1,
+          "f1": 0.996046,
+          "intersection_over_union": 0.992124
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-08-three-room-t",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 10,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "56414513c6370fce6ce233fb7b0af4605afb9312fccc4053b4e0efb4605e11a4",
+      "primitives_sha256": "3cb6e5fd0b2f765465fddea27dc06b1391ac1968be439c00ba36b6f1db95d818",
+      "primitive_count": 16,
+      "glb": {
+        "nodes": 16,
+        "meshes": 16,
+        "triangles": 132,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.991226,
+          "recall": 1,
+          "f1": 0.995594,
+          "intersection_over_union": 0.991226
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-09-four-room-grid",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 12,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "e0b2b2d9f9456bceb0deb582ed2c6ab5f13c3be82dab539d4c318ca5707b3910",
+      "primitives_sha256": "a83d00cc8a3e27525fe611a46c03b489ba9bff38b9d5089a7b8fadf4948d084a",
+      "primitive_count": 20,
+      "glb": {
+        "nodes": 20,
+        "meshes": 20,
+        "triangles": 160,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.993808,
+          "recall": 1,
+          "f1": 0.996895,
+          "intersection_over_union": 0.993808
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-10-corridor-living",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 8,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "bbb994fedad1a8bfde4262f3435b6de5146a01aeb204f77d84a1bfb33c225328",
+      "primitives_sha256": "b1a64c8450d6d1ca5abdaec99d671354d0b2c6cb2c41bffb09e788da4c7fbde1",
+      "primitive_count": 12,
+      "glb": {
+        "nodes": 12,
+        "meshes": 12,
+        "triangles": 104,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.956557,
+          "recall": 1,
+          "f1": 0.977796,
+          "intersection_over_union": 0.956557
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-11-slanted-pentagon",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 5,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "2e817abc380a151dd0c0a58a108f8f4514294d01aa2cfe5964038798bb56e1bf",
+      "primitives_sha256": "36f5783d803ab140d2bf5a6a469f5d3afe735123c02f5f8c7f0593a69bdd9e05",
+      "primitive_count": 7,
+      "glb": {
+        "nodes": 7,
+        "meshes": 7,
+        "triangles": 66,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.988704,
+          "recall": 1,
+          "f1": 0.99432,
+          "intersection_over_union": 0.988704
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-12-level-change",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 7,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "c73541bb5a6d0b708ac08e6b9361d8b63ba27c1787e21bedc00ecd08d0ebcb36",
+      "primitives_sha256": "1e8cc426873f4ea51851caa7878267ec481eae1abf900f123acb3090fca291d6",
+      "primitive_count": 11,
+      "glb": {
+        "nodes": 11,
+        "meshes": 11,
+        "triangles": 92,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.990799,
+          "recall": 1,
+          "f1": 0.995378,
+          "intersection_over_union": 0.990799
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-13-column",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "3ede7abc3d170953d7f5242114a6fe822500ebb1764d669c7e59451c488ecf9f",
+      "primitives_sha256": "64f20054f58aca83ecbcbfe7665ef81f29b1e6d09110965ce58ed7844be68320",
+      "primitive_count": 7,
+      "glb": {
+        "nodes": 7,
+        "meshes": 7,
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.989583,
+          "recall": 1,
+          "f1": 0.994764,
+          "intersection_over_union": 0.989583
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-14-beam",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "1051b48c733ca3886a1e7ef491f113563d12d8861b6e52281fa43fc4dab766f9",
+      "primitives_sha256": "3333d368f401443e1ec8cd3fefbc3a4793f8abb380fc3585d8e4a7ef7c15e27a",
+      "primitive_count": 7,
+      "glb": {
+        "nodes": 7,
+        "meshes": 7,
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.989061,
+          "recall": 1,
+          "f1": 0.9945,
+          "intersection_over_union": 0.989061
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-15-stair",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "e3e5d3107e2ef6a750fe45bdfd02e2c12a946f2aca6c474991c26c9259913274",
+      "primitives_sha256": "d98d16010fc8575f1dcb7d9cafa8762875b972b0eccabe9d4eccb75712050d9c",
+      "primitive_count": 12,
+      "glb": {
+        "nodes": 12,
+        "meshes": 7,
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.990055,
+          "recall": 1,
+          "f1": 0.995003,
+          "intersection_over_union": 0.990055
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-16-structure-combined",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 4,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "c403a6b70ab41f9641f8eece034b3cdf56f3698016f3f265f6b8d454f9c35303",
+      "primitives_sha256": "0c8d2c87250db347c5bb556ae37d50ebc95d130e25d9cdd008c46de1b41a36c6",
+      "primitive_count": 13,
+      "glb": {
+        "nodes": 13,
+        "meshes": 7,
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.947241,
+          "recall": 1,
+          "f1": 0.972906,
+          "intersection_over_union": 0.947241
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-17-concave-two-room",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 10,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "aa288aa0da187fbca2aeb62cdfab8535ca2e15a87aa85c84f290d9b57be9baa7",
+      "primitives_sha256": "e35e9da8cd2523ed693813b6b4b18d9e87689b7701cfb5f23757b41c79d06313",
+      "primitive_count": 14,
+      "glb": {
+        "nodes": 14,
+        "meshes": 14,
+        "triangles": 132,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.987142,
+          "recall": 1,
+          "f1": 0.993529,
+          "intersection_over_union": 0.987142
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-18-narrow-openings",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 5,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "b43d3e1ac0b0986884678772f41ed200a2463001477d742544c19f68375af5ae",
+      "primitives_sha256": "193ea3d5f339639845efc9fd26ca59243621745cef0a3bcb3365a7269489fe63",
+      "primitive_count": 7,
+      "glb": {
+        "nodes": 7,
+        "meshes": 7,
+        "triangles": 64,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.989663,
+          "recall": 1,
+          "f1": 0.994805,
+          "intersection_over_union": 0.989663
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-19-unequal-heights",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 10,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "15b534f480163a4e9820f459d8369e2fe2a08d8b03dbad27f35d6e0e7ff32e55",
+      "primitives_sha256": "06296b968b213119d7da470b7ff3e4952e202d8ca4c96932c1e45ed0fc6e47e4",
+      "primitive_count": 16,
+      "glb": {
+        "nodes": 16,
+        "meshes": 16,
+        "triangles": 132,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.964887,
+          "recall": 0.999927,
+          "f1": 0.982095,
+          "intersection_over_union": 0.964819
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    },
+    {
+      "id": "p3-20-complex-shared",
+      "spatial_valid": true,
+      "glb_valid": true,
+      "wall_topology_valid": true,
+      "wall_topology": {
+        "wall_count": 16,
+        "errors": []
+      },
+      "expected_counts_valid": true,
+      "scene_sha256": "a7c39dcfed5ab1f716f4a6bc8b2162a2a56faf212185be52bd800529f7752ffb",
+      "primitives_sha256": "2ebcd7629a9dc54b0e87bcc85afa85f08b7187366f9b312c84f6dbe68df9310f",
+      "primitive_count": 26,
+      "glb": {
+        "nodes": 26,
+        "meshes": 26,
+        "triangles": 212,
+        "images": 0,
+        "lights": 0
+      },
+      "alignment": {
+        "schema_version": "1.0",
+        "method": "binary-registration-v1",
+        "source_dimensions": [
+          512,
+          512
+        ],
+        "render_dimensions": [
+          512,
+          512
+        ],
+        "comparison_dimensions": [
+          512,
+          512
+        ],
+        "registration": {
+          "translation_pixels_at_comparison_size": [
+            0,
+            0
+          ],
+          "search_radius_pixels": 2
+        },
+        "metrics": {
+          "precision": 0.995101,
+          "recall": 1,
+          "f1": 0.997545,
+          "intersection_over_union": 0.995101
+        },
+        "thresholds": {
+          "minimum_f1": 0.84,
+          "minimum_intersection_over_union": 0.72
+        },
+        "passed": true,
+        "note": "Alignment is a deterministic visual signal and does not certify construction dimensions."
+      }
+    }
+  ]
+}

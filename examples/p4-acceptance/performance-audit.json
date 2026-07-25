@@ -1,0 +1,634 @@
+{
+  "schema_version": "1.0",
+  "stage": "P4",
+  "limits": {
+    "draft": {
+      "max_glb_bytes": 2097152,
+      "max_texture_bytes": 524288
+    },
+    "standard": {
+      "max_glb_bytes": 8388608,
+      "max_texture_bytes": 2097152
+    },
+    "presentation": {
+      "max_glb_bytes": 25165824,
+      "max_texture_bytes": 8388608
+    }
+  },
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 20,
+    "profiles": [
+      "draft",
+      "standard",
+      "presentation"
+    ],
+    "sample_count": 60,
+    "budget_errors": 0,
+    "material_slot_errors": 0,
+    "maximum_glb_bytes": 43068,
+    "maximum_texture_bytes": 140
+  },
+  "samples": [
+    {
+      "id": "p4-01-rectangle",
+      "quality": "draft",
+      "glb_bytes": 14180,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-01-rectangle",
+      "quality": "standard",
+      "glb_bytes": 14168,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-01-rectangle",
+      "quality": "presentation",
+      "glb_bytes": 14180,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-02-door",
+      "quality": "draft",
+      "glb_bytes": 19676,
+      "texture_bytes": 132,
+      "material_count": 4,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-02-door",
+      "quality": "standard",
+      "glb_bytes": 19664,
+      "texture_bytes": 136,
+      "material_count": 4,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-02-door",
+      "quality": "presentation",
+      "glb_bytes": 19676,
+      "texture_bytes": 140,
+      "material_count": 4,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-03-window",
+      "quality": "draft",
+      "glb_bytes": 21508,
+      "texture_bytes": 132,
+      "material_count": 4,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-03-window",
+      "quality": "standard",
+      "glb_bytes": 21496,
+      "texture_bytes": 136,
+      "material_count": 4,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-03-window",
+      "quality": "presentation",
+      "glb_bytes": 21508,
+      "texture_bytes": 140,
+      "material_count": 4,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-04-l-room",
+      "quality": "draft",
+      "glb_bytes": 17844,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-04-l-room",
+      "quality": "standard",
+      "glb_bytes": 17836,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-04-l-room",
+      "quality": "presentation",
+      "glb_bytes": 17848,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-05-u-room",
+      "quality": "draft",
+      "glb_bytes": 21516,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-05-u-room",
+      "quality": "standard",
+      "glb_bytes": 21504,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-05-u-room",
+      "quality": "presentation",
+      "glb_bytes": 21520,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-06-two-room-vertical",
+      "quality": "draft",
+      "glb_bytes": 21344,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-06-two-room-vertical",
+      "quality": "standard",
+      "glb_bytes": 21332,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-06-two-room-vertical",
+      "quality": "presentation",
+      "glb_bytes": 21348,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-07-two-room-horizontal",
+      "quality": "draft",
+      "glb_bytes": 21360,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-07-two-room-horizontal",
+      "quality": "standard",
+      "glb_bytes": 21348,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-07-two-room-horizontal",
+      "quality": "presentation",
+      "glb_bytes": 21360,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-08-three-room-t",
+      "quality": "draft",
+      "glb_bytes": 28528,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-08-three-room-t",
+      "quality": "standard",
+      "glb_bytes": 28516,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-08-three-room-t",
+      "quality": "presentation",
+      "glb_bytes": 28528,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-09-four-room-grid",
+      "quality": "draft",
+      "glb_bytes": 33992,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-09-four-room-grid",
+      "quality": "standard",
+      "glb_bytes": 33980,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-09-four-room-grid",
+      "quality": "presentation",
+      "glb_bytes": 33996,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-10-corridor-living",
+      "quality": "draft",
+      "glb_bytes": 23160,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-10-corridor-living",
+      "quality": "standard",
+      "glb_bytes": 23152,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-10-corridor-living",
+      "quality": "presentation",
+      "glb_bytes": 23164,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-11-slanted-pentagon",
+      "quality": "draft",
+      "glb_bytes": 16096,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-11-slanted-pentagon",
+      "quality": "standard",
+      "glb_bytes": 16084,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-11-slanted-pentagon",
+      "quality": "presentation",
+      "glb_bytes": 16096,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-12-level-change",
+      "quality": "draft",
+      "glb_bytes": 21352,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-12-level-change",
+      "quality": "standard",
+      "glb_bytes": 21340,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-12-level-change",
+      "quality": "presentation",
+      "glb_bytes": 21356,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-13-column",
+      "quality": "draft",
+      "glb_bytes": 15984,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-13-column",
+      "quality": "standard",
+      "glb_bytes": 15972,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-13-column",
+      "quality": "presentation",
+      "glb_bytes": 15984,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-14-beam",
+      "quality": "draft",
+      "glb_bytes": 15972,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-14-beam",
+      "quality": "standard",
+      "glb_bytes": 15960,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-14-beam",
+      "quality": "presentation",
+      "glb_bytes": 15976,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-15-stair",
+      "quality": "draft",
+      "glb_bytes": 17104,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-15-stair",
+      "quality": "standard",
+      "glb_bytes": 17092,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-15-stair",
+      "quality": "presentation",
+      "glb_bytes": 17108,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-16-structure-combined",
+      "quality": "draft",
+      "glb_bytes": 17120,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-16-structure-combined",
+      "quality": "standard",
+      "glb_bytes": 17108,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-16-structure-combined",
+      "quality": "presentation",
+      "glb_bytes": 17124,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-17-concave-two-room",
+      "quality": "draft",
+      "glb_bytes": 26880,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-17-concave-two-room",
+      "quality": "standard",
+      "glb_bytes": 26868,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-17-concave-two-room",
+      "quality": "presentation",
+      "glb_bytes": 26880,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-18-narrow-openings",
+      "quality": "draft",
+      "glb_bytes": 15944,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-18-narrow-openings",
+      "quality": "standard",
+      "glb_bytes": 15936,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-18-narrow-openings",
+      "quality": "presentation",
+      "glb_bytes": 15948,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-19-unequal-heights",
+      "quality": "draft",
+      "glb_bytes": 28588,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-19-unequal-heights",
+      "quality": "standard",
+      "glb_bytes": 28576,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-19-unequal-heights",
+      "quality": "presentation",
+      "glb_bytes": 28592,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-20-complex-shared",
+      "quality": "draft",
+      "glb_bytes": 43068,
+      "texture_bytes": 132,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-20-complex-shared",
+      "quality": "standard",
+      "glb_bytes": 43056,
+      "texture_bytes": 136,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    },
+    {
+      "id": "p4-20-complex-shared",
+      "quality": "presentation",
+      "glb_bytes": 43068,
+      "texture_bytes": 140,
+      "material_count": 3,
+      "embedded_images": 2,
+      "material_slots_valid": true,
+      "within_budget": true
+    }
+  ]
+}

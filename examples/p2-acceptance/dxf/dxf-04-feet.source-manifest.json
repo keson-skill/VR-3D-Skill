@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-31e31288b1df",
+      "type": "cad",
+      "name": "dxf-04-feet.dxf",
+      "uri": "local://dxf-04-feet.dxf",
+      "revision": null,
+      "bytes": 429,
+      "sha256": "31e31288b1df3fe9b5e8f35021a522a1ad311f3ddd748cd4c7ea5f38bb5059bb",
+      "contains_personal_data": false
+    }
+  ]
+}

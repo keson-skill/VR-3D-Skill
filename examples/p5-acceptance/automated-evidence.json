@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "stage": "P5",
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 20,
+    "design_errors": 0,
+    "asset_errors": 0,
+    "comparison_errors": 0,
+    "unresolved_selected_assets": 0
+  },
+  "samples": [
+    {
+      "id": "p5-01-rectangle",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "66ed2d4bbf87710780fa1006894f44f9f09200f8fff31d840c0867e2b5566f1b",
+      "errors": []
+    },
+    {
+      "id": "p5-02-door",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "4b726a7d0d6bee005f99d4759852ba539f5d95e6812d6905e5b36d0bb88beb08",
+      "errors": []
+    },
+    {
+      "id": "p5-03-window",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "9b72c313de91ba05f8df2e74be92728b3cc93bf1fcb26a7ed946b86d19923f6c",
+      "errors": []
+    },
+    {
+      "id": "p5-04-l-room",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "1bd1f391de52a326ff3407764b6350f7b5a203a25b5379ba87bb1f0cd1d4ef74",
+      "errors": []
+    },
+    {
+      "id": "p5-05-u-room",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "e2fcc82402b08c48bfd91d2085862615a8e920962e3b395445a2db57223728ba",
+      "errors": []
+    },
+    {
+      "id": "p5-06-two-room-vertical",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "516d457cbf06fe481e2db5fa90e12a390dcfd36c0517d89ada26a2e64f3a354c",
+      "errors": []
+    },
+    {
+      "id": "p5-07-two-room-horizontal",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "acfd7ff2d1c64956268844c610f2c0a1516cb8e40fe20681432dafc6c9747760",
+      "errors": []
+    },
+    {
+      "id": "p5-08-three-room-t",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "15b15f12036514cdbd0a323b6a0c6db5203ca97af7e9b4790bc7ae6637fe7dba",
+      "errors": []
+    },
+    {
+      "id": "p5-09-four-room-grid",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "6e835d30ca381afd3e07ade8b1302d97621ea8b280451f020ae4e1095f5c1688",
+      "errors": []
+    },
+    {
+      "id": "p5-10-corridor-living",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "e52b76e89e742858f6cbb9abf06e0b109e3911bf52940ff649247f3a110b5afa",
+      "errors": []
+    },
+    {
+      "id": "p5-11-slanted-pentagon",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "145850479d83e66ffd55b4c3885f422a389180528d5f6878e0cae1018b3906ef",
+      "errors": []
+    },
+    {
+      "id": "p5-12-level-change",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "673089d4e15ef5a01dcb97063527c8cbd96e0001b71ec362c424cfe180b63ea7",
+      "errors": []
+    },
+    {
+      "id": "p5-13-column",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "9e0b684cc15fed28da68a6b1672bc1db63e1e1176f20980a2cd5b38ecbfd22ec",
+      "errors": []
+    },
+    {
+      "id": "p5-14-beam",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "2aa75c55b288e1d43e569700dc1b975841006ef8c11b692d2bc12526648c7457",
+      "errors": []
+    },
+    {
+      "id": "p5-15-stair",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "82c651ab0ba1eeaeb12a1d2a36fb2f871c35eda776c2bf68ae2eb85c8d06f7fc",
+      "errors": []
+    },
+    {
+      "id": "p5-16-structure-combined",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "ce70f2e0481be858bce363743b592f5e33a281a6071758a33d3d7ab5ce7d1f94",
+      "errors": []
+    },
+    {
+      "id": "p5-17-concave-two-room",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "9cbe0cdef172cec193c383d1fd5b298e75299972948ffcdda969f08c04fdf53e",
+      "errors": []
+    },
+    {
+      "id": "p5-18-narrow-openings",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "c4b1bac5af805a3ae7753cf71e97667b47d2926536701e391f736d8b46b3423a",
+      "errors": []
+    },
+    {
+      "id": "p5-19-unequal-heights",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "1041844468be7c72f8bfe2eaed25b7d19f6ee2a7a4289d9c1a8df0f079dc05d1",
+      "errors": []
+    },
+    {
+      "id": "p5-20-complex-shared",
+      "design_valid": true,
+      "asset_resolution_valid": true,
+      "alternatives": 2,
+      "real_assets": 1,
+      "proxies": 0,
+      "proposal_sha256": "ebf67222137196b1a01a136008dc37a6482b23c07712d5861fcea0d2362b1046",
+      "errors": []
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VR 3D Interior Viewer</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="scene" aria-label="室内三维场景"></canvas>
+      <section class="panel" aria-label="场景控制">
+        <div>
+          <p class="eyebrow">VR 3D SKILL</p>
+          <h1 id="project-name">室内方案</h1>
+          <p id="project-meta" class="meta">正在加载场景…</p>
+        </div>
+        <div class="controls">
+          <button id="orbit-button" class="active">旋转查看</button>
+          <button id="walk-button">第一视角</button>
+          <button id="top-button">俯视户型</button>
+          <button id="reset-button">重置视角</button>
+          <select id="room-select" aria-label="跳转房间"><option value="">跳转房间</option></select>
+          <button id="measure-button" aria-pressed="false">测量</button>
+          <button id="annotate-button">添加注释</button>
+          <button id="move-left-button">左移</button>
+          <button id="move-right-button">右移</button>
+          <button id="rotate-button">旋转</button>
+          <button id="undo-button">撤销</button>
+          <label><input id="furniture-toggle" type="checkbox" checked /> 家具</label>
+          <label><input id="opening-toggle" type="checkbox" checked /> 门窗</label>
+        </div>
+        <p id="scope-warning" class="warning" hidden></p>
+        <p id="status" class="status" role="status" aria-live="polite">准备中</p>
+      </section>
+      <section class="help">
+        <span>旋转：拖动</span>
+        <span>缩放：滚轮</span>
+        <span>第一视角：WASD</span>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

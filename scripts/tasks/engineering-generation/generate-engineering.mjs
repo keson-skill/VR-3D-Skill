@@ -19,7 +19,7 @@ import { checkStageReadiness } from "../../orchestration/check-stage-readiness.m
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node --env-file=.env scripts/tasks/engineering-generation/generate-engineering.mjs --task task.md --spatial-json approved-spatial.json [--asset-manifest assets.json] --output result.md [--metadata output-metadata.json] --allow-provider
+  node --env-file=.env scripts/tasks/engineering-generation/generate-engineering.mjs --task task.md --spatial-json approved-spatial.json --source-manifest source-manifest.json --spatial-validation spatial-validation.json --approval spatial-approval.json --approval-trust spatial-approval-trust.json [--asset-manifest assets.json] --output result.md [--metadata output-metadata.json] --allow-provider
 `);
 }
 
@@ -27,6 +27,10 @@ async function main() {
   const options = parseArgs(process.argv.slice(2), {
     task: { type: "string", required: true },
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "spatial-validation": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     "asset-manifest": { type: "string" },
     output: { type: "string", required: true },
     metadata: { type: "string" },
@@ -39,15 +43,31 @@ async function main() {
   }
   requireProviderApproval(options);
 
-  const [task, spatialJson, assetManifest] = await Promise.all([
-    readText(options.task, "engineering task"),
-    readJson(options["spatial-json"], "approved Spatial JSON"),
+  const [
+    task,
+    spatialJson,
+    sourceManifest,
+    spatialValidation,
+    approval,
+    approvalTrust,
+    assetManifest,
+  ] = await Promise.all([
+    readText(options.task, "engineering task", { maxBytes: 256 * 1024 }),
+    readJson(options["spatial-json"], "approved Spatial JSON", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options["source-manifest"], "source manifest", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options["spatial-validation"], "spatial validation report", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options.approval, "spatial approval", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options["approval-trust"], "spatial approval trust store", { maxBytes: 16 * 1024 * 1024 }),
     options["asset-manifest"]
-      ? readJson(options["asset-manifest"], "asset manifest")
+      ? readJson(options["asset-manifest"], "asset manifest", { maxBytes: 16 * 1024 * 1024 })
       : Promise.resolve(null),
   ]);
   const readiness = checkStageReadiness("engineering", spatialJson, {
     assetManifest,
+    sourceManifest,
+    validationReport: spatialValidation,
+    approval,
+    approvalTrust,
   });
   if (!readiness.ready) {
     throw new Error(

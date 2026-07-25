@@ -16,16 +16,21 @@ import {
 } from "../../lib/cli.mjs";
 import { checkStageReadiness } from "../../orchestration/check-stage-readiness.mjs";
 import { validateRevision } from "../../validation/validate-revision.mjs";
+import { evaluateDesignProposal } from "./evaluate-design-proposal.mjs";
 
 function printHelp() {
   process.stdout.write(`Usage:
-  node --env-file=.env scripts/tasks/design-planning/propose-design.mjs --spatial-json approved-spatial.json --requirements requirements.md --output design-proposal.json [--metadata output-metadata.json] [--validation-report revision-validation.json] --allow-provider
+  node --env-file=.env scripts/tasks/design-planning/propose-design.mjs --spatial-json approved-spatial.json --source-manifest source-manifest.json --spatial-validation spatial-validation.json --approval spatial-approval.json --approval-trust spatial-approval-trust.json --requirements requirements.md --output design-proposal.json [--metadata output-metadata.json] [--validation-report revision-validation.json] --allow-provider
 `);
 }
 
 async function main() {
   const options = parseArgs(process.argv.slice(2), {
     "spatial-json": { type: "string", required: true },
+    "source-manifest": { type: "string", required: true },
+    "spatial-validation": { type: "string", required: true },
+    approval: { type: "string", required: true },
+    "approval-trust": { type: "string", required: true },
     requirements: { type: "string", required: true },
     output: { type: "string", required: true },
     metadata: { type: "string" },
@@ -39,11 +44,27 @@ async function main() {
   }
   requireProviderApproval(options);
 
-  const [spatialJson, requirements] = await Promise.all([
+  const [
+    spatialJson,
+    sourceManifest,
+    spatialValidation,
+    approval,
+    approvalTrust,
+    requirements,
+  ] = await Promise.all([
     readJson(options["spatial-json"], "approved Spatial JSON"),
+    readJson(options["source-manifest"], "source manifest"),
+    readJson(options["spatial-validation"], "spatial validation report"),
+    readJson(options.approval, "spatial approval"),
+    readJson(options["approval-trust"], "spatial approval trust store"),
     readText(options.requirements, "design requirements"),
   ]);
-  const readiness = checkStageReadiness("design", spatialJson);
+  const readiness = checkStageReadiness("design", spatialJson, {
+    sourceManifest,
+    validationReport: spatialValidation,
+    approval,
+    approvalTrust,
+  });
   if (!readiness.ready) {
     throw new Error(
       `Design planning blocked: ${readiness.blockers
@@ -72,9 +93,10 @@ ${JSON.stringify(providerSpatial, null, 2)}
 
 Return one JSON object with:
 - base_revision;
+- design_brief with budget, occupants, activities, must_keep_ids, minimum_clearance_meters;
 - design_alternatives with explainable zoning, furniture footprints, clearances, materials, lighting, cost/risk notes, and scores;
 - recommended_alternative_id;
-- a proposed revision_patch using stable target IDs and durable JSON Pointer paths.
+- a proposed revision_patch with explicit scope.target_ids/scope.paths, stable target IDs, durable JSON Pointer paths, must-preserve rules, and deterministic gates to revalidate.
 
 Do not change the measured envelope, structural edit policies, room topology, locked openings, or required circulation. This is a proposal only; do not mark it approved.`;
 
@@ -86,6 +108,16 @@ Do not change the measured envelope, structural edit policies, room topology, lo
     prompt,
     timeoutMs: Number(process.env.REALMROUTER_TIMEOUT_MS || 120000),
   });
+  if (result.spatialJson?.revision_patch) {
+    result.spatialJson.revision_patch.provenance = {
+      actor_type: "model",
+      actor_id: result.model,
+      created_at: new Date().toISOString(),
+      ...(result.requestId ? { request_id: result.requestId } : {}),
+    };
+    result.spatialJson.revision_patch.rollback_reference =
+      spatialJson.project.revision;
+  }
   await writeJson(options.output, result.spatialJson);
 
   const revisionValidation = result.spatialJson?.revision_patch
@@ -101,6 +133,7 @@ Do not change the measured envelope, structural edit policies, room topology, lo
         ],
         warnings: [],
       };
+  const designValidation = evaluateDesignProposal(spatialJson, result.spatialJson);
   if (options["validation-report"]) {
     await writeJson(options["validation-report"], revisionValidation);
   }
@@ -118,12 +151,17 @@ Do not change the measured envelope, structural edit policies, room topology, lo
       errors: revisionValidation.errors.length,
       warnings: revisionValidation.warnings.length,
     },
+    design_validation: {
+      valid: designValidation.valid,
+      errors: designValidation.errors.length,
+      warnings: designValidation.warnings.length,
+    },
   };
   if (options.metadata) {
     await writeJson(options.metadata, metadata);
   }
   printJson(metadata);
-  if (!revisionValidation.valid) {
+  if (!revisionValidation.valid || !designValidation.valid) {
     process.exitCode = 2;
   }
 }

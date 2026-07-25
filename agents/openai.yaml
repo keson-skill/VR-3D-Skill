@@ -1,4 +1,4 @@
 interface:
   display_name: "AI VR Interior Design"
-  short_description: "Turn floor plans and room inputs into validated VR designs"
-  default_prompt: "Use $vr-3d-skill to turn my floor plan, photos, and renovation requirements into a validated Spatial JSON and a comfortable WebXR interior walkthrough."
+  short_description: "Turn plans and CAD into viewable GLB and WebXR interiors"
+  default_prompt: "Use $vr-3d-skill to turn my floor plan or CAD file into a validated, directly viewable furnished or shell Web 3D scene."

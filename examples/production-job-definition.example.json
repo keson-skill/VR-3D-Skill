@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "job_id": "job-project-001",
+  "idempotency_key": "project-001-revision-001",
+  "kind": "interior_pipeline",
+  "retry_policy": {
+    "max_attempts": 3,
+    "base_delay_ms": 500,
+    "max_delay_ms": 10000
+  },
+  "metadata": {
+    "project_id": "project-001",
+    "data_classification": "customer_confidential",
+    "example_only": true
+  },
+  "stages": [
+    {
+      "id": "prepare",
+      "handler": "prepare_interior_job",
+      "parameters": {
+        "inputs": [
+          {
+            "path": "inputs/plan.png"
+          }
+        ],
+        "output_directory": "runs/project-001/input"
+      }
+    },
+    {
+      "id": "validate",
+      "handler": "validate_spatial",
+      "parameters": {
+        "input": "runs/project-001/spatial.json",
+        "output": "runs/project-001/spatial-validation.json"
+      }
+    },
+    {
+      "id": "approval",
+      "handler": "await_spatial_approval",
+      "parameters": {
+        "spatial_json": "runs/project-001/spatial.json",
+        "source_manifest": "runs/project-001/input/source-manifest.json",
+        "validation_report": "runs/project-001/spatial-validation.json",
+        "approval": "runs/project-001/spatial-approval.json",
+        "approval_trust": "config/spatial-approval-trust.json",
+        "output": "runs/project-001/approval-verification.json"
+      }
+    },
+    {
+      "id": "scene",
+      "handler": "build_viewable_scene",
+      "parameters": {
+        "spatial_json": "runs/project-001/spatial.json",
+        "source_manifest": "runs/project-001/input/source-manifest.json",
+        "validation_report": "runs/project-001/spatial-validation.json",
+        "approval": "runs/project-001/spatial-approval.json",
+        "approval_trust": "config/spatial-approval-trust.json",
+        "output_directory": "runs/project-001/viewer",
+        "mode": "furnished"
+      }
+    },
+    {
+      "id": "xr",
+      "handler": "verify_xr",
+      "parameters": {
+        "spatial_json": "runs/project-001/spatial.json",
+        "source_manifest": "runs/project-001/input/source-manifest.json",
+        "validation_report": "runs/project-001/spatial-validation.json",
+        "approval": "runs/project-001/spatial-approval.json",
+        "approval_trust": "config/spatial-approval-trust.json",
+        "output": "runs/project-001/xr-verification.json"
+      }
+    },
+    {
+      "id": "render",
+      "handler": "render_blender",
+      "parameters": {
+        "spatial_json": "runs/project-001/spatial.json",
+        "source_manifest": "runs/project-001/input/source-manifest.json",
+        "validation_report": "runs/project-001/spatial-validation.json",
+        "approval": "runs/project-001/spatial-approval.json",
+        "approval_trust": "config/spatial-approval-trust.json",
+        "scene": "runs/project-001/viewer/scene.glb",
+        "scene_manifest": "runs/project-001/viewer/scene-manifest.json",
+        "output_directory": "runs/project-001/render",
+        "walkthrough": false,
+        "render_timeout_ms": 7200000
+      }
+    }
+  ]
+}

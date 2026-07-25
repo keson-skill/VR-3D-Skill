@@ -1,0 +1,36 @@
+{
+  "outer_boundary_pixels": [
+    [
+      75,
+      75
+    ],
+    [
+      525,
+      75
+    ],
+    [
+      525,
+      300
+    ],
+    [
+      300,
+      300
+    ],
+    [
+      300,
+      525
+    ],
+    [
+      75,
+      525
+    ]
+  ],
+  "openings": [
+    {
+      "wall_index": 0,
+      "start_pixel": 180,
+      "end_pixel": 280,
+      "kind": "open_passage"
+    }
+  ]
+}

@@ -1,0 +1,313 @@
+{
+  "schema_version": "1.0",
+  "benchmark": "core_spatial_compile",
+  "evidence_kind": "ci_core_benchmark",
+  "passed": true,
+  "host": {
+    "platform": "linux",
+    "release": "6.12.13",
+    "node": "24.14.0",
+    "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "logical_cpus": 9,
+    "total_memory_bytes": 17105375232
+  },
+  "limits": {
+    "max_median_ms": 250,
+    "max_p95_ms": 1000,
+    "max_memory_growth_bytes": 134217728
+  },
+  "aggregate": {
+    "fixtures": 20,
+    "iterations": 2,
+    "samples": 40,
+    "median_ms": 0.8043859999999654,
+    "p95_ms": 7.503863000000024,
+    "maximum_ms": 9.530930000000012,
+    "memory_growth_bytes": 0,
+    "deterministic": true
+  },
+  "samples": [
+    {
+      "fixture_id": "p3-01-rectangle",
+      "iteration": 1,
+      "duration_ms": 7.503863000000024,
+      "glb_bytes": 9572,
+      "glb_sha256": "0c216f254caeb9bdd3b117e0f5a214616bc963e311f9992b738fc38f41d7e56f"
+    },
+    {
+      "fixture_id": "p3-02-door",
+      "iteration": 1,
+      "duration_ms": 3.0779210000000035,
+      "glb_bytes": 15064,
+      "glb_sha256": "5f042287da36e099b2e2d78036b4b9d5ee03737a91df0f9ffcdc04c323e60b5a"
+    },
+    {
+      "fixture_id": "p3-03-window",
+      "iteration": 1,
+      "duration_ms": 1.1979989999999816,
+      "glb_bytes": 16896,
+      "glb_sha256": "173afd9e0247e4c282b2d72d7779a9fbd5f146946e697f88d144da9ea3619ab2"
+    },
+    {
+      "fixture_id": "p3-04-l-room",
+      "iteration": 1,
+      "duration_ms": 1.2270259999999666,
+      "glb_bytes": 13240,
+      "glb_sha256": "d340871b15af12b64a9991e68b5f4a7818e201527c726f09390af7de57d33003"
+    },
+    {
+      "fixture_id": "p3-05-u-room",
+      "iteration": 1,
+      "duration_ms": 1.403825999999981,
+      "glb_bytes": 16904,
+      "glb_sha256": "8dbdccb0085a241746afe2a4ea59454a442fb96d73e769bfcd9f32f697c1e4d8"
+    },
+    {
+      "fixture_id": "p3-06-two-room-vertical",
+      "iteration": 1,
+      "duration_ms": 1.1231159999999818,
+      "glb_bytes": 16732,
+      "glb_sha256": "dfa6da57b1bad272bd6de55517973ba0106356e1294cd742e76b936e602e9937"
+    },
+    {
+      "fixture_id": "p3-07-two-room-horizontal",
+      "iteration": 1,
+      "duration_ms": 1.614438000000007,
+      "glb_bytes": 16748,
+      "glb_sha256": "ee7f8a8d1e738eba98954c305fbe62d8e24851c1dd2fad1cd0e24d1c49b24fc2"
+    },
+    {
+      "fixture_id": "p3-08-three-room-t",
+      "iteration": 1,
+      "duration_ms": 9.530930000000012,
+      "glb_bytes": 23912,
+      "glb_sha256": "56414513c6370fce6ce233fb7b0af4605afb9312fccc4053b4e0efb4605e11a4"
+    },
+    {
+      "fixture_id": "p3-09-four-room-grid",
+      "iteration": 1,
+      "duration_ms": 2.4378130000000056,
+      "glb_bytes": 29376,
+      "glb_sha256": "e0b2b2d9f9456bceb0deb582ed2c6ab5f13c3be82dab539d4c318ca5707b3910"
+    },
+    {
+      "fixture_id": "p3-10-corridor-living",
+      "iteration": 1,
+      "duration_ms": 1.823508000000004,
+      "glb_bytes": 18544,
+      "glb_sha256": "bbb994fedad1a8bfde4262f3435b6de5146a01aeb204f77d84a1bfb33c225328"
+    },
+    {
+      "fixture_id": "p3-11-slanted-pentagon",
+      "iteration": 1,
+      "duration_ms": 0.5694119999999998,
+      "glb_bytes": 11480,
+      "glb_sha256": "2e817abc380a151dd0c0a58a108f8f4514294d01aa2cfe5964038798bb56e1bf"
+    },
+    {
+      "fixture_id": "p3-12-level-change",
+      "iteration": 1,
+      "duration_ms": 0.8470289999999636,
+      "glb_bytes": 16732,
+      "glb_sha256": "c73541bb5a6d0b708ac08e6b9361d8b63ba27c1787e21bedc00ecd08d0ebcb36"
+    },
+    {
+      "fixture_id": "p3-13-column",
+      "iteration": 1,
+      "duration_ms": 1.5224249999999984,
+      "glb_bytes": 11368,
+      "glb_sha256": "3ede7abc3d170953d7f5242114a6fe822500ebb1764d669c7e59451c488ecf9f"
+    },
+    {
+      "fixture_id": "p3-14-beam",
+      "iteration": 1,
+      "duration_ms": 0.8043859999999654,
+      "glb_bytes": 11360,
+      "glb_sha256": "1051b48c733ca3886a1e7ef491f113563d12d8861b6e52281fa43fc4dab766f9"
+    },
+    {
+      "fixture_id": "p3-15-stair",
+      "iteration": 1,
+      "duration_ms": 0.8073139999999626,
+      "glb_bytes": 12488,
+      "glb_sha256": "e3e5d3107e2ef6a750fe45bdfd02e2c12a946f2aca6c474991c26c9259913274"
+    },
+    {
+      "fixture_id": "p3-16-structure-combined",
+      "iteration": 1,
+      "duration_ms": 0.40849900000000616,
+      "glb_bytes": 12500,
+      "glb_sha256": "c403a6b70ab41f9641f8eece034b3cdf56f3698016f3f265f6b8d454f9c35303"
+    },
+    {
+      "fixture_id": "p3-17-concave-two-room",
+      "iteration": 1,
+      "duration_ms": 0.7170030000000338,
+      "glb_bytes": 22252,
+      "glb_sha256": "aa288aa0da187fbca2aeb62cdfab8535ca2e15a87aa85c84f290d9b57be9baa7"
+    },
+    {
+      "fixture_id": "p3-18-narrow-openings",
+      "iteration": 1,
+      "duration_ms": 0.8481289999999717,
+      "glb_bytes": 11332,
+      "glb_sha256": "b43d3e1ac0b0986884678772f41ed200a2463001477d742544c19f68375af5ae"
+    },
+    {
+      "fixture_id": "p3-19-unequal-heights",
+      "iteration": 1,
+      "duration_ms": 1.0701599999999871,
+      "glb_bytes": 23964,
+      "glb_sha256": "15b534f480163a4e9820f459d8369e2fe2a08d8b03dbad27f35d6e0e7ff32e55"
+    },
+    {
+      "fixture_id": "p3-20-complex-shared",
+      "iteration": 1,
+      "duration_ms": 1.0513630000000376,
+      "glb_bytes": 38432,
+      "glb_sha256": "a7c39dcfed5ab1f716f4a6bc8b2162a2a56faf212185be52bd800529f7752ffb"
+    },
+    {
+      "fixture_id": "p3-01-rectangle",
+      "iteration": 2,
+      "duration_ms": 0.42757599999998774,
+      "glb_bytes": 9572,
+      "glb_sha256": "0c216f254caeb9bdd3b117e0f5a214616bc963e311f9992b738fc38f41d7e56f"
+    },
+    {
+      "fixture_id": "p3-02-door",
+      "iteration": 2,
+      "duration_ms": 0.7988249999999653,
+      "glb_bytes": 15064,
+      "glb_sha256": "5f042287da36e099b2e2d78036b4b9d5ee03737a91df0f9ffcdc04c323e60b5a"
+    },
+    {
+      "fixture_id": "p3-03-window",
+      "iteration": 2,
+      "duration_ms": 1.7497979999999984,
+      "glb_bytes": 16896,
+      "glb_sha256": "173afd9e0247e4c282b2d72d7779a9fbd5f146946e697f88d144da9ea3619ab2"
+    },
+    {
+      "fixture_id": "p3-04-l-room",
+      "iteration": 2,
+      "duration_ms": 0.5285269999999969,
+      "glb_bytes": 13240,
+      "glb_sha256": "d340871b15af12b64a9991e68b5f4a7818e201527c726f09390af7de57d33003"
+    },
+    {
+      "fixture_id": "p3-05-u-room",
+      "iteration": 2,
+      "duration_ms": 0.5210820000000354,
+      "glb_bytes": 16904,
+      "glb_sha256": "8dbdccb0085a241746afe2a4ea59454a442fb96d73e769bfcd9f32f697c1e4d8"
+    },
+    {
+      "fixture_id": "p3-06-two-room-vertical",
+      "iteration": 2,
+      "duration_ms": 0.7430100000000266,
+      "glb_bytes": 16732,
+      "glb_sha256": "dfa6da57b1bad272bd6de55517973ba0106356e1294cd742e76b936e602e9937"
+    },
+    {
+      "fixture_id": "p3-07-two-room-horizontal",
+      "iteration": 2,
+      "duration_ms": 0.47016800000000103,
+      "glb_bytes": 16748,
+      "glb_sha256": "ee7f8a8d1e738eba98954c305fbe62d8e24851c1dd2fad1cd0e24d1c49b24fc2"
+    },
+    {
+      "fixture_id": "p3-08-three-room-t",
+      "iteration": 2,
+      "duration_ms": 0.558969999999988,
+      "glb_bytes": 23912,
+      "glb_sha256": "56414513c6370fce6ce233fb7b0af4605afb9312fccc4053b4e0efb4605e11a4"
+    },
+    {
+      "fixture_id": "p3-09-four-room-grid",
+      "iteration": 2,
+      "duration_ms": 0.5787520000000086,
+      "glb_bytes": 29376,
+      "glb_sha256": "e0b2b2d9f9456bceb0deb582ed2c6ab5f13c3be82dab539d4c318ca5707b3910"
+    },
+    {
+      "fixture_id": "p3-10-corridor-living",
+      "iteration": 2,
+      "duration_ms": 0.3805870000000482,
+      "glb_bytes": 18544,
+      "glb_sha256": "bbb994fedad1a8bfde4262f3435b6de5146a01aeb204f77d84a1bfb33c225328"
+    },
+    {
+      "fixture_id": "p3-11-slanted-pentagon",
+      "iteration": 2,
+      "duration_ms": 0.5349699999999871,
+      "glb_bytes": 11480,
+      "glb_sha256": "2e817abc380a151dd0c0a58a108f8f4514294d01aa2cfe5964038798bb56e1bf"
+    },
+    {
+      "fixture_id": "p3-12-level-change",
+      "iteration": 2,
+      "duration_ms": 0.37863199999998187,
+      "glb_bytes": 16732,
+      "glb_sha256": "c73541bb5a6d0b708ac08e6b9361d8b63ba27c1787e21bedc00ecd08d0ebcb36"
+    },
+    {
+      "fixture_id": "p3-13-column",
+      "iteration": 2,
+      "duration_ms": 0.4450280000000362,
+      "glb_bytes": 11368,
+      "glb_sha256": "3ede7abc3d170953d7f5242114a6fe822500ebb1764d669c7e59451c488ecf9f"
+    },
+    {
+      "fixture_id": "p3-14-beam",
+      "iteration": 2,
+      "duration_ms": 0.3625769999999875,
+      "glb_bytes": 11360,
+      "glb_sha256": "1051b48c733ca3886a1e7ef491f113563d12d8861b6e52281fa43fc4dab766f9"
+    },
+    {
+      "fixture_id": "p3-15-stair",
+      "iteration": 2,
+      "duration_ms": 0.5161770000000274,
+      "glb_bytes": 12488,
+      "glb_sha256": "e3e5d3107e2ef6a750fe45bdfd02e2c12a946f2aca6c474991c26c9259913274"
+    },
+    {
+      "fixture_id": "p3-16-structure-combined",
+      "iteration": 2,
+      "duration_ms": 0.4656620000000089,
+      "glb_bytes": 12500,
+      "glb_sha256": "c403a6b70ab41f9641f8eece034b3cdf56f3698016f3f265f6b8d454f9c35303"
+    },
+    {
+      "fixture_id": "p3-17-concave-two-room",
+      "iteration": 2,
+      "duration_ms": 0.6604370000000017,
+      "glb_bytes": 22252,
+      "glb_sha256": "aa288aa0da187fbca2aeb62cdfab8535ca2e15a87aa85c84f290d9b57be9baa7"
+    },
+    {
+      "fixture_id": "p3-18-narrow-openings",
+      "iteration": 2,
+      "duration_ms": 0.5381719999999746,
+      "glb_bytes": 11332,
+      "glb_sha256": "b43d3e1ac0b0986884678772f41ed200a2463001477d742544c19f68375af5ae"
+    },
+    {
+      "fixture_id": "p3-19-unequal-heights",
+      "iteration": 2,
+      "duration_ms": 0.8089410000000044,
+      "glb_bytes": 23964,
+      "glb_sha256": "15b534f480163a4e9820f459d8369e2fe2a08d8b03dbad27f35d6e0e7ff32e55"
+    },
+    {
+      "fixture_id": "p3-20-complex-shared",
+      "iteration": 2,
+      "duration_ms": 1.4669589999999744,
+      "glb_bytes": 38432,
+      "glb_sha256": "a7c39dcfed5ab1f716f4a6bc8b2162a2a56faf212185be52bd800529f7752ffb"
+    }
+  ],
+  "explicit_non_claim": "This CI/core benchmark does not qualify browser FPS, mobile GPU, physical XR, or Blender rendering.",
+  "report_sha256": "baa6c1b1f0af05d70ee742057f0aa34d499754f1fa66787b89a216fab704befc"
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spatial JSON 人工校正</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <p class="eyebrow">P2 HUMAN REVIEW GATE</p>
+        <h1>Spatial JSON 人工校正</h1>
+        <p>叠加源图、拖动墙端点、修正开口与尺度，导出后必须重新运行确定性验证。</p>
+      </div>
+      <div class="file-actions">
+        <label>源图<input id="image-file" type="file" accept="image/png,image/jpeg,image/webp" /></label>
+        <label>Spatial JSON<input id="json-file" type="file" accept="application/json,.json" /></label>
+        <button id="export" disabled>导出修正版 JSON</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="stage">
+        <canvas id="canvas"></canvas>
+        <p id="canvas-help">先载入标准化源图和 Spatial JSON。蓝线为墙，橙线为开口；拖动圆形端点可修正共享墙角。</p>
+      </section>
+
+      <aside>
+        <section>
+          <h2>尺度与房间</h2>
+          <label>米 / 像素<input id="meters-per-pixel" type="number" min="0.000001" step="0.000001" /></label>
+          <label>尺度状态
+            <select id="scale-status">
+              <option value="trusted">trusted（有可信锚点）</option>
+              <option value="estimated">estimated（仅可视化）</option>
+              <option value="unknown">unknown（禁止批准）</option>
+            </select>
+          </label>
+          <label class="check"><input id="independent-verification" type="checkbox" /> 尺度、主要尺寸、开口和拓扑已有独立来源核验记录</label>
+          <label>房间名称<input id="room-name" type="text" /></label>
+          <label>房间类型<input id="room-type" type="text" /></label>
+        </section>
+
+        <section>
+          <h2>开口</h2>
+          <label>选择开口<select id="opening-select"></select></label>
+          <label>类型
+            <select id="opening-kind">
+              <option value="hinged_door">hinged_door</option>
+              <option value="sliding_door">sliding_door</option>
+              <option value="open_passage">open_passage</option>
+              <option value="window">window</option>
+              <option value="fixed_window">fixed_window</option>
+            </select>
+          </label>
+          <label>距墙起点（米）<input id="opening-offset" type="number" min="0" step="0.001" /></label>
+          <label>宽度（米）<input id="opening-width" type="number" min="0.001" step="0.001" /></label>
+          <label>高度（米）<input id="opening-height" type="number" min="0.001" step="0.001" /></label>
+          <label>窗台高度（米）<input id="opening-sill" type="number" min="0" step="0.001" /></label>
+        </section>
+
+        <section>
+          <h2>问题与批准意图</h2>
+          <label>未解决问题（每行一项）<textarea id="questions" rows="4"></textarea></label>
+          <label>批准范围
+            <select id="approval-scope">
+              <option value="">未选择</option>
+              <option value="visualization_only">visualization_only</option>
+              <option value="construction_ready">construction_ready</option>
+            </select>
+          </label>
+          <label class="check"><input id="mark-reviewed" type="checkbox" /> 我已人工核对源图叠加、拓扑、尺度、开口和未解决问题</label>
+          <p class="warning">这里仅把人工审阅意图写入 Spatial JSON。独立批准文件仍必须由人在终端运行 <code>approve-spatial-json.mjs</code> 生成。</p>
+        </section>
+
+        <section class="status">
+          <h2>状态</h2>
+          <pre id="status">等待文件。</pre>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

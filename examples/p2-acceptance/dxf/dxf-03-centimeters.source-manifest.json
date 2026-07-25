@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-479e442728fc",
+      "type": "cad",
+      "name": "dxf-03-centimeters.dxf",
+      "uri": "local://dxf-03-centimeters.dxf",
+      "revision": null,
+      "bytes": 279,
+      "sha256": "479e442728fcc79d3f7d7a60aa6035a4dac807d7423452a55ad2d5fa0837db9c",
+      "contains_personal_data": false
+    }
+  ]
+}

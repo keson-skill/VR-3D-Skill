@@ -34,7 +34,7 @@ CAD / plan / photos / requirements
  design rules   asset manifest  revision patches
        \            |           /
         v           v          v
-  engineering scene generation
+ deterministic scene compilation
               |
       +-------+--------+
       |                |
@@ -54,17 +54,28 @@ Inputs:
 Actions:
 
 - preserve originals and revisions;
+- detect the source route before processing;
+- parse DXF vector entities, layers, units, blocks, text, and dimensions without rasterizing them;
+- validate DWG headers and pass only explicitly approved local conversions into the DXF parser, recording converter version, arguments, and input/output hashes;
+- classify each PDF page as vector, scanned, mixed, or empty; retain SVG and text bounding boxes for vector pages and normalize a high-resolution raster for scan pages;
 - preprocess raster plans locally and run optional local Tesseract OCR; keep OCR boxes, confidence, and source hashes as evidence;
+- validate photo/panorama resolution and projection, video metadata/keyframes, multi-view intrinsics/poses/reprojection error, and a user-confirmed metric scale;
+- preserve IFC units, storeys, containment, properties, classifications, and source entity IDs; require storey selection or a verified geometry engine when simple wall axes are insufficient;
+- normalize point-cloud units and axes, cap source size/count, extract reviewable planes/opening candidates, and use an approved local PDAL route for LAS/LAZ/E57;
+- validate existing-scene dimensions, axes, handedness, resource containment/hashes, semantic names, asset identity, collision metadata, and license; convert FBX locally before import;
+- validate CSV/TSV/XLSX product catalogs before they become asset candidates;
 - detect file coordinate systems and drawing scales;
 - extract explicit dimensions, orientation, room labels, and scale anchors;
 - distinguish observed facts, user-provided facts, and inferences;
 - redact or obtain approval before sending sensitive project data externally.
 
-Output: normalized sources, OCR evidence, and a source manifest. If no reliable scale anchor exists, ask for one or keep the scene explicitly unscaled.
+Output: normalized sources, route-specific evidence, structured blockers, and a source manifest. Missing tools, unsafe resources, unresolved axes, weak registration, complex IFC/scan geometry, or absent scale must block that route or keep its result explicitly `visualization_only`.
 
 ## Stage 2: spatial understanding
 
-The spatial reasoning model identifies:
+Run deterministic conversion first. `dxf-to-spatial.mjs` maps known layers, closed polylines, line openings, blocks, units, and labels without changing vector coordinates. `raster-to-spatial.mjs` extracts the supported orthogonal shell, wall gaps, room outline, and trusted or estimated scale while retaining the pixel-to-meter transform. The IFC and point-cloud adapters may emit a pending visualization draft only for their bounded deterministic cases. `extract-visual-spatial.mjs` is an approval-gated model task that verifies every image hash and rejects paths, unsupported cameras, hidden-geometry claims, or model-created approval. Ambiguous or unsupported topology must become a blocking question for the correction UI rather than an invented room.
+
+The spatial reasoning model may then classify evidence that deterministic rules cannot resolve:
 
 - exterior and interior walls, thicknesses, columns, openings, stairs, ceiling changes, and fixed equipment;
 - room boundaries, labels, connections, usable regions, and likely functions;
@@ -72,19 +83,21 @@ The spatial reasoning model identifies:
 - circulation, door swings, daylight cues, and immovable constraints;
 - user intent, occupants, style, storage, accessibility, budget, and retained objects.
 
-Output: a draft `Spatial JSON` plus unresolved questions. Never convert low-confidence image interpretation into asserted construction dimensions.
+Output: a source-bound draft `Spatial JSON` plus unresolved questions. Never convert low-confidence image interpretation into asserted construction dimensions.
 
 ## Stage 3: validation
 
 Run deterministic checks before design:
 
-- schema, units, axes, stable IDs, references, and transforms;
+- Draft 2020-12 schema, units, axes, stable IDs, references, and transforms;
 - wall connectivity, intersections, room closure, openings on host walls, and plausible dimensions;
 - agreement between duplicated measurements and source annotations;
 - explicit handling of conflicting inputs;
-- privacy and provider routing approval.
+- privacy and provider routing approval;
+- source-aligned top-view comparison and human overlay correction;
+- independent approval-sidecar hashes, human attestation, and signature against an active externally managed reviewer trust key.
 
-Output: an approved contract or a blocking issue list. A render is not a substitute for geometry validation.
+Output: the exact approved contract, its source manifest, validation report, alignment report, and independent human approval sidecar—or a blocking issue list. A render and the in-document `validation.status` are not substitutes for geometry validation or independent approval.
 
 ## Stage 4: design generation
 
@@ -117,23 +130,23 @@ Provide requested dimensions, style, material zones, target polygon budget, and 
 
 Output: an asset manifest and optimized runtime assets, normally GLB for the web.
 
-## Stage 7: engineering generation
+## Stage 7: deterministic scene compilation
 
-The engineering model consumes only approved spatial data, design constraints, asset manifests, and engine conventions. It may generate:
+Use the bundled scene compiler as the default path:
 
-- Three.js or React Three Fiber scene code;
-- Blender Python for assembly, cleanup, baking, and export;
-- renderer-neutral scene configuration;
-- interaction, comparison, annotation, and revision interfaces;
-- validation and regression tests.
+- split walls around approved door and window openings;
+- generate floors, wall solids, door/window panels, and dimensionally correct furniture proxies;
+- export one deterministic GLB;
+- copy the fixed Three.js/WebXR viewer and local runtime dependencies;
+- record the scene hash, approval scope, limitations, and source Spatial JSON.
 
-Generated scripts must be deterministic, idempotent where practical, and reviewed like source code. Do not accept hidden geometry edits introduced by generation.
+Use the engineering model only to extend the compiler, viewer, Blender path, or tests when the fixed implementation lacks a requested feature. Never regenerate the whole viewer per project and never accept hidden geometry edits introduced by generated code.
 
 ## Stage 8: rendering and VR
 
 Use desktop mode to inspect scale, clipping, materials, navigation, and changes before immersive testing. Then validate WebXR or native VR lifecycle, comfort, reach, teleportation, interaction, and target-device performance. Choose Blender, Unreal, or Twinmotion for high-fidelity presentation when requested, while retaining the same validated source data.
 
-Output: runnable scene, review path, device notes, performance evidence, and known limitations.
+Output: runnable GLB scene and static Web viewer first; optional Blender, panorama, Unreal, or Twinmotion artifacts second. Record device notes, performance evidence, and known limitations.
 
 ## Stage 9: incremental revision
 
@@ -144,6 +157,10 @@ Translate requests such as “change to warm cream,” “replace the sofa,” o
   "revision_id": "rev-004",
   "base_revision": "rev-003",
   "intent": "Create a warmer cream palette and preserve the approved layout.",
+  "scope": {
+    "target_ids": [],
+    "paths": ["/materials/wall_main"]
+  },
   "operations": [
     {
       "op": "replace",
@@ -158,11 +175,17 @@ Translate requests such as “change to warm cream,” “replace the sofa,” o
     "/circulation",
     "/design_objects"
   ],
-  "revalidate": ["materials", "lighting", "performance"]
+  "revalidate": ["materials", "lighting", "performance"],
+  "provenance": {
+    "actor_type": "human",
+    "actor_id": "reviewer-001",
+    "created_at": "2026-07-24T00:00:00.000Z"
+  },
+  "rollback_reference": "rev-003"
 }
 ```
 
-Use RFC 6901 JSON Pointer paths for ID-keyed objects. For an item stored in an array, target its stable ID and use a relative field path; never persist array indexes or wildcards as durable revision targets. Validate affected constraints, regenerate only dependent artifacts, preserve the previous revision, and show the user what changed.
+Use RFC 6901 JSON Pointer paths for ID-keyed objects. For an item stored in an array, target its stable ID and use a relative field path; never persist array indexes or wildcards as durable revision targets. Treat natural-language planning as an untrusted proposal. `validate-revision.mjs` and `apply-revision.mjs` enforce the scope and preservation rules, while `revision-store.mjs` persists immutable snapshots, inverse operations, rollback lineage and a hash-chained audit. Every applied change resets approval to pending. Rerun validation and independent human approval before `regenerate-affected.mjs` executes the affected downstream handlers; unaffected artifact hashes are reused.
 
 ## Failure handling
 

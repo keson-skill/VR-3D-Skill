@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
 import {
   parseArgs,
@@ -9,9 +7,8 @@ import {
   sha256,
   writeJson,
 } from "../lib/cli.mjs";
-import { readFile } from "node:fs/promises";
-
-const execFileAsync = promisify(execFile);
+import { MiB, readBoundedFile } from "./file-safety.mjs";
+import { runTool } from "./tool-runner.mjs";
 
 function printHelp() {
   process.stdout.write(`Usage:
@@ -62,13 +59,19 @@ async function main() {
     printHelp();
     return;
   }
-  const bytes = await readFile(options.input);
+  const { bytes } = await readBoundedFile(options.input, {
+    label: "OCR image",
+    maxBytes: 128 * MiB,
+  });
   let stdout;
   try {
-    ({ stdout } = await execFileAsync(
+    ({ stdout } = await runTool(
       "tesseract",
       [options.input, "stdout", "--oem", "1", "--psm", options.psm, "-l", options.lang, "tsv"],
-      { maxBuffer: 16 * 1024 * 1024 },
+      {
+        timeoutMs: 120000,
+        maxOutputBytes: 16 * MiB,
+      },
     ));
   } catch (error) {
     const detail = error?.stderr?.trim() || error?.message || "unknown error";

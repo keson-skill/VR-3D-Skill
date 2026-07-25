@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-3e661b848ce1",
+      "type": "image",
+      "name": "raster-03-bottom-window.png",
+      "uri": "local://raster-03-bottom-window.png",
+      "revision": null,
+      "bytes": 2331,
+      "sha256": "3e661b848ce14eca3047e4a196895dbd66e183692e7c2b8ee974e1f0b4bed33b",
+      "contains_personal_data": false
+    }
+  ]
+}

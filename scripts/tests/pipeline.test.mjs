@@ -8,13 +8,20 @@ import { checkStageReadiness } from "../orchestration/check-stage-readiness.mjs"
 import { buildAssetManifest } from "../processing/build-asset-manifest.mjs";
 import { createAssetBrief } from "../tasks/asset-generation/create-asset-brief.mjs";
 import { validateRevision } from "../validation/validate-revision.mjs";
+import { evaluateDesignProposal } from "../tasks/design-planning/evaluate-design-proposal.mjs";
+import { resolveAssets } from "../tasks/asset-generation/resolve-assets.mjs";
+import { buildRuntimeContract } from "../runtime/build-runtime-contract.mjs";
+import { buildBlenderRenderPlan } from "../tasks/blender/build-render-plan.mjs";
 import { validateSpatialJson } from "../validation/validate-spatial-json.mjs";
 import { verifyXrConfig } from "../runtime/verify-xr-config.mjs";
 import {
   assertModelAvailable,
   editImage,
+  generateImage,
   generateSpatialJson,
+  isPrivateDownloadHost,
 } from "../adapters/realmrouter-openai.mjs";
+import { createTestApprovalContext } from "./helpers/p2-approval.mjs";
 
 function validSpatialJson() {
   return {
@@ -28,10 +35,18 @@ function validSpatialJson() {
       handedness: "right",
       origin: [0, 0, 0],
     },
-    sources: [],
+    sources: [
+      {
+        id: "source-plan",
+        type: "dimensioned_floor_plan",
+        uri: "local://test-plan",
+        contains_personal_data: false,
+      },
+    ],
     requirements: { design_intent: { style: "warm cream" } },
     envelope: {
       floor_elevation: 0,
+      ceiling_height: 2.8,
       walls: [
         {
           id: "wall-01",
@@ -41,6 +56,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
         {
           id: "wall-02",
@@ -50,6 +70,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
         {
           id: "wall-03",
@@ -59,6 +84,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
         {
           id: "wall-04",
@@ -68,6 +98,11 @@ function validSpatialJson() {
           height: 2.8,
           structural_role: "unknown",
           edit_policy: "review_required",
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
       ],
       openings: [
@@ -78,6 +113,12 @@ function validSpatialJson() {
           offset: 0.5,
           width: 0.9,
           height: 2.1,
+          sill_height: 0,
+          provenance: {
+            source_id: "source-plan",
+            method: "measured",
+            confidence: 1,
+          },
         },
       ],
     },
@@ -86,6 +127,11 @@ function validSpatialJson() {
         id: "room-living",
         type: "living",
         boundary_wall_ids: ["wall-01", "wall-02", "wall-03", "wall-04"],
+        provenance: {
+          source_id: "source-plan",
+          method: "measured",
+          confidence: 1,
+        },
       },
     ],
     circulation: {
@@ -158,8 +204,11 @@ function validSpatialJson() {
 }
 
 test("validates an approved one-room spatial contract", () => {
+  const document = validSpatialJson();
+  const approval = createTestApprovalContext(document);
   const report = validateSpatialJson(validSpatialJson(), {
     requireApproved: true,
+    ...approval,
   });
   assert.equal(report.valid, true, JSON.stringify(report.errors));
 });
@@ -173,12 +222,102 @@ test("rejects an opening outside its host wall", () => {
   assert.ok(report.errors.some((error) => error.code === "opening.outside_wall"));
 });
 
+test("validates two explainable P5 layouts and distinguishes real assets from proxies", () => {
+  const document = validSpatialJson();
+  document.assets[0].source = "catalog";
+  const object = structuredClone(document.design_objects[0]);
+  object.transform.position = [3, 0, 3];
+  const { asset_id: _proxyAssetId, ...proxyObject } = object;
+  const proposal = {
+    base_revision: document.project.revision,
+    design_brief: {
+      budget: { amount: 50000, currency: "CNY" },
+      occupants: [{ role: "adult", count: 2 }],
+      activities: ["conversation", "television"],
+      must_keep_ids: ["object-sofa"],
+      minimum_clearance_meters: 0.8,
+    },
+    recommended_alternative_id: "family-layout",
+    design_alternatives: [
+      {
+        id: "family-layout",
+        explanation: { zoning: "Keep the sofa in the social zone and protect the door path.", tradeoff: "More seating, less open floor." },
+        score: { circulation: 0.9, budget: 0.8, function: 0.9 },
+        cost: { estimated_total: 42000, currency: "CNY" },
+        risk_notes: "Catalog availability may change.",
+        design_objects: [object],
+      },
+      {
+        id: "open-layout",
+        explanation: { zoning: "Retain the social zone with a compact furniture arrangement.", tradeoff: "Less storage." },
+        score: { circulation: 0.95, budget: 0.85, function: 0.82 },
+        cost: { estimated_total: 38000, currency: "CNY" },
+        risk_notes: "Proxy must be replaced before procurement.",
+        design_objects: [proxyObject],
+      },
+    ],
+  };
+  const report = evaluateDesignProposal(document, proposal);
+  assert.equal(report.valid, true, JSON.stringify(report.errors));
+  assert.deepEqual(report.alternatives[0].real_assets, ["object-sofa"]);
+  assert.deepEqual(report.alternatives[1].proxy_assets, ["object-sofa"]);
+  assert.equal(report.warnings.some((warning) => warning.code === "design.proxy_assets"), true);
+});
+
+test("P5 resolves only licensed dimensionally compatible catalog assets and records proxies", () => {
+  const result = resolveAssets([
+    { id: "sofa", kind: "sofa", dimensions: [2, 0.8, 0.9] },
+    { id: "chair", kind: "chair", dimensions: [0.6, 0.8, 0.6] },
+  ], {
+    assets: [
+      { id: "catalog-sofa", kind: "sofa", uri: "catalog/sofa.glb", format: "glb", source: "licensed_catalog", license: "commercial", units: "meters", pivot: "bottom_center", forward_axis: "-Z", optimized: true, collision_proxy: true, dimensions: [2.02, 0.8, 0.91] },
+      { id: "bad-chair", kind: "chair", uri: "catalog/chair.glb", format: "glb", source: "licensed_catalog", license: "forbidden", units: "meters", pivot: "bottom_center", forward_axis: "-Z", optimized: true, collision_proxy: true, dimensions: [0.6, 0.8, 0.6] },
+    ],
+  });
+  assert.equal(result.valid, true);
+  assert.equal(result.resolved[0].representation, "real_asset");
+  assert.equal(result.resolved[1].representation, "proxy");
+});
+
+test("P6 builds room navigation, collision, interaction, accessibility, and XR lifecycle contracts", () => {
+  const contract = buildRuntimeContract(validSpatialJson());
+  assert.equal(contract.valid, true, JSON.stringify(contract.errors));
+  assert.equal(contract.rooms.length, 1);
+  assert.equal(contract.obstacles.length, 1);
+  assert.ok(contract.interaction.operations.includes("measure"));
+  assert.ok(contract.interaction.operations.includes("undo"));
+  assert.ok(contract.lifecycle.includes("reconnecting"));
+  assert.equal(contract.accessibility.live_status, true);
+});
+
+test("P7 builds deterministic multi-camera, equirectangular panorama, color, and checkpoint plans", () => {
+  const plan = buildBlenderRenderPlan(validSpatialJson(), { scene: "scene.glb", outputDirectory: "render" });
+  assert.ok(plan.cameras.length >= 2);
+  assert.equal(plan.panorama.width / plan.panorama.height, 2);
+  assert.equal(plan.panorama.projection, "EQUIRECTANGULAR");
+  assert.ok(plan.cameras.some((camera) => camera.id === plan.panorama.camera_id));
+  assert.equal(plan.color_management.view_transform, "AgX");
+  assert.equal(plan.checkpoint_file, "render-checkpoint.json");
+  assert.equal(plan.plan_sha256.length, 64);
+
+  const punctuated = validSpatialJson();
+  punctuated.rooms[0].id = "room:living";
+  punctuated.design_objects[0].room_id = "room:living";
+  punctuated.xr.boundary_room_ids = ["room:living"];
+  const punctuatedPlan = buildBlenderRenderPlan(punctuated);
+  assert.ok(
+    punctuatedPlan.cameras.some((camera) =>
+      camera.id === punctuatedPlan.panorama.camera_id),
+  );
+});
+
 test("validates stable-ID revision operations and rejects array indexes", () => {
   const document = validSpatialJson();
   const valid = validateRevision(document, {
     revision_id: "rev-002",
     base_revision: "rev-001",
     intent: "Change the sofa asset.",
+    scope: { target_ids: ["object-sofa"], paths: [] },
     operations: [
       {
         op: "replace",
@@ -190,6 +329,12 @@ test("validates stable-ID revision operations and rejects array indexes", () => 
     must_preserve_ids: ["wall-01"],
     must_preserve_paths: ["/envelope"],
     revalidate: ["asset_bindings"],
+    provenance: {
+      actor_type: "human",
+      actor_id: "reviewer-001",
+      created_at: "2026-07-24T00:00:00.000Z",
+    },
+    rollback_reference: "rev-001",
   });
   assert.equal(valid.valid, true, JSON.stringify(valid.errors));
 
@@ -216,8 +361,12 @@ test("builds an asset brief and web asset manifest", () => {
 
 test("reports downstream stage and XR readiness", () => {
   const document = validSpatialJson();
-  assert.equal(checkStageReadiness("preview", document).ready, true);
-  assert.equal(verifyXrConfig(document).valid, true);
+  const approval = createTestApprovalContext(document);
+  assert.equal(
+    checkStageReadiness("preview", document, approval).ready,
+    true,
+  );
+  assert.equal(verifyXrConfig(document, approval).valid, true);
 });
 
 test("builds a deterministic local source manifest", async () => {
@@ -251,7 +400,7 @@ test("retries transient RealmRouter failures before returning Spatial JSON", asy
       return new Response(
         JSON.stringify({
           id: "request-123",
-          model: "gpt-5.6-sol",
+          model: "gpt-5.5",
           choices: [{ message: { content: "{\"ok\":true}" } }],
         }),
         { status: 200, headers: { "content-type": "application/json" } },
@@ -314,6 +463,10 @@ test("sends reference image edits as multipart data", async () => {
     const inputImage = join(directory, "reference.png");
     await writeFile(inputImage, "not-a-real-png", "utf8");
     let request;
+    const generatedPng = Buffer.from([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+      0x00, 0x00, 0x00, 0x00,
+    ]);
     const result = await editImage({
       apiKey: "test-key",
       model: "gpt-image-2",
@@ -323,7 +476,7 @@ test("sends reference image edits as multipart data", async () => {
       fetchImpl: async (endpoint, options) => {
         request = { endpoint, options };
         return new Response(
-          JSON.stringify({ data: [{ b64_json: Buffer.from("image-bytes").toString("base64") }] }),
+          JSON.stringify({ data: [{ b64_json: generatedPng.toString("base64") }] }),
           { status: 200, headers: { "content-type": "application/json" } },
         );
       },
@@ -331,8 +484,48 @@ test("sends reference image edits as multipart data", async () => {
     assert.equal(request.endpoint, "https://realmrouter.cn/v1/images/edits");
     assert.ok(request.options.body instanceof FormData);
     assert.equal(request.options.headers["Content-Type"], undefined);
-    assert.deepEqual(result.bytes, Buffer.from("image-bytes"));
+    assert.deepEqual(result.bytes, generatedPng);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test("rejects private image download hosts and non-image provider payloads", async () => {
+  for (const host of [
+    "127.0.0.1",
+    "10.0.0.1",
+    "169.254.169.254",
+    "[fc00::1]",
+    "[::ffff:127.0.0.1]",
+  ]) {
+    assert.equal(isPrivateDownloadHost(host), true);
+  }
+  await assert.rejects(
+    generateImage({
+      apiKey: "test-key",
+      prompt: "A bounded fixture.",
+      maxRetries: 0,
+      fetchImpl: async () =>
+        new Response(
+          JSON.stringify({ data: [{ url: "https://[fc00::1]/image.png" }] }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        ),
+    }),
+    /public/u,
+  );
+  await assert.rejects(
+    generateImage({
+      apiKey: "test-key",
+      prompt: "A bounded fixture.",
+      maxRetries: 0,
+      fetchImpl: async () =>
+        new Response(
+          JSON.stringify({
+            data: [{ b64_json: Buffer.from("not-an-image").toString("base64") }],
+          }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        ),
+    }),
+    /not a PNG, JPEG, or WebP/u,
+  );
 });

@@ -1,0 +1,333 @@
+{
+  "schema_version": "1.0",
+  "stage": "P8",
+  "passed": true,
+  "aggregate": {
+    "fixture_count": 20,
+    "application_errors": 0,
+    "scope_blocked": true,
+    "preservation_blocked": true
+  },
+  "samples": [
+    {
+      "id": "p8-01-rectangle",
+      "valid": true,
+      "revision": "p8-fixture-001-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "e13f84a0b96e32bbb96247f8c75fbda8bdf9547cac1084ad1c955a572f4e6f48",
+      "error": null
+    },
+    {
+      "id": "p8-02-door",
+      "valid": true,
+      "revision": "p8-fixture-002-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "308a954293838b0da75b4d4c78bdb0998f20cffa47a87dd71b8468076756c8a4",
+      "error": null
+    },
+    {
+      "id": "p8-03-window",
+      "valid": true,
+      "revision": "p8-fixture-003-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "ef5ce6abc12d46d8d2c787e67c6110cef1a22c90d54bcc2c2bd0bce812d9948c",
+      "error": null
+    },
+    {
+      "id": "p8-04-l-room",
+      "valid": true,
+      "revision": "p8-fixture-004-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "9a90d94e8e0dc34419a371fc19ee49463cdfb73da6c3b51a246c01bf24756336",
+      "error": null
+    },
+    {
+      "id": "p8-05-u-room",
+      "valid": true,
+      "revision": "p8-fixture-005-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "39832799e76bcd9f42d194260bfdfb9aa60539a09ae34a4f29250be910ffd0ac",
+      "error": null
+    },
+    {
+      "id": "p8-06-two-room-vertical",
+      "valid": true,
+      "revision": "p8-fixture-006-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "9845639ffeda2a884c9d6216d42fd627c9af4a81ef6a64fc439dbd7f630fec01",
+      "error": null
+    },
+    {
+      "id": "p8-07-two-room-horizontal",
+      "valid": true,
+      "revision": "p8-fixture-007-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "ad09a2e694334335c66a9662a11b1bc04e3518b346054360cd5a25ce555a0621",
+      "error": null
+    },
+    {
+      "id": "p8-08-three-room-t",
+      "valid": true,
+      "revision": "p8-fixture-008-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "85bd1c62b464a3792e3910c0572628d564c5742bd1c7e0ceb20e7cf9c0d82431",
+      "error": null
+    },
+    {
+      "id": "p8-09-four-room-grid",
+      "valid": true,
+      "revision": "p8-fixture-009-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "0a29fe409e3c318648b86149197a8bc6b89e4ec3136f3d095f3107f4995aa3fd",
+      "error": null
+    },
+    {
+      "id": "p8-10-corridor-living",
+      "valid": true,
+      "revision": "p8-fixture-010-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "b680a78eda191719f77d542915de3c89eb849703053d4496e397b70be1f51e88",
+      "error": null
+    },
+    {
+      "id": "p8-11-slanted-pentagon",
+      "valid": true,
+      "revision": "p8-fixture-011-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "01e6122226e2f069a7dd1e7cd3df1d546744a953140c12852b070cf527ab8b6f",
+      "error": null
+    },
+    {
+      "id": "p8-12-level-change",
+      "valid": true,
+      "revision": "p8-fixture-012-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "90cc64eee076b4b477f1ef633651b8e352de487afaa27e0569b036d952d5363d",
+      "error": null
+    },
+    {
+      "id": "p8-13-column",
+      "valid": true,
+      "revision": "p8-fixture-013-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "a857f51af9639e0ea79ac085a9781c567b8f7414d8cb4ac1c78eecb68f0d125f",
+      "error": null
+    },
+    {
+      "id": "p8-14-beam",
+      "valid": true,
+      "revision": "p8-fixture-014-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "b97004c9b9d7ea7580ce97b4996cffe3478d660c9e52c0d8297db2bab036af43",
+      "error": null
+    },
+    {
+      "id": "p8-15-stair",
+      "valid": true,
+      "revision": "p8-fixture-015-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "c4d2924c592ba001afb761ffe2c6fde50d2ffa4a8445711c196ca3d3fe9483e3",
+      "error": null
+    },
+    {
+      "id": "p8-16-structure-combined",
+      "valid": true,
+      "revision": "p8-fixture-016-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "37c74d8ec70a8994bd31dacaadf4663c6f35eb70c2b65553963b9925cefc246b",
+      "error": null
+    },
+    {
+      "id": "p8-17-concave-two-room",
+      "valid": true,
+      "revision": "p8-fixture-017-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "eae759ca41a63b2a1e03c1521ac8b241af223d41eaf9f6e08973e3702e37d744",
+      "error": null
+    },
+    {
+      "id": "p8-18-narrow-openings",
+      "valid": true,
+      "revision": "p8-fixture-018-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "9e6fc9475bd3ec580c1c3917dfb626959b49cfb3a73a5a1bdb6dd6db1aa338e5",
+      "error": null
+    },
+    {
+      "id": "p8-19-unequal-heights",
+      "valid": true,
+      "revision": "p8-fixture-019-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "88c5df49e05d3ec9b3f0b8d434a6d60063c83c6db3d1f83366795e1293642776",
+      "error": null
+    },
+    {
+      "id": "p8-20-complex-shared",
+      "valid": true,
+      "revision": "p8-fixture-020-rev-002",
+      "diff_items": 1,
+      "regenerated": [
+        "scene_glb",
+        "web_viewer",
+        "blender_plan",
+        "stills",
+        "panorama",
+        "walkthrough"
+      ],
+      "audit_sha256": "da5f194949450bff0b4d7e590d50f05f650d7ddc26aeff1a4e0774390257a3e8",
+      "error": null
+    }
+  ]
+}

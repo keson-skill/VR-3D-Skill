@@ -7,6 +7,7 @@ Use this contract as the authoritative, renderer-neutral representation of the i
 - [Required principles](#required-principles)
 - [Minimal shape](#minimal-shape)
 - [Provenance](#provenance)
+- [P3 shell geometry extensions](#p3-shell-geometry-extensions)
 - [Validation order](#validation-order)
 - [Revision contract](#revision-contract)
 
@@ -232,6 +233,12 @@ Use this contract as the authoritative, renderer-neutral representation of the i
 
 The example shows one internally connected room, not a complete building model. A validator must still reject incomplete geometry, dangling references, unknown structural roles presented as facts, or constraints that target missing IDs rather than filling them silently.
 
+## P3 shell geometry extensions
+
+Use `room.floor_elevation` and `room.ceiling_elevation` only when a room differs from the envelope defaults; both are absolute Y coordinates in meters and the ceiling must be higher than the floor. The compiler emits one floor and one inward-facing ceiling polygon for every valid room.
+
+Use `envelope.architectural_elements` for measured structural or fixed shell geometry. Each element has a stable `id`, `kind` (`column`, `beam`, or `stair`), meter `dimensions` in `[x, y, z]`, and a `transform.position`. A stair additionally has `step_count`; its position is the center of the full stair footprint at the lower floor elevation, and its `dimensions` are `[width, total_rise, total_run]`. Keep every element source-bound; do not encode P4 finishes, P5 furniture, or renderer-only meshes here.
+
 ## Provenance
 
 For important facts, record:
@@ -265,12 +272,25 @@ Set `validation.status` to `approved` only with an explicit `validation.approved
 
 Downstream scripts may render either scope, but must surface a visible warning for `visualization_only`. Never silently promote scope based on model confidence, an image preview, or a rendered scene.
 
+The in-document `validation.status` records the reviewed state of that exact Spatial JSON, but is not sufficient authority for downstream work. Production gates must also verify a separate [spatial-approval.schema.json](../schemas/spatial-approval.schema.json) artifact containing:
+
+- canonical SHA-256 of the source manifest;
+- canonical SHA-256 of the exact Spatial JSON;
+- canonical SHA-256 of its zero-error validation report;
+- project ID and revision;
+- human approver, UTC approval time, approval scope, and notes;
+- an attestation digest over the hashes, scope, and approver;
+- an Ed25519 signature whose public key is active in a separately managed reviewer trust store.
+
+Create a reviewer key once with `scripts/approval/create-approval-key.mjs`; keep its private key outside the workspace and protect the public trust store from job-level writes. Create a human artifact only with `scripts/approval/approve-spatial-json.mjs` in an interactive terminal after reviewing the source overlay. A model task and non-interactive process must not create it. Checked-in `test_fixture` approvals are valid only inside dedicated test helpers and must be rejected by production CLIs. Any changed source, Spatial JSON, validation report, signature, or trusted-key status invalidates the approval.
+
 ## Revision contract
 
 Every edit should include:
 
 - unique revision ID and base revision;
 - human intent;
+- an explicit allow-list scope of target IDs and durable paths;
 - explicit operations;
 - exact stable IDs and exact JSON Pointer paths that must be preserved;
 - affected artifacts;
@@ -285,6 +305,10 @@ Use RFC 6901 JSON Pointer for `path`. Allow operations only on object keys or ID
   "revision_id": "rev-002",
   "base_revision": "rev-001",
   "intent": "Change only the living-room wall finish to dark walnut.",
+  "scope": {
+    "target_ids": ["surface-wall-01-living"],
+    "paths": ["/materials"]
+  },
   "operations": [
     {
       "op": "add",
@@ -309,8 +333,14 @@ Use RFC 6901 JSON Pointer for `path`. Allow operations only on object keys or ID
     "/circulation",
     "/design_objects"
   ],
-  "revalidate": ["materials", "lighting", "asset_material_bindings", "performance"]
+  "revalidate": ["materials", "lighting", "asset_material_bindings", "performance"],
+  "provenance": {
+    "actor_type": "human",
+    "actor_id": "reviewer-001",
+    "created_at": "2026-07-24T00:00:00.000Z"
+  },
+  "rollback_reference": "rev-001"
 }
 ```
 
-Reject a patch when its base revision is stale, a target ID is missing, a pointer is invalid, or a preserved constraint would be violated. Prefer targeted regeneration over recreating unrelated rooms or assets.
+Reject a patch when its base revision is stale, an operation exceeds `scope`, a target ID is missing, a pointer is invalid, a test precondition fails, or a preserved constraint would be violated. The deterministic engine owns `project.revision` and approval invalidation; model output may not edit `/schema_version`, `/project/id`, `/project/revision`, or `/validation`. Applying a revision must produce a structural diff, an inverse revision, a dependency plan, a pending document that requires reapproval, and a hash-chained audit event. Prefer targeted regeneration over recreating unrelated rooms or assets.

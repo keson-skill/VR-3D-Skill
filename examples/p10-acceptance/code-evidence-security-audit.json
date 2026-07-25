@@ -1,0 +1,434 @@
+{
+  "schema_version": "1.0",
+  "audit": "release_security_privacy_license",
+  "passed": true,
+  "aggregate": {
+    "files_considered": 215,
+    "text_files_scanned": 205,
+    "bytes_scanned": 2417135,
+    "dependencies_checked": 40,
+    "provider_tasks_checked": 7,
+    "workflow_actions_checked": 8,
+    "blockers": 0,
+    "warnings": 0
+  },
+  "findings": [],
+  "dependencies": [
+    {
+      "name": "@emnapi/runtime",
+      "requested": null,
+      "version": "1.11.2",
+      "license": "MIT",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@emnapi/runtime",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/colour",
+      "requested": null,
+      "version": "1.1.0",
+      "license": "MIT",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/@img/colour",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-darwin-arm64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-darwin-arm64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-darwin-x64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-darwin-x64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-freebsd-wasm32",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-freebsd-wasm32",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-darwin-arm64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-darwin-arm64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-darwin-x64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-darwin-x64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linux-arm",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linux-arm",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linux-arm64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linux-arm64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linux-ppc64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linux-ppc64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linux-riscv64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linux-riscv64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linux-s390x",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linux-s390x",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linux-x64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linux-x64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linuxmusl-arm64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linuxmusl-arm64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-libvips-linuxmusl-x64",
+      "requested": null,
+      "version": "1.3.2",
+      "license": "LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-libvips-linuxmusl-x64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linux-arm",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linux-arm",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linux-arm64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linux-arm64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linux-ppc64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linux-ppc64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linux-riscv64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linux-riscv64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linux-s390x",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linux-s390x",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linux-x64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linux-x64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linuxmusl-arm64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linuxmusl-arm64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-linuxmusl-x64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-linuxmusl-x64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-wasm32",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-wasm32",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-webcontainers-wasm32",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-webcontainers-wasm32",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-win32-arm64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0 AND LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-win32-arm64",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-win32-ia32",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0 AND LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-win32-ia32",
+      "integrity_present": true
+    },
+    {
+      "name": "@img/sharp-win32-x64",
+      "requested": null,
+      "version": "0.35.3",
+      "license": "Apache-2.0 AND LGPL-3.0-or-later",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/@img/sharp-win32-x64",
+      "integrity_present": true
+    },
+    {
+      "name": "ajv",
+      "requested": "8.18.0",
+      "version": "8.18.0",
+      "license": "MIT",
+      "direct": true,
+      "optional": false,
+      "lockfile_path": "node_modules/ajv",
+      "integrity_present": true
+    },
+    {
+      "name": "detect-libc",
+      "requested": null,
+      "version": "2.1.2",
+      "license": "Apache-2.0",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/detect-libc",
+      "integrity_present": true
+    },
+    {
+      "name": "dxf-parser",
+      "requested": "1.1.2",
+      "version": "1.1.2",
+      "license": "MIT",
+      "direct": true,
+      "optional": false,
+      "lockfile_path": "node_modules/dxf-parser",
+      "integrity_present": true
+    },
+    {
+      "name": "fast-deep-equal",
+      "requested": null,
+      "version": "3.1.3",
+      "license": "MIT",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/fast-deep-equal",
+      "integrity_present": true
+    },
+    {
+      "name": "fast-uri",
+      "requested": null,
+      "version": "3.1.4",
+      "license": "BSD-3-Clause",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/fast-uri",
+      "integrity_present": true
+    },
+    {
+      "name": "json-schema-traverse",
+      "requested": null,
+      "version": "1.0.0",
+      "license": "MIT",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/json-schema-traverse",
+      "integrity_present": true
+    },
+    {
+      "name": "loglevel",
+      "requested": null,
+      "version": "1.9.2",
+      "license": "MIT",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/loglevel",
+      "integrity_present": true
+    },
+    {
+      "name": "require-from-string",
+      "requested": null,
+      "version": "2.0.2",
+      "license": "MIT",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/require-from-string",
+      "integrity_present": true
+    },
+    {
+      "name": "semver",
+      "requested": null,
+      "version": "7.8.5",
+      "license": "ISC",
+      "direct": false,
+      "optional": false,
+      "lockfile_path": "node_modules/semver",
+      "integrity_present": true
+    },
+    {
+      "name": "sharp",
+      "requested": "0.35.3",
+      "version": "0.35.3",
+      "license": "Apache-2.0",
+      "direct": true,
+      "optional": false,
+      "lockfile_path": "node_modules/sharp",
+      "integrity_present": true
+    },
+    {
+      "name": "three",
+      "requested": "0.179.1",
+      "version": "0.179.1",
+      "license": "MIT",
+      "direct": true,
+      "optional": false,
+      "lockfile_path": "node_modules/three",
+      "integrity_present": true
+    },
+    {
+      "name": "tslib",
+      "requested": null,
+      "version": "2.8.1",
+      "license": "0BSD",
+      "direct": false,
+      "optional": true,
+      "lockfile_path": "node_modules/tslib",
+      "integrity_present": true
+    }
+  ],
+  "provider_tasks": [
+    "scripts/tasks/design-planning/propose-design.mjs",
+    "scripts/tasks/engineering-generation/generate-engineering.mjs",
+    "scripts/tasks/revision-planning/plan-revision.mjs",
+    "scripts/tasks/spatial-extraction/extract-spatial-json.mjs",
+    "scripts/tasks/visual-preview/edit-reference.mjs",
+    "scripts/tasks/visual-preview/generate-preview.mjs",
+    "scripts/tasks/visual-reconstruction/extract-visual-spatial.mjs"
+  ],
+  "limitations": [
+    "Pattern scanning does not replace provider-side secret scanning or manual privacy review.",
+    "Transitive dependency vulnerabilities require a current registry-backed npm audit in release CI.",
+    "Customer asset redistribution rights require review of the exact delivery asset manifest.",
+    "Generated P10 acceptance/audit/benchmark reports are excluded to avoid self-referential evidence; their generators and source fixtures remain scanned."
+  ],
+  "report_sha256": "cf9b5d4ecb1229672b070223845646dc2584e5a391c523c46ae427882cad0e41"
+}

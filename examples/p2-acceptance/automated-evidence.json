@@ -1,0 +1,232 @@
+{
+  "schema_version": "1.0",
+  "stage": "P2",
+  "fixture_set": "examples/p2-acceptance",
+  "fixture_counts": {
+    "raster": 5,
+    "dxf": 5,
+    "total": 10
+  },
+  "thresholds": {
+    "schema_and_geometry_errors": 0,
+    "dxf_max_endpoint_error_meters": 0.001,
+    "raster_median_relative_wall_error": 0.02,
+    "raster_max_absolute_wall_error_meters": 0.05
+  },
+  "aggregate": {
+    "schema_and_geometry_errors": 0,
+    "dxf_max_endpoint_error_meters": 0,
+    "raster_median_relative_wall_error": 0,
+    "raster_max_absolute_wall_error_meters": 0,
+    "minimum_alignment_f1": 0.956079,
+    "minimum_alignment_iou": 0.915854
+  },
+  "passed": true,
+  "samples": [
+    {
+      "id": "dxf-01-meters",
+      "input_kind": "dxf",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "openings": 1,
+        "rooms": 1
+      },
+      "metrics": {
+        "max_endpoint_error_meters": 0,
+        "opening_width_error_meters": 0,
+        "tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-02-millimeters",
+      "input_kind": "dxf",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "openings": 1,
+        "rooms": 1
+      },
+      "metrics": {
+        "max_endpoint_error_meters": 0,
+        "opening_width_error_meters": 0,
+        "tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-03-centimeters",
+      "input_kind": "dxf",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "openings": 1,
+        "rooms": 1
+      },
+      "metrics": {
+        "max_endpoint_error_meters": 0,
+        "opening_width_error_meters": 0,
+        "tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-04-feet",
+      "input_kind": "dxf",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 7,
+        "openings": 1,
+        "rooms": 2
+      },
+      "metrics": {
+        "max_endpoint_error_meters": 0,
+        "opening_width_error_meters": 0,
+        "tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "dxf-05-inches",
+      "input_kind": "dxf",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "openings": 1,
+        "rooms": 1
+      },
+      "metrics": {
+        "max_endpoint_error_meters": 0,
+        "opening_width_error_meters": 0,
+        "tolerance_meters": 0.001
+      }
+    },
+    {
+      "id": "raster-01-meter-anchor",
+      "input_kind": "raster",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "automatic_openings": 1,
+        "final_openings": 1,
+        "rooms": 1
+      },
+      "scale": {
+        "status": "trusted",
+        "recommended_scope": "visualization_only"
+      },
+      "correction_applied": true,
+      "metrics": {
+        "median_relative_wall_error": 0,
+        "max_absolute_wall_error_meters": 0,
+        "alignment_f1": 0.966366,
+        "alignment_iou": 0.934921
+      }
+    },
+    {
+      "id": "raster-02-right-door",
+      "input_kind": "raster",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "automatic_openings": 1,
+        "final_openings": 1,
+        "rooms": 1
+      },
+      "scale": {
+        "status": "trusted",
+        "recommended_scope": "visualization_only"
+      },
+      "correction_applied": true,
+      "metrics": {
+        "median_relative_wall_error": 0,
+        "max_absolute_wall_error_meters": 0,
+        "alignment_f1": 0.971185,
+        "alignment_iou": 0.943984
+      }
+    },
+    {
+      "id": "raster-03-bottom-window",
+      "input_kind": "raster",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "automatic_openings": 1,
+        "final_openings": 1,
+        "rooms": 1
+      },
+      "scale": {
+        "status": "trusted",
+        "recommended_scope": "visualization_only"
+      },
+      "correction_applied": true,
+      "metrics": {
+        "median_relative_wall_error": 0,
+        "max_absolute_wall_error_meters": 0,
+        "alignment_f1": 0.957345,
+        "alignment_iou": 0.918179
+      }
+    },
+    {
+      "id": "raster-04-left-passage",
+      "input_kind": "raster",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 6,
+        "automatic_openings": 3,
+        "final_openings": 1,
+        "rooms": 1
+      },
+      "scale": {
+        "status": "trusted",
+        "recommended_scope": "visualization_only"
+      },
+      "correction_applied": true,
+      "metrics": {
+        "median_relative_wall_error": 0,
+        "max_absolute_wall_error_meters": 0,
+        "alignment_f1": 0.99501,
+        "alignment_iou": 0.99007
+      }
+    },
+    {
+      "id": "raster-05-estimated-scale",
+      "input_kind": "raster",
+      "passed": true,
+      "schema_valid": true,
+      "geometry_errors": 0,
+      "counts": {
+        "walls": 4,
+        "automatic_openings": 0,
+        "final_openings": 0,
+        "rooms": 1
+      },
+      "scale": {
+        "status": "estimated",
+        "recommended_scope": "visualization_only"
+      },
+      "correction_applied": false,
+      "metrics": {
+        "median_relative_wall_error": 0,
+        "max_absolute_wall_error_meters": 0,
+        "alignment_f1": 0.956079,
+        "alignment_iou": 0.915854
+      }
+    }
+  ]
+}

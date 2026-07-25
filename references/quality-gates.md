@@ -7,6 +7,12 @@ Use the gates that apply to the requested output. Record evidence, exclusions, a
 - Every source file has an identifier, type, revision, and coordinate or image orientation.
 - Explicit dimensions remain distinct from inferred dimensions.
 - Unit conversions, scale anchors, confidence scores, and assumptions are recorded.
+- Local DWG, binary scan, FBX, PDF/video, and spreadsheet tool routes record the executable version, bounded arguments, input/output hashes, and failures without invoking a shell.
+- PDF pages retain vector/text evidence when present; scan pages retain page transforms and never gain authority merely because they were rasterized or OCR-processed.
+- Multi-view and video evidence has distinct image hashes, matching camera intrinsics/poses, acceptable reprojection error, and a metric scale; 360° evidence has a valid equirectangular projection and explicit alignment when multiple panoramas are used.
+- IFC evidence retains units, storeys, containment, semantic types, property sets, classifications, and stable source entity IDs; cross-storey or unsupported geometry requires selection or a verified geometry engine.
+- Point-cloud/depth evidence records source axis, unit scale, filtering, bounds, planes, point counts, limitations, and review-only opening candidates. It never claims hidden construction geometry.
+- Existing 3D references reject remote/absolute/traversing resources, hash packaged dependencies, require explicit OBJ axes/units, and require asset ID and license in asset mode.
 - Private plans, photos, addresses, and client metadata are sent only to approved providers.
 - The output can identify which source, user edit, model, or asset produced each important fact.
 
@@ -18,6 +24,7 @@ Use the gates that apply to the requested output. Record evidence, exclusions, a
 - Room boundaries, area, ceiling height, fixed services, columns, and unusable zones agree with available measurements.
 - Structural roles are source-backed; load-bearing or otherwise protected elements have explicit locked edit policies.
 - Low-confidence topology or dimension conflicts block downstream generation until accepted or resolved.
+- Production approval is an independent human-created sidecar bound to the exact source manifest, Spatial JSON, and zero-error validation report and signed by an active externally trusted Ed25519 reviewer key; in-document status and test fixtures are insufficient.
 - User requirements, design intent, primary circulation rules, surface-material bindings, and asset material-slot bindings use stable IDs.
 - Every revision uses stable IDs or exact JSON Pointers, contains no durable array indexes or wildcards, and revalidates affected geometry.
 
@@ -85,3 +92,22 @@ Use the gates that apply to the requested output. Record evidence, exclusions, a
 | Spatial setup | Spawn, floor height, standing or seated origin, handedness, reach, and boundaries |
 | Performance | Representative-device frame-time and memory capture during the busiest scene |
 | Failure handling | Missing dimension, provider timeout, invalid asset, denied permission, unsupported feature, and disconnected input |
+
+## Production operations and release
+
+- Production definitions pass `schemas/production-job.schema.json`, use only registered handlers, and provide every handler's required parameter.
+- Repeated requests bind an idempotency-key hash to one exact definition; conflicting reuse is rejected.
+- Successful stages have hash-verified checkpoints; retry attempts are bounded; approval and dependency gaps pause safely.
+- Job and checkpoint writes are atomic, concurrent execution uses ownership-token locks with handle-bound heartbeats, active cancellation is recorded, crash recovery is explicit, and event/checkpoint tampering is detectable.
+- Operational events contain only allowlisted, redacted fields and never include credentials, customer contact data or local source paths.
+- Inputs are bounded regular files; local tools run without a shell and have time/output limits; provider responses and public image downloads have size, format, timeout, retry and SSRF controls.
+- Every production output stays below the declared workspace and neither its parents nor an existing directory output may traverse symbolic links.
+- Delivery manifests include exact approval bindings, explicit artifact hashes, license state, limitations and no path outside the delivery root.
+- Linux, macOS and Windows evidence belongs to the exact release commit and records the actual workflow URL.
+- Desktop, mobile, XR and Blender qualification uses real non-synthetic captures on the declared hardware and meets `config/performance-budgets.json`.
+- At least one anonymized real project has a ready delivery manifest and interactive product-owner acceptance.
+- The qualification bundle embeds complete bounded platform, target/capture and project records, reproduces their hashes/budgets, stays below 32 KiB and reaches the tag workflow through a protected secret rather than a commit-changing repository file.
+- All workflow actions/reusable workflows use full commit pins; all locked packages have an approved license and valid SRI, with redistribution obligations reviewed separately.
+- The release package includes a lockfile-derived SBOM with unique component references and a dependency graph; SHA-256, npm SHA-1/SHA-512, SBOM identity, preflight, version and tag all verify.
+- Hashes prove integrity and commit binding, not physical-device or human-event authenticity; release owners retain and inspect the external raw captures.
+- Any missing item keeps `release_ready: false` and P10 out of `COMPLETED`.

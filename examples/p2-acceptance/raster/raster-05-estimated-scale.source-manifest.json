@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-17d90e055dfa",
+      "type": "image",
+      "name": "raster-05-estimated-scale.png",
+      "uri": "local://raster-05-estimated-scale.png",
+      "revision": null,
+      "bytes": 1602,
+      "sha256": "17d90e055dfadb01e1c7b18ae1949a9b6694243664e375ad8c9fb244ee0ba8fc",
+      "contains_personal_data": false
+    }
+  ]
+}

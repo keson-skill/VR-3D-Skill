@@ -1,0 +1,12 @@
+{
+  "pixel_start": [
+    70,
+    60
+  ],
+  "pixel_end": [
+    570,
+    60
+  ],
+  "distance_meters": 5,
+  "label": "known outer wall centerline"
+}

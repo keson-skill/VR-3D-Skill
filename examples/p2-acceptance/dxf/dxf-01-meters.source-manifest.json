@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "sources": [
+    {
+      "id": "source-d7aa793ff084",
+      "type": "cad",
+      "name": "dxf-01-meters.dxf",
+      "uri": "local://dxf-01-meters.dxf",
+      "revision": null,
+      "bytes": 282,
+      "sha256": "d7aa793ff084cf16bba681bcddc496efa732ffddcef9b8acd7e215e6db8787d6",
+      "contains_personal_data": false
+    }
+  ]
+}

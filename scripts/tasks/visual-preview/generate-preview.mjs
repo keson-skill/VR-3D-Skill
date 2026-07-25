@@ -78,7 +78,11 @@ async function main() {
     readJson(options["spatial-validation"], "spatial validation report"),
     readJson(options.approval, "spatial approval"),
     readJson(options["approval-trust"], "spatial approval trust store"),
-    readText(options["prompt-file"], "visual direction"),
+    readText(
+      options["prompt-file"],
+      "visual direction",
+      { maxBytes: 256 * 1024 },
+    ),
   ]);
   const readiness = checkStageReadiness("preview", spatialJson, {
     sourceManifest,

@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
-import { readFile, stat } from "node:fs/promises";
 import { basename, extname } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   parseArgs,
   printJson,
-  sha256,
   writeJson,
 } from "../lib/cli.mjs";
+import { GiB, hashBoundedFile } from "./file-safety.mjs";
 
 const TYPE_BY_EXTENSION = new Map([
   [".dwg", "cad"],
@@ -25,7 +24,11 @@ const TYPE_BY_EXTENSION = new Map([
 
 export async function buildSourceManifest(
   inputPaths,
-  { containsPersonalData = "unknown" } = {},
+  {
+    containsPersonalData = "unknown",
+    maxFileBytes = 512 * 1024 * 1024,
+    maxTotalBytes = 2 * GiB,
+  } = {},
 ) {
   if (!Array.isArray(inputPaths) || inputPaths.length === 0) {
     throw new Error("At least one source input is required.");
@@ -38,14 +41,17 @@ export async function buildSourceManifest(
 
   const idCounts = new Map();
   const sources = [];
+  let totalBytes = 0;
 
   for (const filePath of inputPaths) {
-    const [bytes, metadata] = await Promise.all([readFile(filePath), stat(filePath)]);
-    if (!metadata.isFile()) {
-      throw new Error(`Source is not a file: ${filePath}`);
+    const { metadata, sha256: hash } = await hashBoundedFile(filePath, {
+      label: "Source input",
+      maxBytes: maxFileBytes,
+    });
+    totalBytes += metadata.size;
+    if (totalBytes > maxTotalBytes) {
+      throw new Error(`Source inputs exceed the ${maxTotalBytes}-byte total limit.`);
     }
-
-    const hash = sha256(bytes);
     const idBase = `source-${hash.slice(0, 12)}`;
     const occurrence = (idCounts.get(idBase) || 0) + 1;
     idCounts.set(idBase, occurrence);

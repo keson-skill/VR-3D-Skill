@@ -1,7 +1,12 @@
 import { readFile } from "node:fs/promises";
 import Ajv2020 from "ajv/dist/2020.js";
 
-const [spatialSchema, approvalSchema, approvalTrustSchema] = await Promise.all([
+const [
+  spatialSchema,
+  approvalSchema,
+  approvalTrustSchema,
+  productionJobSchema,
+] = await Promise.all([
   readFile(
     new URL("../../schemas/spatial.schema.json", import.meta.url),
     "utf8",
@@ -14,10 +19,14 @@ const [spatialSchema, approvalSchema, approvalTrustSchema] = await Promise.all([
     new URL("../../schemas/spatial-approval-trust.schema.json", import.meta.url),
     "utf8",
   ).then(JSON.parse),
+  readFile(
+    new URL("../../schemas/production-job.schema.json", import.meta.url),
+    "utf8",
+  ).then(JSON.parse),
 ]);
 
 const ajv = new Ajv2020({
-  allErrors: true,
+  allErrors: false,
   strict: true,
   validateFormats: false,
 });
@@ -25,6 +34,7 @@ const ajv = new Ajv2020({
 const validateSpatial = ajv.compile(spatialSchema);
 const validateApproval = ajv.compile(approvalSchema);
 const validateApprovalTrust = ajv.compile(approvalTrustSchema);
+const validateProductionJob = ajv.compile(productionJobSchema);
 
 function escapePointerToken(value) {
   return String(value).replaceAll("~", "~0").replaceAll("/", "~1");
@@ -64,4 +74,8 @@ export function validateSpatialApprovalSchema(value) {
 
 export function validateSpatialApprovalTrustSchema(value) {
   return run(validateApprovalTrust, value);
+}
+
+export function validateProductionJobSchema(value) {
+  return run(validateProductionJob, value);
 }

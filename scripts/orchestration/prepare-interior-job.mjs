@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { copyFile, mkdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildSourceManifest } from "../ingest/build-source-manifest.mjs";
@@ -28,9 +28,14 @@ import {
 import {
   parseArgs,
   printJson,
-  sha256,
+  readJson,
   writeJson,
 } from "../lib/cli.mjs";
+import {
+  MiB,
+  hashBoundedFile,
+  readBoundedFile,
+} from "../ingest/file-safety.mjs";
 import { preprocessPlanImage } from "../processing/preprocess-plan-image.mjs";
 import { validateSpatialJson } from "../validation/validate-spatial-json.mjs";
 
@@ -71,6 +76,13 @@ export async function prepareInteriorJob(
     const storedName = `${String(index + 1).padStart(2, "0")}-${safeName(basename(source))}`;
     const storedPath = join(inputDirectory, storedName);
     await copyFile(source, storedPath);
+    const storedEvidence = await hashBoundedFile(storedPath, {
+      label: "Stored input copy",
+      maxBytes: 512 * MiB,
+    });
+    if (storedEvidence.sha256 !== sourceManifest.sources[index].sha256) {
+      throw new Error(`Input changed while it was copied: ${source}`);
+    }
     const entry = {
       ...route,
       original_sha256: sourceManifest.sources[index].sha256,
@@ -96,15 +108,21 @@ export async function prepareInteriorJob(
         entry.evidence.push({
           type: "normalized_raster",
           path: normalizedPath,
-          sha256: sha256(await readFile(normalizedPath)),
+          sha256: (await hashBoundedFile(normalizedPath, {
+            label: "Normalized plan image",
+            maxBytes: 64 * MiB,
+          })).sha256,
           preprocessing_metadata: metadataPath,
           coordinate_transform: preprocessing.coordinate_transform,
         });
       } else if (route.route === "dxf") {
-        const bytes = await readFile(storedPath);
+        const { bytes } = await readBoundedFile(storedPath, {
+          label: "DXF input",
+          maxBytes: 128 * MiB,
+        });
         const evidence = extractDxfEvidence(bytes.toString("utf8"), {
           path: storedPath,
-          sha256: sha256(bytes),
+          sha256: storedEvidence.sha256,
         });
         const evidencePath = join(evidenceDirectory, `${storedName}.json`);
         await writeJson(evidencePath, evidence);
@@ -146,10 +164,13 @@ export async function prepareInteriorJob(
           message: `PDF page ${blocker.page}: ${blocker.message}`,
         })));
       } else if (route.route === "ifc") {
-        const bytes = await readFile(storedPath);
+        const { bytes } = await readBoundedFile(storedPath, {
+          label: "IFC input",
+          maxBytes: 256 * MiB,
+        });
         const evidence = extractIfcEvidence(bytes.toString("utf8"), {
           path: storedPath,
-          fileSha256: sha256(bytes),
+          fileSha256: storedEvidence.sha256,
         });
         const evidencePath = join(evidenceDirectory, `${storedName}-ifc.json`);
         await writeJson(evidencePath, evidence);
@@ -296,7 +317,11 @@ export async function prepareInteriorJob(
           role: view.role,
         });
       } else if (route.route === "spatial_json") {
-        const spatial = JSON.parse(await readFile(storedPath, "utf8"));
+        const spatial = await readJson(
+          storedPath,
+          "Spatial JSON input",
+          { maxBytes: 16 * MiB },
+        );
         const validation = validateSpatialJson(spatial);
         const validationPath = join(evidenceDirectory, `${storedName}-spatial-validation.json`);
         await writeJson(validationPath, validation);
@@ -453,9 +478,15 @@ async function main() {
     throw new Error("When --role is used, provide one role for every input.");
   }
   const [cameraRegistration, scaleAnchor, depthIntrinsics] = await Promise.all([
-    options.registration ? JSON.parse(await readFile(options.registration, "utf8")) : null,
-    options["scale-anchor"] ? JSON.parse(await readFile(options["scale-anchor"], "utf8")) : null,
-    options["depth-intrinsics"] ? JSON.parse(await readFile(options["depth-intrinsics"], "utf8")) : null,
+    options.registration
+      ? readJson(options.registration, "camera registration", { maxBytes: 16 * MiB })
+      : null,
+    options["scale-anchor"]
+      ? readJson(options["scale-anchor"], "scale anchor", { maxBytes: 16 * MiB })
+      : null,
+    options["depth-intrinsics"]
+      ? readJson(options["depth-intrinsics"], "depth intrinsics", { maxBytes: 16 * MiB })
+      : null,
   ]);
   const result = await prepareInteriorJob(options.input, {
     outputDirectory: options.output,

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -10,6 +10,7 @@ import {
   writeJson,
 } from "../lib/cli.mjs";
 import { extractDxfEvidence } from "./extract-dxf-evidence.mjs";
+import { GiB, MiB, readBoundedFile } from "./file-safety.mjs";
 import { inspectTool, runTool } from "./tool-runner.mjs";
 
 const DWG_VERSIONS = new Map([
@@ -60,7 +61,10 @@ export async function convertDwgToDxf(
   }
   const input = resolve(inputFile);
   const output = resolve(outputFile);
-  const sourceBytes = await readFile(input);
+  const { bytes: sourceBytes } = await readBoundedFile(input, {
+    label: "DWG input",
+    maxBytes: GiB,
+  });
   const header = inspectDwgHeader(sourceBytes);
   if (!header.valid) {
     throw new Error(`Input is not a recognized DWG header (${header.signature || "missing"}).`);
@@ -72,7 +76,10 @@ export async function convertDwgToDxf(
   }
   const args = expandArguments(argumentsTemplate, input, output);
   await run(command, args, { timeoutMs: 300000 });
-  const outputBytes = await readFile(output);
+  const { bytes: outputBytes } = await readBoundedFile(output, {
+    label: "Converted DXF",
+    maxBytes: 512 * MiB,
+  });
   const dxfText = outputBytes.toString("utf8");
   if (!/\bSECTION\b/u.test(dxfText) || !/\bEOF\b/u.test(dxfText)) {
     throw new Error("DWG converter did not produce a recognizable ASCII DXF.");

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "commit_sha": null,
+  "platforms": {
+    "linux": null,
+    "darwin": null,
+    "win32": null
+  },
+  "targets": {
+    "web_desktop": null,
+    "web_mobile": null,
+    "web_xr": null,
+    "blender": null
+  },
+  "projects": [],
+  "qualification_bundle_sha256": null
+}

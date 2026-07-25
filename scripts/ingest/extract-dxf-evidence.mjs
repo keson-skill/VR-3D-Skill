@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import DxfParser from "dxf-parser";
 import {
@@ -9,6 +8,7 @@ import {
   sha256,
   writeJson,
 } from "../lib/cli.mjs";
+import { MiB, readBoundedFile } from "./file-safety.mjs";
 
 const UNIT_BY_INSUNITS = new Map([
   [0, "unitless"],
@@ -154,7 +154,10 @@ async function main() {
     );
     return;
   }
-  const bytes = await readFile(options.input);
+  const { bytes } = await readBoundedFile(options.input, {
+    label: "DXF input",
+    maxBytes: 512 * MiB,
+  });
   const evidence = extractDxfEvidence(bytes.toString("utf8"), {
     path: options.input,
     sha256: sha256(bytes),

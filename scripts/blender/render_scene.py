@@ -137,6 +137,10 @@ if __name__ == "__main__":
                 plan = json.load(handle)
             output = os.path.abspath(plan["output_directory"])
             os.makedirs(output, exist_ok=True)
-            write_checkpoint(os.path.join(output, plan["checkpoint_file"]), "failed", str(error))
+            write_checkpoint(
+                os.path.join(output, plan["checkpoint_file"]),
+                "failed",
+                {"error_type": type(error).__name__},
+            )
         finally:
             raise

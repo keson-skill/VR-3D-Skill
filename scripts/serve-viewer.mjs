@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
+import { realpath, stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, isAbsolute, normalize, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -22,26 +22,73 @@ export function createViewerServer(rootDirectory) {
   const root = resolve(rootDirectory);
   return createServer(async (request, response) => {
     try {
+      if (!["GET", "HEAD"].includes(request.method || "GET")) {
+        response.writeHead(405, {
+          Allow: "GET, HEAD",
+          "Content-Type": "text/plain; charset=utf-8",
+        });
+        response.end("Method not allowed");
+        return;
+      }
+      if ((request.url || "").length > 2048) {
+        response.writeHead(414, { "Content-Type": "text/plain; charset=utf-8" });
+        response.end("URI too long");
+        return;
+      }
       const url = new URL(request.url || "/", "http://127.0.0.1");
+      const decodedPath = decodeURIComponent(url.pathname);
       const requestPath =
-        decodeURIComponent(url.pathname) === "/"
+        decodedPath === "/"
           ? "index.html"
-          : decodeURIComponent(url.pathname).replace(/^\/+/, "");
+          : decodedPath.replace(/^\/+/, "");
+      if (requestPath.split("/").some((segment) => segment.startsWith("."))) {
+        response.writeHead(403).end("Forbidden");
+        return;
+      }
       const target = resolve(root, normalize(requestPath));
       const relativePath = relative(root, target);
       if (relativePath.startsWith("..") || isAbsolute(relativePath)) {
         response.writeHead(403).end("Forbidden");
         return;
       }
-      const fileStat = await stat(target);
+      const [realRoot, realTarget] = await Promise.all([
+        realpath(root),
+        realpath(target),
+      ]);
+      const actualRelative = relative(realRoot, realTarget);
+      if (actualRelative.startsWith("..") || isAbsolute(actualRelative)) {
+        response.writeHead(403).end("Forbidden");
+        return;
+      }
+      if (
+        actualRelative.split(/[\\/]/u).some((segment) => segment.startsWith("."))
+        || resolve(realRoot, relativePath) !== realTarget
+      ) {
+        response.writeHead(403).end("Forbidden");
+        return;
+      }
+      const fileStat = await stat(realTarget);
       if (!fileStat.isFile()) throw new Error("Not a file");
       response.writeHead(200, {
         "Content-Type": MIME_TYPES.get(extname(target).toLowerCase()) ||
           "application/octet-stream",
         "Cache-Control": "no-cache",
         "Cross-Origin-Opener-Policy": "same-origin",
+        "Cross-Origin-Embedder-Policy": "require-corp",
+        "Cross-Origin-Resource-Policy": "same-origin",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self' 'sha256-dYVe1nKHqze8AgOhimSbxHqEp7ZLX7PeZ1W2tTkN//k='; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=(), xr-spatial-tracking=(self)",
+        "Referrer-Policy": "no-referrer",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
       });
-      createReadStream(target).pipe(response);
+      if (request.method === "HEAD") {
+        response.end();
+      } else {
+        const stream = createReadStream(realTarget);
+        stream.on("error", () => response.destroy());
+        stream.pipe(response);
+      }
     } catch {
       response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
       response.end("Not found");

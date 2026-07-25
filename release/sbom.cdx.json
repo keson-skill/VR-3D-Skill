@@ -1,0 +1,1218 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:38b7fa06-f9d5-314a-1d07-e53b09477ce9",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "bom-ref": "pkg:npm/vr-3d-skill@1.0.0-rc.1",
+      "name": "vr-3d-skill",
+      "version": "1.0.0-rc.1",
+      "licenses": [
+        {
+          "license": {
+            "name": "Proprietary; all rights reserved"
+          }
+        }
+      ],
+      "purl": "pkg:npm/vr-3d-skill@1.0.0-rc.1"
+    },
+    "properties": [
+      {
+        "name": "vr3d:lockfileVersion",
+        "value": "3"
+      }
+    ]
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:0c73b7ca-1e19-22c2-3786-6b68c0e1fa63",
+      "name": "@img/sharp-win32-ia32",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "expression": "Apache-2.0 AND LGPL-3.0-or-later"
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-win32-ia32@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-win32-ia32"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-r53mXsBN6lFUDiST764SvgwUdHAqM4rPAiDzAmf4fLoB6X/rkfyTrLCg6+g17wJJiCmB3JYgHuUldCWUIRFSXw=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:13803f94-8140-1edb-c55b-b4255a5821c7",
+      "name": "@img/sharp-libvips-linux-riscv64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linux-riscv64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linux-riscv64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-bsb4rI+NldGOsXuej2r8OdSS8+zXDVaCWxyWrcv6kneTOlgAHtZABRzBBCwdsPiD90J4myNJuHpg6kA20ImW/w=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:13d5ccc1-2e82-fb69-e57c-3126d66e69e4",
+      "name": "json-schema-traverse",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/json-schema-traverse@1.0.0",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/json-schema-traverse"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:197dd625-6bbd-79e5-8ea3-b5062c3c95f0",
+      "name": "@img/sharp-wasm32",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "expression": "Apache-2.0 AND LGPL-3.0-or-later AND MIT"
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-wasm32@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-wasm32"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-cZ0XkcYGpHZkqW6iCkqTcmUC0CD9DhD5d/qeZlZkfRBn6GnHniZXLUo5+9xw8Iv76YE6LQFN9YNBlKREcCG76w=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:1ef2792a-5ebf-6e68-6295-1a0b50243cfa",
+      "name": "ajv",
+      "version": "8.18.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/ajv@8.18.0",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/ajv"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-PlXPeEWMXMZ7sPYOHqmDyCJzcfNrUr3fGNKtezX14ykXOEIvyK81d+qydx89KY5O71FKMPaQ2vBfBFI5NHR63A=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:1f598208-9aab-1899-ba58-11d640459873",
+      "name": "@img/sharp-darwin-x64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-darwin-x64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-darwin-x64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-Xo+5uFBtLN0BKqieTxiFzFPQAUlBbbH5iBKyRX/z1JrbnYsHTfKJnUfL8+p2TPXr1pXqao4eeL4Rl144uDpK9w=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:210882df-0b52-bf82-8976-c36d426c6871",
+      "name": "sharp",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/sharp@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/sharp"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-ej0zVHuZGHCiABXcNxeYhpRnPNPAcvbG8RMdBAhDAxLKkCRVSpK3Iyu7qbqw3JMzoj0REeM6f3tJLtVwl0023Q=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:212e8e2c-6dbf-6d83-91e6-5c23c08ed32f",
+      "name": "@img/sharp-freebsd-wasm32",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-freebsd-wasm32@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-freebsd-wasm32"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-lUxcqWIj2wMQ9BrwNjngcr1gWUr5xgaGThBRqPPalIC2n67Cqj1uPh8NnA/ZhAg8hUbKl+kVHKwgUIwe6ZYPrg=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:218504bd-deb6-900c-b728-c75a361a431a",
+      "name": "@img/sharp-libvips-linux-arm64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linux-arm64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linux-arm64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-dqVSFynCox4C/J8kT16V7SIFAns0IjgLwkvYT7p8LQVmJ5OS5b6tI9IGflxTeuBS//zXeFIUbwt5dwxyZ17cnA=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:2e2ffd28-7c90-b106-4a4d-5c07c74f5900",
+      "name": "@img/colour",
+      "version": "1.1.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/colour@1.1.0",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/colour"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:3f9935cb-fd66-59ab-9adf-3f655e82c9ee",
+      "name": "@img/sharp-linux-x64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linux-x64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linux-x64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-8pqvxubL2PGdhlPy6GLqzDYMUjyRmKAwKHYKixpdJYBUK7PJ0C029XdsnpFIdgRZG68fZiGdHVWcKPvtiPB4cA=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:42bce7ae-a6db-62cf-def8-528572f8f7ef",
+      "name": "fast-deep-equal",
+      "version": "3.1.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/fast-deep-equal@3.1.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/fast-deep-equal"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:4be78aee-608c-1d41-77d0-45ab7de03249",
+      "name": "@img/sharp-webcontainers-wasm32",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-webcontainers-wasm32@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-webcontainers-wasm32"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-2rnq7bX3NzeR2T4YWgz8qiG4h3TSdMe+vN1iQXpJleSJ3SM5zQ8Fy2SyyXAWlbxpEZ2Y+Z4u1BePgJEYbSy80Q=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:593cf1af-986e-463f-3593-38d6b92ce0dc",
+      "name": "@img/sharp-libvips-linux-x64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linux-x64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linux-x64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-ITPEtgffGJ0S6G9dRyw/366tJQqFRcHWPHhC+Stpg3Z8AEMrDrTr2lhdz4f/Y/HMbRh//7Z5mBzEpVdi62Oc3w=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:5a4a087f-f23e-c784-85dc-c82b3c396cfb",
+      "name": "@emnapi/runtime",
+      "version": "1.11.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40emnapi/runtime@1.11.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@emnapi/runtime"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-kyOl3X0DuTiT1h2ft8r2fYO8JYtU9a9Xis/zBSiGArNaagCOWx90N1k2wxp18czFDH+OgcWGb5ZP/XMt3dcyPA=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:638a3ed4-5f31-be76-6ac0-7be9d52fb8ec",
+      "name": "three",
+      "version": "0.179.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/three@0.179.1",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/three"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-5y/elSIQbrvKOISxpwXCR4sQqHtGiOI+MKLc3SsBdDXA2hz3Mdp3X59aUp8DyybMa34aeBwbFTpdoLJaUDEWSw=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:650564dc-ec15-f6e9-ae68-af6fe9d1c468",
+      "name": "semver",
+      "version": "7.8.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC"
+          }
+        }
+      ],
+      "purl": "pkg:npm/semver@7.8.5",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/semver"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:67c72177-0c2b-9cab-2b33-2dcbfe7edaca",
+      "name": "dxf-parser",
+      "version": "1.1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/dxf-parser@1.1.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/dxf-parser"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-GPTumUvRkounlIazLIyJMmTWt+nlg+ksS0Hdm8jWvejmZKBTz6gvHTam76wRm4PQMma5sgKLThblQyeIJcH79Q=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:761f9903-6496-3bc5-145f-5f894fe2c447",
+      "name": "loglevel",
+      "version": "1.9.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/loglevel@1.9.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/loglevel"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:7e8f737d-41fd-9d38-214d-199c182ac636",
+      "name": "@img/sharp-libvips-linux-s390x",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linux-s390x@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linux-s390x"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-/ABshyj8gCpyIrNXnHn4LorDJ0HHm1VhXPBlxZ8zAtfVPAaSafXPGn+sUSIRiwaSBy0mmFjSjiXI5mkcwdChKQ=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:7ecac86b-e688-5cb0-0a8b-6c3827602e93",
+      "name": "@img/sharp-linux-arm",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linux-arm@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linux-arm"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-affVWCTLooy8TSxbDx2qkzuDeaWLNVBA+P//FNBirHsXpP2fuBhk5AuboYUnrDnzoXes8GFjpTx0SBFOCRg+FA=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:83ee7571-2b86-539b-3ee4-41997ceb75a7",
+      "name": "require-from-string",
+      "version": "2.0.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/require-from-string@2.0.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/require-from-string"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:88444346-b496-706f-9d3e-d9b1a6042d18",
+      "name": "@img/sharp-linuxmusl-x64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linuxmusl-x64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linuxmusl-x64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-6O1NPKcDVj9QEdg7Hx549EX8U0rp6yXQERqru6yRN7fGBn32UvIRJUlWnk+8xDCiG76hXVBbX82NZ/ZKr0euIg=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:8a4c994d-531b-9559-8bc9-9b66118e7f9d",
+      "name": "detect-libc",
+      "version": "2.1.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/detect-libc@2.1.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/detect-libc"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:8ca7db7c-86a5-fe71-3c82-ada46d1ca34f",
+      "name": "@img/sharp-libvips-linux-ppc64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linux-ppc64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linux-ppc64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-3z0NHDxD6n5I9gc05U1eW1AyRm+Gznzq3naMrthPNqE6oYykcogW0l/jfpJdjYnuNl8R7yI9pNbE1XiUeyq0Aw=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:8dd04e98-83ad-8960-2726-7cd97ee4fdc9",
+      "name": "@img/sharp-linux-s390x",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linux-s390x@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linux-s390x"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-KgAxQ0DxpNOq1rG2t5cgTgShJFGSuU7XO45cqC+1NVOuZnP6tlgZRuSYOfNupGkHID0o3cJOsw4DVeJpMovcGw=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:90c9c708-2fc9-e8a9-4b94-04cbe3b6dd9c",
+      "name": "@img/sharp-libvips-darwin-x64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-darwin-x64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-darwin-x64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-m2pW1n6cns9VaubNwsZ+c3CRYjxNQWgJ5gPlnL1nbBcpkBvFm6SCFN5o0psFHI8w9n11NKhFkeEDns98tiqbEw=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:94d129f8-9d24-6356-ec61-0ee27e3f309c",
+      "name": "@img/sharp-libvips-linuxmusl-x64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linuxmusl-x64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linuxmusl-x64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-m0lrLiUt+lBYnCFr8qV/65yMR4E/c7/wf78I5eKTdkEakFAlZ9QlzEM3QIhhAwVeUhLAHLcCq7a7Vszq/oFNZQ=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:be2ada74-2cb9-c656-a09c-939a21b8930c",
+      "name": "@img/sharp-libvips-darwin-arm64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-darwin-arm64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-darwin-arm64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-9J6ypZFpQBj4YnePGoq/S38w6nz+vqg5WZLrLGY4YuSemdMq47GMLBPO42MzwdGwpg/agZ7xzZcFHa48xlywfg=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:cb69ece8-7a99-0ccb-d73d-47d5ce66a147",
+      "name": "@img/sharp-linux-arm64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linux-arm64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linux-arm64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-QgKDspHPnrU+GQ55XPhGwyhC8acLVOOSyAvo1oVfFmrIXLkDNmGWzAfDZ4xK8oSA1qBQrALcHX0G5UZni/SuFQ=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:cdf7c15f-93ea-00f3-8f6d-69774a0ea6f1",
+      "name": "@img/sharp-win32-arm64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "expression": "Apache-2.0 AND LGPL-3.0-or-later"
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-win32-arm64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-win32-arm64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-4bPwFdMbeC4JQ8L8LOyWp6nsHcboP5fxkp6iPOXz2Vg49R42TuMs2whkJ5OAP4/Ul035qOzy0AecOF9VOscn4w=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:ce701a08-8f56-d015-fe6b-dde4363d701a",
+      "name": "@img/sharp-linuxmusl-arm64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linuxmusl-arm64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linuxmusl-arm64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-Vz0iQjzzcSX3HCbfwFfCSG/9SCIqyO0mH2sXyiHaAYfBk0cRsCWXRyQYX0ovCK/PAQBbTzQ0dsPQHh5MAFL59w=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:d9bb86fc-4bbb-f1e1-4685-e75ac40ab009",
+      "name": "tslib",
+      "version": "2.8.1",
+      "licenses": [
+        {
+          "license": {
+            "id": "0BSD"
+          }
+        }
+      ],
+      "purl": "pkg:npm/tslib@2.8.1",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/tslib"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:dfab83d2-8c94-edc9-9d11-3b284ac922ce",
+      "name": "@img/sharp-darwin-arm64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-darwin-arm64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-darwin-arm64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-RMnFX7YQsMoh7lWfcM4NEHHymBX/rLuKNPVM84XE9ONPcaSCDgE7CHIHpSgPcO2xcRthgBy1HfNO319mwhIAkg=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:e25cadc6-8a92-2606-1472-ef77a66b80c8",
+      "name": "@img/sharp-linux-ppc64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linux-ppc64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linux-ppc64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-sMd8rDxmpLOwv/7N44klFjOD5DUO7FLdjiXDI0hoxYaf7Ar262dQIEkosE98bps+5HPLtp/EvNqeqQtOycP/IA=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:e852d7ff-6308-4aa1-6156-abb9ffb24c0a",
+      "name": "@img/sharp-linux-riscv64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-linux-riscv64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-linux-riscv64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-0Eob78yjlYPfL5vMNWAW55l3R9Y6BQS/gOfe0ZcP9mEz9ohhKSt4im1hayiknXgf8AWrFqMvJcKIdmLmEe7yeQ=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:efd44e06-45d5-4fd1-b8fb-68940fba2e1b",
+      "name": "@img/sharp-win32-x64",
+      "version": "0.35.3",
+      "licenses": [
+        {
+          "expression": "Apache-2.0 AND LGPL-3.0-or-later"
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-win32-x64@0.35.3",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-win32-x64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-D4y1vNeZrIIJCN+uHaWVtH86B+aCrdMYYjicy9pXHvbGZeGYLLSd3wdVuC37FxVXlU1ARsk84eKWfWMXGYEqvA=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:f83dfd0c-02b5-21c1-35ba-f4371998398f",
+      "name": "fast-uri",
+      "version": "3.1.4",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:npm/fast-uri@3.1.4",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/fast-uri"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-8JnbkQ4juDyvYs4mgFGQqg4yCYtFDtUtmp2QIQq11ZZe5CFQ5wcqm1rqDgAh/QdMySuBnPzMUiJUNZG5N/AiQw=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:f918134b-28fa-2cc7-48b7-64ab2380d3f1",
+      "name": "@img/sharp-libvips-linux-arm",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linux-arm@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linux-arm"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-1eMLzy92I4J6rmi4mAT8yC3HxOtniyGELlzGbNMLLeqe052ahFQ0h6LFq+lh5DsDIdYViIDst08abvSbcEdLXQ=="
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "urn:uuid:fe83a40d-f089-4ecd-6d52-cf6b20c1c16a",
+      "name": "@img/sharp-libvips-linuxmusl-arm64",
+      "version": "1.3.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-3.0-or-later"
+          }
+        }
+      ],
+      "purl": "pkg:npm/%40img/sharp-libvips-linuxmusl-arm64@1.3.2",
+      "properties": [
+        {
+          "name": "vr3d:lockfile-path",
+          "value": "node_modules/@img/sharp-libvips-linuxmusl-arm64"
+        },
+        {
+          "name": "vr3d:integrity",
+          "value": "sha512-zE9EdiUzUmg5mDT5a1rk5fYJ6GWPloTwWBYDS14naqHsL+EaMpDj1AWnpLgh3u0YCORv2Tt50wrcrpYqkP97Kw=="
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:npm/vr-3d-skill@1.0.0-rc.1",
+      "dependsOn": [
+        "urn:uuid:1ef2792a-5ebf-6e68-6295-1a0b50243cfa",
+        "urn:uuid:210882df-0b52-bf82-8976-c36d426c6871",
+        "urn:uuid:638a3ed4-5f31-be76-6ac0-7be9d52fb8ec",
+        "urn:uuid:67c72177-0c2b-9cab-2b33-2dcbfe7edaca"
+      ]
+    },
+    {
+      "ref": "urn:uuid:0c73b7ca-1e19-22c2-3786-6b68c0e1fa63",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:13803f94-8140-1edb-c55b-b4255a5821c7",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:13d5ccc1-2e82-fb69-e57c-3126d66e69e4",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:197dd625-6bbd-79e5-8ea3-b5062c3c95f0",
+      "dependsOn": [
+        "urn:uuid:5a4a087f-f23e-c784-85dc-c82b3c396cfb"
+      ]
+    },
+    {
+      "ref": "urn:uuid:1ef2792a-5ebf-6e68-6295-1a0b50243cfa",
+      "dependsOn": [
+        "urn:uuid:13d5ccc1-2e82-fb69-e57c-3126d66e69e4",
+        "urn:uuid:42bce7ae-a6db-62cf-def8-528572f8f7ef",
+        "urn:uuid:83ee7571-2b86-539b-3ee4-41997ceb75a7",
+        "urn:uuid:f83dfd0c-02b5-21c1-35ba-f4371998398f"
+      ]
+    },
+    {
+      "ref": "urn:uuid:1f598208-9aab-1899-ba58-11d640459873",
+      "dependsOn": [
+        "urn:uuid:90c9c708-2fc9-e8a9-4b94-04cbe3b6dd9c"
+      ]
+    },
+    {
+      "ref": "urn:uuid:210882df-0b52-bf82-8976-c36d426c6871",
+      "dependsOn": [
+        "urn:uuid:0c73b7ca-1e19-22c2-3786-6b68c0e1fa63",
+        "urn:uuid:13803f94-8140-1edb-c55b-b4255a5821c7",
+        "urn:uuid:1f598208-9aab-1899-ba58-11d640459873",
+        "urn:uuid:212e8e2c-6dbf-6d83-91e6-5c23c08ed32f",
+        "urn:uuid:218504bd-deb6-900c-b728-c75a361a431a",
+        "urn:uuid:2e2ffd28-7c90-b106-4a4d-5c07c74f5900",
+        "urn:uuid:3f9935cb-fd66-59ab-9adf-3f655e82c9ee",
+        "urn:uuid:4be78aee-608c-1d41-77d0-45ab7de03249",
+        "urn:uuid:593cf1af-986e-463f-3593-38d6b92ce0dc",
+        "urn:uuid:650564dc-ec15-f6e9-ae68-af6fe9d1c468",
+        "urn:uuid:7e8f737d-41fd-9d38-214d-199c182ac636",
+        "urn:uuid:7ecac86b-e688-5cb0-0a8b-6c3827602e93",
+        "urn:uuid:88444346-b496-706f-9d3e-d9b1a6042d18",
+        "urn:uuid:8a4c994d-531b-9559-8bc9-9b66118e7f9d",
+        "urn:uuid:8ca7db7c-86a5-fe71-3c82-ada46d1ca34f",
+        "urn:uuid:8dd04e98-83ad-8960-2726-7cd97ee4fdc9",
+        "urn:uuid:90c9c708-2fc9-e8a9-4b94-04cbe3b6dd9c",
+        "urn:uuid:94d129f8-9d24-6356-ec61-0ee27e3f309c",
+        "urn:uuid:be2ada74-2cb9-c656-a09c-939a21b8930c",
+        "urn:uuid:cb69ece8-7a99-0ccb-d73d-47d5ce66a147",
+        "urn:uuid:cdf7c15f-93ea-00f3-8f6d-69774a0ea6f1",
+        "urn:uuid:ce701a08-8f56-d015-fe6b-dde4363d701a",
+        "urn:uuid:dfab83d2-8c94-edc9-9d11-3b284ac922ce",
+        "urn:uuid:e25cadc6-8a92-2606-1472-ef77a66b80c8",
+        "urn:uuid:e852d7ff-6308-4aa1-6156-abb9ffb24c0a",
+        "urn:uuid:efd44e06-45d5-4fd1-b8fb-68940fba2e1b",
+        "urn:uuid:f918134b-28fa-2cc7-48b7-64ab2380d3f1",
+        "urn:uuid:fe83a40d-f089-4ecd-6d52-cf6b20c1c16a"
+      ]
+    },
+    {
+      "ref": "urn:uuid:212e8e2c-6dbf-6d83-91e6-5c23c08ed32f",
+      "dependsOn": [
+        "urn:uuid:197dd625-6bbd-79e5-8ea3-b5062c3c95f0"
+      ]
+    },
+    {
+      "ref": "urn:uuid:218504bd-deb6-900c-b728-c75a361a431a",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:2e2ffd28-7c90-b106-4a4d-5c07c74f5900",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:3f9935cb-fd66-59ab-9adf-3f655e82c9ee",
+      "dependsOn": [
+        "urn:uuid:593cf1af-986e-463f-3593-38d6b92ce0dc"
+      ]
+    },
+    {
+      "ref": "urn:uuid:42bce7ae-a6db-62cf-def8-528572f8f7ef",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:4be78aee-608c-1d41-77d0-45ab7de03249",
+      "dependsOn": [
+        "urn:uuid:197dd625-6bbd-79e5-8ea3-b5062c3c95f0"
+      ]
+    },
+    {
+      "ref": "urn:uuid:593cf1af-986e-463f-3593-38d6b92ce0dc",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:5a4a087f-f23e-c784-85dc-c82b3c396cfb",
+      "dependsOn": [
+        "urn:uuid:d9bb86fc-4bbb-f1e1-4685-e75ac40ab009"
+      ]
+    },
+    {
+      "ref": "urn:uuid:638a3ed4-5f31-be76-6ac0-7be9d52fb8ec",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:650564dc-ec15-f6e9-ae68-af6fe9d1c468",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:67c72177-0c2b-9cab-2b33-2dcbfe7edaca",
+      "dependsOn": [
+        "urn:uuid:761f9903-6496-3bc5-145f-5f894fe2c447"
+      ]
+    },
+    {
+      "ref": "urn:uuid:761f9903-6496-3bc5-145f-5f894fe2c447",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:7e8f737d-41fd-9d38-214d-199c182ac636",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:7ecac86b-e688-5cb0-0a8b-6c3827602e93",
+      "dependsOn": [
+        "urn:uuid:f918134b-28fa-2cc7-48b7-64ab2380d3f1"
+      ]
+    },
+    {
+      "ref": "urn:uuid:83ee7571-2b86-539b-3ee4-41997ceb75a7",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:88444346-b496-706f-9d3e-d9b1a6042d18",
+      "dependsOn": [
+        "urn:uuid:94d129f8-9d24-6356-ec61-0ee27e3f309c"
+      ]
+    },
+    {
+      "ref": "urn:uuid:8a4c994d-531b-9559-8bc9-9b66118e7f9d",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:8ca7db7c-86a5-fe71-3c82-ada46d1ca34f",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:8dd04e98-83ad-8960-2726-7cd97ee4fdc9",
+      "dependsOn": [
+        "urn:uuid:7e8f737d-41fd-9d38-214d-199c182ac636"
+      ]
+    },
+    {
+      "ref": "urn:uuid:90c9c708-2fc9-e8a9-4b94-04cbe3b6dd9c",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:94d129f8-9d24-6356-ec61-0ee27e3f309c",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:be2ada74-2cb9-c656-a09c-939a21b8930c",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:cb69ece8-7a99-0ccb-d73d-47d5ce66a147",
+      "dependsOn": [
+        "urn:uuid:218504bd-deb6-900c-b728-c75a361a431a"
+      ]
+    },
+    {
+      "ref": "urn:uuid:cdf7c15f-93ea-00f3-8f6d-69774a0ea6f1",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:ce701a08-8f56-d015-fe6b-dde4363d701a",
+      "dependsOn": [
+        "urn:uuid:fe83a40d-f089-4ecd-6d52-cf6b20c1c16a"
+      ]
+    },
+    {
+      "ref": "urn:uuid:d9bb86fc-4bbb-f1e1-4685-e75ac40ab009",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:dfab83d2-8c94-edc9-9d11-3b284ac922ce",
+      "dependsOn": [
+        "urn:uuid:be2ada74-2cb9-c656-a09c-939a21b8930c"
+      ]
+    },
+    {
+      "ref": "urn:uuid:e25cadc6-8a92-2606-1472-ef77a66b80c8",
+      "dependsOn": [
+        "urn:uuid:8ca7db7c-86a5-fe71-3c82-ada46d1ca34f"
+      ]
+    },
+    {
+      "ref": "urn:uuid:e852d7ff-6308-4aa1-6156-abb9ffb24c0a",
+      "dependsOn": [
+        "urn:uuid:13803f94-8140-1edb-c55b-b4255a5821c7"
+      ]
+    },
+    {
+      "ref": "urn:uuid:efd44e06-45d5-4fd1-b8fb-68940fba2e1b",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:f83dfd0c-02b5-21c1-35ba-f4371998398f",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:f918134b-28fa-2cc7-48b7-64ab2380d3f1",
+      "dependsOn": []
+    },
+    {
+      "ref": "urn:uuid:fe83a40d-f089-4ecd-6d52-cf6b20c1c16a",
+      "dependsOn": []
+    }
+  ],
+  "document_sha256": "e89d2e59d43775ccd6d5668d1505e570210d220c5ad6d31694570ad2725844b3"
+}

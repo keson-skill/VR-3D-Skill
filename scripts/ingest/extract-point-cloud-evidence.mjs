@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, stat } from "node:fs/promises";
+import { mkdir } from "node:fs/promises";
 import { dirname, extname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import sharp from "sharp";
@@ -11,6 +11,12 @@ import {
   sha256,
   writeJson,
 } from "../lib/cli.mjs";
+import {
+  GiB,
+  MiB,
+  hashBoundedFile,
+  readBoundedFile,
+} from "./file-safety.mjs";
 import { inspectTool, runTool } from "./tool-runner.mjs";
 
 function finitePoint(tokens) {
@@ -389,7 +395,10 @@ export async function convertPointCloudToAscii(
   }
   const input = resolve(inputFile);
   const output = resolve(outputFile);
-  const sourceBytes = await readFile(input);
+  const source = await hashBoundedFile(input, {
+    label: "Binary point cloud",
+    maxBytes: 2 * GiB,
+  });
   const tool = await inspectTool(command, ["--version"], { run });
   if (!tool.available) throw new Error(`Configured point-cloud converter is unavailable: ${tool.error}.`);
   await mkdir(dirname(output), { recursive: true });
@@ -405,8 +414,8 @@ export async function convertPointCloudToAscii(
   return {
     source: {
       path: input,
-      sha256: sha256(sourceBytes),
-      bytes: sourceBytes.length,
+      sha256: source.sha256,
+      bytes: source.metadata.size,
       format: extname(input).slice(1).toLowerCase(),
     },
     output: {
@@ -430,11 +439,10 @@ export async function extractPointCloudEvidence(
 ) {
   const maxSourceBytes = options.maxSourceBytes ?? 64 * 1024 * 1024;
   const maxPoints = options.maxPoints ?? 2_000_000;
-  const sourceStat = await stat(filePath);
-  if (sourceStat.size > maxSourceBytes) {
-    throw new Error(`Point-cloud source exceeds the ${maxSourceBytes}-byte input limit.`);
-  }
-  const bytes = await readFile(filePath);
+  const { bytes } = await readBoundedFile(filePath, {
+    label: "Point-cloud source",
+    maxBytes: maxSourceBytes,
+  });
   const format = (options.format || extname(filePath).slice(1)).toLowerCase();
   if (["las", "laz", "e57"].includes(format)) {
     return {
@@ -476,7 +484,10 @@ export async function extractDepthEvidence(
   if (!Number.isInteger(sampleStep) || sampleStep < 1) throw new Error("sampleStep must be a positive integer.");
   if (!Number.isFinite(depthScaleMeters) || depthScaleMeters <= 0) throw new Error("depthScaleMeters must be positive.");
   if (!Number.isFinite(maxDepthMeters) || maxDepthMeters <= 0) throw new Error("maxDepthMeters must be positive.");
-  const bytes = await readFile(depthImage);
+  const { bytes } = await readBoundedFile(depthImage, {
+    label: "Depth image",
+    maxBytes: 256 * MiB,
+  });
   const { data, info } = await sharp(bytes, { failOn: "error" })
     .greyscale()
     .raw({ depth: "ushort" })

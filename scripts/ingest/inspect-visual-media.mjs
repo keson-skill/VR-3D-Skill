@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, readdir } from "node:fs/promises";
+import { mkdir, readdir } from "node:fs/promises";
 import { extname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import sharp from "sharp";
@@ -11,6 +11,12 @@ import {
   sha256,
   writeJson,
 } from "../lib/cli.mjs";
+import {
+  GiB,
+  MiB,
+  hashBoundedFile,
+  readBoundedFile,
+} from "./file-safety.mjs";
 import { inspectTool, runTool } from "./tool-runner.mjs";
 
 const IMAGE_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".webp", ".tif", ".tiff", ".avif"]);
@@ -19,8 +25,15 @@ const ROLES = new Set(["interior_photo", "multiview", "panorama", "material_refe
 
 export async function inspectImageMedia(filePath, role = "interior_photo") {
   if (!ROLES.has(role)) throw new Error(`Unsupported visual role ${role}.`);
-  const bytes = await readFile(filePath);
-  const metadata = await sharp(bytes, { failOn: "error" }).metadata();
+  const { bytes } = await readBoundedFile(filePath, {
+    label: "Visual image",
+    maxBytes: 128 * MiB,
+  });
+  const metadata = await sharp(bytes, {
+    failOn: "error",
+    limitInputPixels: 100_000_000,
+    sequentialRead: true,
+  }).metadata();
   const width = metadata.width || 0;
   const height = metadata.height || 0;
   const aspectRatio = height > 0 ? width / height : null;
@@ -109,7 +122,10 @@ export async function inspectVideoMedia(
 ) {
   const input = resolve(filePath);
   const output = resolve(outputDirectory);
-  const bytes = await readFile(input);
+  const source = await hashBoundedFile(input, {
+    label: "Visual video",
+    maxBytes: 2 * GiB,
+  });
   const [ffprobe, ffmpeg] = await Promise.all([
     inspectTool("ffprobe", ["-version"], { run }),
     inspectTool("ffmpeg", ["-version"], { run }),
@@ -153,10 +169,10 @@ export async function inspectVideoMedia(
     frames.push(await inspectImageMedia(frame, "multiview"));
   }
   return {
-    id: `video-${sha256(bytes).slice(0, 12)}`,
+    id: `video-${source.sha256.slice(0, 12)}`,
     path: input,
-    sha256: sha256(bytes),
-    bytes: bytes.length,
+    sha256: source.sha256,
+    bytes: source.metadata.size,
     media_type: "video",
     codec: stream.codec_name || null,
     width: stream.width || null,

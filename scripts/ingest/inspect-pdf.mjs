@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile } from "node:fs/promises";
+import { mkdir, open } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
@@ -10,6 +10,11 @@ import {
   writeJson,
 } from "../lib/cli.mjs";
 import { preprocessPlanImage } from "../processing/preprocess-plan-image.mjs";
+import {
+  MiB,
+  hashBoundedFile,
+  readBoundedFile,
+} from "./file-safety.mjs";
 import { inspectTool, runTool } from "./tool-runner.mjs";
 
 function parseKeyValueOutput(text) {
@@ -62,7 +67,13 @@ async function readFirst(paths) {
   let lastError;
   for (const filePath of paths) {
     try {
-      return { filePath, bytes: await readFile(filePath) };
+      return {
+        filePath,
+        bytes: (await readBoundedFile(filePath, {
+          label: "Extracted PDF vector page",
+          maxBytes: 64 * MiB,
+        })).bytes,
+      };
     } catch (error) {
       lastError = error;
     }
@@ -82,8 +93,18 @@ export async function inspectPdf(
   const input = resolve(inputFile);
   const output = resolve(outputDirectory);
   await mkdir(output, { recursive: true });
-  const sourceBytes = await readFile(input);
-  if (!sourceBytes.subarray(0, 5).equals(Buffer.from("%PDF-"))) {
+  const sourceEvidence = await hashBoundedFile(input, {
+    label: "PDF input",
+    maxBytes: 512 * MiB,
+  });
+  const handle = await open(input, "r");
+  const header = Buffer.alloc(5);
+  try {
+    await handle.read(header, 0, header.length, 0);
+  } finally {
+    await handle.close();
+  }
+  if (!header.equals(Buffer.from("%PDF-"))) {
     throw new Error("Input does not have a PDF header.");
   }
   const tools = {};
@@ -124,7 +145,10 @@ export async function inspectPdf(
       ["-f", String(pageNumber), "-l", String(pageNumber), "-bbox-layout", input, textLayoutPath],
       { timeoutMs: 30000 },
     );
-    const textBytes = await readFile(textLayoutPath);
+    const { bytes: textBytes } = await readBoundedFile(textLayoutPath, {
+      label: "Extracted PDF text page",
+      maxBytes: 64 * MiB,
+    });
     const text = textBytes.toString("utf8");
     const textWords = (text.match(/<word\b/gu) || []).length;
 
@@ -186,7 +210,10 @@ export async function inspectPdf(
       const rasterPath = `${rasterBase}.png`;
       const normalizedPath = join(output, `${label}-normalized.png`);
       const preprocessing = await preprocessPlanImage(rasterPath, normalizedPath);
-      const normalizedBytes = await readFile(normalizedPath);
+      const { bytes: normalizedBytes } = await readBoundedFile(normalizedPath, {
+        label: "Normalized PDF raster page",
+        maxBytes: 64 * MiB,
+      });
       page.raster = {
         source_path: rasterPath,
         normalized_path: normalizedPath,
@@ -212,8 +239,8 @@ export async function inspectPdf(
     route: "pdf",
     source: {
       path: input,
-      sha256: sha256(sourceBytes),
-      bytes: sourceBytes.length,
+      sha256: sourceEvidence.sha256,
+      bytes: sourceEvidence.metadata.size,
       pdf_version: info["PDF version"] || null,
     },
     document_kind: documentKind,

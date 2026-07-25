@@ -64,6 +64,7 @@ Read [interior-design-workflow.md](references/interior-design-workflow.md) for s
 7. **Compile the viewable scene.** Run the fixed `build-viewable-scene.mjs` task against approved Spatial JSON. Generate a deterministic GLB and static Three.js viewer. Represent unresolved furniture assets with dimensionally correct proxies. Do not ask a model to rewrite the viewer per job.
 8. **Render and interact.** Serve the viewer over HTTP and verify orbit, top, first-person, furniture visibility, desktop fallback, and WebXR. Add Blender panorama or high-fidelity rendering only after the deterministic scene passes. Compare a normalized top-view render against the source plan before delivery.
 9. **Apply revisions incrementally.** Let the revision-planning task translate natural language into a scoped stable-ID contract, but never apply raw model output. Validate and apply it with the deterministic revision engine, persist the version/diff/inverse/hash-chain audit, invalidate stale approvals, obtain reapproval, and regenerate only the dependency plan.
+10. **Run and deliver through production gates.** Use the production job runtime for idempotency, retries, checkpoints, pause/resume, cancellation, and tamper-evident redacted events. Build an explicit delivery manifest that binds the exact approval chain and artifacts. Never promote a candidate package until the same commit has Linux/macOS/Windows CI evidence, actual desktop/mobile/XR/Blender qualification, and an interactively accepted anonymized real project.
 
 Use the contract in [spatial-json-contract.md](references/spatial-json-contract.md). Validate the contract before any downstream generation. If geometry conflicts with source measurements, stop and surface the conflict rather than choosing silently.
 
@@ -185,6 +186,23 @@ node scripts/serve-viewer.mjs \
 
 Use `--mode shell` for a bare shell, `hard-furnishing` for fixed finishes, and `furnished` for furniture proxies or resolved assets. A single raster plan defaults to `visualization_only`; surface that warning in the viewer.
 
+For recoverable production execution, copy and edit [production-job-definition.example.json](examples/production-job-definition.example.json), then run:
+
+```bash
+npm run job -- \
+  --action run \
+  --definition production-job-definition.json \
+  --store runs/runtime \
+  --workspace runs
+
+npm run job -- \
+  --action verify \
+  --job-id job-project-001 \
+  --store runs/runtime
+```
+
+Definitions may use only the bundled handler registry and must satisfy both the production-job Schema and per-handler parameter contracts. Every declared output must stay below `--workspace`, including existing directory contents; there is no arbitrary shell handler.
+
 ## Build the immersive experience
 
 ### Establish spatial conventions
@@ -231,6 +249,8 @@ Read [quality-gates.md](references/quality-gates.md), then verify the relevant r
 - Measure frame time on representative target hardware; do not infer headset performance from a desktop alone.
 - Exercise missing-provider, timeout, rejected-input, invalid-asset, and unsupported-XR fallbacks.
 - Report what was tested, what could not be tested, unresolved assumptions, and remaining device or construction risk.
+- Run `npm run p10:code-acceptance` for code readiness. Treat its expected `release_qualified: false` as a real blocker, not a warning to suppress.
+- Read [docs/QUALIFICATION.md](docs/QUALIFICATION.md) before any release claim. Desktop simulation cannot qualify mobile or XR, mock Blender cannot qualify rendering, and configured CI cannot qualify a commit until the workflow actually runs.
 
 ## Deliver reproducible artifacts
 
@@ -242,5 +262,7 @@ Deliver the artifacts relevant to the request:
 - deterministic `scene.glb`, `scene-primitives.json`, GLB structural report, compiled-scene top-view alignment report, the static Three.js viewer, source Spatial JSON, validation report, and run command;
 - desktop review path, WebXR build or native scene, and required HTTPS, device, browser, or permission notes;
 - customer-facing renders, walkthrough, bill of materials, or proposal only when requested.
+- an explicit delivery manifest containing the exact source, Spatial JSON, validation, approval, trust-root and artifact hashes, resolved asset-license status, limitations, and `delivery_ready` result;
+- for software distribution, a candidate or qualified package, CycloneDX SBOM and release manifest. Keep `release_ready: false` candidates visibly unqualified.
 
 Prefer a verified one-room vertical slice over a large unvalidated model.

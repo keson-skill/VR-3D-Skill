@@ -17,7 +17,9 @@ import { verifyXrConfig } from "../runtime/verify-xr-config.mjs";
 import {
   assertModelAvailable,
   editImage,
+  generateImage,
   generateSpatialJson,
+  isPrivateDownloadHost,
 } from "../adapters/realmrouter-openai.mjs";
 import { createTestApprovalContext } from "./helpers/p2-approval.mjs";
 
@@ -293,9 +295,20 @@ test("P7 builds deterministic multi-camera, equirectangular panorama, color, and
   assert.ok(plan.cameras.length >= 2);
   assert.equal(plan.panorama.width / plan.panorama.height, 2);
   assert.equal(plan.panorama.projection, "EQUIRECTANGULAR");
+  assert.ok(plan.cameras.some((camera) => camera.id === plan.panorama.camera_id));
   assert.equal(plan.color_management.view_transform, "AgX");
   assert.equal(plan.checkpoint_file, "render-checkpoint.json");
   assert.equal(plan.plan_sha256.length, 64);
+
+  const punctuated = validSpatialJson();
+  punctuated.rooms[0].id = "room:living";
+  punctuated.design_objects[0].room_id = "room:living";
+  punctuated.xr.boundary_room_ids = ["room:living"];
+  const punctuatedPlan = buildBlenderRenderPlan(punctuated);
+  assert.ok(
+    punctuatedPlan.cameras.some((camera) =>
+      camera.id === punctuatedPlan.panorama.camera_id),
+  );
 });
 
 test("validates stable-ID revision operations and rejects array indexes", () => {
@@ -450,6 +463,10 @@ test("sends reference image edits as multipart data", async () => {
     const inputImage = join(directory, "reference.png");
     await writeFile(inputImage, "not-a-real-png", "utf8");
     let request;
+    const generatedPng = Buffer.from([
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+      0x00, 0x00, 0x00, 0x00,
+    ]);
     const result = await editImage({
       apiKey: "test-key",
       model: "gpt-image-2",
@@ -459,7 +476,7 @@ test("sends reference image edits as multipart data", async () => {
       fetchImpl: async (endpoint, options) => {
         request = { endpoint, options };
         return new Response(
-          JSON.stringify({ data: [{ b64_json: Buffer.from("image-bytes").toString("base64") }] }),
+          JSON.stringify({ data: [{ b64_json: generatedPng.toString("base64") }] }),
           { status: 200, headers: { "content-type": "application/json" } },
         );
       },
@@ -467,8 +484,48 @@ test("sends reference image edits as multipart data", async () => {
     assert.equal(request.endpoint, "https://realmrouter.cn/v1/images/edits");
     assert.ok(request.options.body instanceof FormData);
     assert.equal(request.options.headers["Content-Type"], undefined);
-    assert.deepEqual(result.bytes, Buffer.from("image-bytes"));
+    assert.deepEqual(result.bytes, generatedPng);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test("rejects private image download hosts and non-image provider payloads", async () => {
+  for (const host of [
+    "127.0.0.1",
+    "10.0.0.1",
+    "169.254.169.254",
+    "[fc00::1]",
+    "[::ffff:127.0.0.1]",
+  ]) {
+    assert.equal(isPrivateDownloadHost(host), true);
+  }
+  await assert.rejects(
+    generateImage({
+      apiKey: "test-key",
+      prompt: "A bounded fixture.",
+      maxRetries: 0,
+      fetchImpl: async () =>
+        new Response(
+          JSON.stringify({ data: [{ url: "https://[fc00::1]/image.png" }] }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        ),
+    }),
+    /public/u,
+  );
+  await assert.rejects(
+    generateImage({
+      apiKey: "test-key",
+      prompt: "A bounded fixture.",
+      maxRetries: 0,
+      fetchImpl: async () =>
+        new Response(
+          JSON.stringify({
+            data: [{ b64_json: Buffer.from("not-an-image").toString("base64") }],
+          }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        ),
+    }),
+    /not a PNG, JPEG, or WebP/u,
+  );
 });

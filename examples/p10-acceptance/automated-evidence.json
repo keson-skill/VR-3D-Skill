@@ -1,0 +1,316 @@
+{
+  "schema_version": "1.0",
+  "stage": "P10",
+  "acceptance_scope": "full_release",
+  "passed": false,
+  "code_passed": true,
+  "release_qualified": false,
+  "stage_status_recommendation": "ACCEPTANCE",
+  "aggregate": {
+    "fixture_count": 30,
+    "categories": 10,
+    "category_counts": {
+      "job_definition": 3,
+      "retry_recovery": 3,
+      "audit_redaction": 3,
+      "migration": 3,
+      "security_license": 3,
+      "scene_budget": 3,
+      "device_qualification": 3,
+      "release_evidence": 3,
+      "release_manifest": 3,
+      "handler_registry": 3
+    },
+    "fixture_errors": 0,
+    "security_blockers": 0,
+    "benchmark_passed": true,
+    "doctor_release_ready": true,
+    "sbom_components": 40
+  },
+  "samples": [
+    {
+      "id": "p10-job_definition-normal",
+      "category": "job_definition",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-job_definition-boundary",
+      "category": "job_definition",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-job_definition-failure",
+      "category": "job_definition",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-retry_recovery-normal",
+      "category": "retry_recovery",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-retry_recovery-boundary",
+      "category": "retry_recovery",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-retry_recovery-failure",
+      "category": "retry_recovery",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-audit_redaction-normal",
+      "category": "audit_redaction",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-audit_redaction-boundary",
+      "category": "audit_redaction",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-audit_redaction-failure",
+      "category": "audit_redaction",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-migration-normal",
+      "category": "migration",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-migration-boundary",
+      "category": "migration",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-migration-failure",
+      "category": "migration",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-security_license-normal",
+      "category": "security_license",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-security_license-boundary",
+      "category": "security_license",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-security_license-failure",
+      "category": "security_license",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-scene_budget-normal",
+      "category": "scene_budget",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-scene_budget-boundary",
+      "category": "scene_budget",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-scene_budget-failure",
+      "category": "scene_budget",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-device_qualification-normal",
+      "category": "device_qualification",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-device_qualification-boundary",
+      "category": "device_qualification",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-device_qualification-failure",
+      "category": "device_qualification",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-release_evidence-normal",
+      "category": "release_evidence",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-release_evidence-boundary",
+      "category": "release_evidence",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-release_evidence-failure",
+      "category": "release_evidence",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-release_manifest-normal",
+      "category": "release_manifest",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-release_manifest-boundary",
+      "category": "release_manifest",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-release_manifest-failure",
+      "category": "release_manifest",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-handler_registry-normal",
+      "category": "handler_registry",
+      "case": "normal",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-handler_registry-boundary",
+      "category": "handler_registry",
+      "case": "boundary",
+      "expected_valid": true,
+      "actual_valid": true,
+      "passed": true,
+      "error": null
+    },
+    {
+      "id": "p10-handler_registry-failure",
+      "category": "handler_registry",
+      "case": "failure",
+      "expected_valid": false,
+      "actual_valid": false,
+      "passed": true,
+      "error": null
+    }
+  ],
+  "evidence": {
+    "security_report_sha256": "cf9b5d4ecb1229672b070223845646dc2584e5a391c523c46ae427882cad0e41",
+    "benchmark_report_sha256": "41235f2e1f370e17cc95f458cf80b3bdb5c56e1e0d8fcd36aa428352f5782a47",
+    "sbom_document_sha256": "e89d2e59d43775ccd6d5668d1505e570210d220c5ad6d31694570ad2725844b3",
+    "qualification_report_sha256": null
+  },
+  "qualification_errors": [
+    {
+      "code": "release_evidence.missing",
+      "message": "No release qualification bundle was supplied."
+    }
+  ],
+  "explicit_non_claim": "P10 code is accepted, but production release remains unqualified until Windows/macOS/Linux, desktop/mobile/XR/Blender, and anonymized real-project evidence all pass.",
+  "report_sha256": "b4b4d2bbcbb7dbfa2675343f61dcfc2ec58708408659c41e509ac149c39a6e2d"
+}

@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 import { pathToFileURL } from "node:url";
-import { readFile } from "node:fs/promises";
 import { assertModelAvailable, editImage } from "../../adapters/realmrouter-openai.mjs";
 import { parseArgs, printJson, readText, requireProviderApproval, sha256, writeBytes, writeJson } from "../../lib/cli.mjs";
+import {
+  MiB,
+  hashBoundedFile,
+} from "../../ingest/file-safety.mjs";
 
 function printHelp() {
   process.stdout.write(`Usage:
@@ -26,7 +29,11 @@ async function main() {
   });
   if (options.help) return printHelp();
   requireProviderApproval(options);
-  const prompt = await readText(options["prompt-file"], "image edit direction");
+  const prompt = await readText(
+    options["prompt-file"],
+    "image edit direction",
+    { maxBytes: 256 * 1024 },
+  );
   const model = process.env.REALMROUTER_IMAGE_MODEL || "gpt-image-2";
   const timeoutMs = Number(process.env.REALMROUTER_TIMEOUT_MS || 120000);
   const maxRetries = Number(process.env.REALMROUTER_MAX_RETRIES || 3);
@@ -51,6 +58,10 @@ async function main() {
     maxRetries,
   });
   await writeBytes(options.output, result.bytes);
+  const inputHash = await hashBoundedFile(options["input-image"], {
+    label: "Image edit input",
+    maxBytes: 64 * MiB,
+  });
   await writeJson(options.metadata, {
     task: "visual-preview-edit",
     provider: "realmrouter",
@@ -58,7 +69,7 @@ async function main() {
     request_id: result.requestId,
     provider_attempts: result.attempts,
     design_revision_id: options["design-revision-id"],
-    input_image_sha256: sha256(await readFile(options["input-image"])),
+    input_image_sha256: inputHash.sha256,
     prompt_sha256: sha256(Buffer.from(prompt, "utf8")),
     output_sha256: sha256(result.bytes),
     output_file: options.output,

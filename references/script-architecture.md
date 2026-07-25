@@ -15,9 +15,13 @@ scripts/
 ├── builders/       deterministic GLB and Web viewer generation
 ├── validation/     deterministic Spatial JSON and revision gates
 ├── processing/     deterministic asset metadata processing
-├── orchestration/  stage-readiness gates
-├── runtime/        deterministic XR configuration checks
+├── orchestration/  stage-readiness gates and the production handler registry
+├── runtime/        XR checks, persistent jobs, checkpoints, audit chain and redaction
 ├── revisions/      scoped patch application, dependencies, versions, undo, rollback, and audit
+├── migrations/     dry-run-first legacy document upgrades and backups
+├── performance/    static scene budgets, core benchmarks and actual-device qualification
+├── security/       repository secret, privacy, provider-gate and license audit
+├── release/        delivery manifests, SBOM, qualification, packaging and verification
 ├── lib/            shared implementation utilities
 └── tests/          offline smoke and contract tests
 ```
@@ -54,6 +58,13 @@ Keep provider names inside `adapters/`; name task directories after stable roles
 | Compiled-scene top view | `scripts/validation/render-scene-top-view.mjs` | Spatial JSON or compiled primitives | deterministic wall-only top view for source alignment |
 | P3 regression gate | `scripts/validation/run-p3-acceptance.mjs` | 20 fixed Spatial JSON fixtures | Spatial, primitive, GLB, scene hash, and top-view alignment evidence |
 | P9 input gate | `scripts/validation/run-p9-acceptance.mjs` | 33 fixed normal/boundary/failure route fixtures | per-category route outcome and aggregate evidence |
+| Production job | `scripts/orchestration/run-production-job.mjs` | Schema-valid definition using registered handlers and an explicit workspace | resumable job, workspace-contained outputs, checkpoints and tamper-evident redacted audit |
+| Delivery manifest | `scripts/release/build-delivery-manifest.mjs` | exact approved bindings and explicit artifacts below one root | hashes, license status, limitations and blocking readiness |
+| P10 code gate | `scripts/validation/run-p10-acceptance.mjs` | 30 fixed production fixtures plus audit, benchmark, doctor and SBOM | code acceptance and explicit release-qualification status |
+| Device qualification | `scripts/performance/validate-qualification.mjs` | actual non-synthetic target capture | budget result bound to commit and artifact |
+| Release qualification | `scripts/release/assemble-qualification-bundle.mjs` | three full platform records, four target reports with raw capture records, full real-project acceptance | strict, reproducible, commit-bound production qualification bundle |
+| Qualification transport | `scripts/release/encode-qualification-secret.mjs` | validated qualification bundle and optional expected commit | bounded Base64 payload for the protected tag-workflow secret |
+| Release package | `scripts/release/build-release.mjs` and `verify-release.mjs` | clean commit, optional qualification, package/lockfile | candidate or qualified archive, full SBOM, hashed manifest and npm/SBOM integrity verification |
 
 External-provider tasks require `--allow-provider`. Treat the flag as confirmation that the user approved the named provider and the exact data selected for that command. Do not add it automatically or call the adapter directly to avoid the check.
 
@@ -179,6 +190,13 @@ node scripts/tasks/scene-generation/build-viewable-scene.mjs \
 npm run p3:fixtures
 npm run p3:acceptance
 
+npm run p10:fixtures
+npm run p10:code-acceptance
+
+npm run doctor -- --profile release
+npm run p10:security
+npm run release:sbom
+
 node scripts/serve-viewer.mjs \
   --directory runs/project-001
 ```
@@ -197,3 +215,5 @@ npm run check
 ```
 
 Tests must not call external providers or require real credentials.
+
+P10 code acceptance is intentionally different from full release acceptance. The code-only command may pass while recommending `ACCEPTANCE`; full acceptance must fail until actual three-platform, physical-device, Blender and anonymized real-project evidence is assembled for the exact release commit. Keep the bundle under ignored `artifacts/`, validate and encode it for `P10_QUALIFICATION_BUNDLE_BASE64`, and never commit raw qualification/customer captures. Embedded hashes make the bounded records reproducible, but the release owner must still inspect the external raw evidence and actual workflow provenance.

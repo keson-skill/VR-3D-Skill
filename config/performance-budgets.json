@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "profiles": {
+    "web_desktop": {
+      "max_glb_bytes": 26214400,
+      "max_delivery_bytes": 36700160,
+      "max_triangles": 500000,
+      "max_draw_calls": 500,
+      "max_texture_bytes": 16777216,
+      "max_materials": 256,
+      "max_lights": 16,
+      "minimum_fps": 30,
+      "target_fps": 60,
+      "max_p95_frame_time_ms": 33.4,
+      "max_memory_growth_bytes": 67108864,
+      "minimum_capture_seconds": 60
+    },
+    "web_mobile": {
+      "max_glb_bytes": 12582912,
+      "max_delivery_bytes": 18874368,
+      "max_triangles": 200000,
+      "max_draw_calls": 250,
+      "max_texture_bytes": 8388608,
+      "max_materials": 128,
+      "max_lights": 8,
+      "minimum_fps": 30,
+      "target_fps": 60,
+      "max_p95_frame_time_ms": 33.4,
+      "max_memory_growth_bytes": 33554432,
+      "minimum_capture_seconds": 60
+    },
+    "web_xr": {
+      "max_glb_bytes": 15728640,
+      "max_delivery_bytes": 23068672,
+      "max_triangles": 250000,
+      "max_draw_calls": 300,
+      "max_texture_bytes": 8388608,
+      "max_materials": 128,
+      "max_lights": 8,
+      "minimum_fps": 72,
+      "target_fps": 72,
+      "max_p95_frame_time_ms": 13.9,
+      "max_memory_growth_bytes": 33554432,
+      "minimum_capture_seconds": 120
+    },
+    "blender": {
+      "max_glb_bytes": 104857600,
+      "max_delivery_bytes": 536870912,
+      "max_triangles": 5000000,
+      "max_draw_calls": 5000,
+      "max_texture_bytes": 268435456,
+      "max_materials": 1024,
+      "max_lights": 128,
+      "max_average_render_seconds_per_frame": 300,
+      "minimum_rendered_frames": 4
+    }
+  }
+}

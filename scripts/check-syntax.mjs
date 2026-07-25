@@ -2,7 +2,8 @@
 
 import { readdir } from "node:fs/promises";
 import { extname, join } from "node:path";
-import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { runTool } from "./ingest/tool-runner.mjs";
 
 async function collectScripts(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -18,41 +19,27 @@ async function collectScripts(directory) {
   return files.sort();
 }
 
-function checkSyntax(file) {
-  return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, ["--check", file], {
-      stdio: ["ignore", "pipe", "pipe"],
-    });
-    let stderr = "";
-    child.stderr.on("data", (chunk) => {
-      stderr += chunk;
-    });
-    child.on("error", reject);
-    child.on("close", (code) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(`${file}\n${stderr.trim()}`));
-      }
-    });
+async function checkSyntax(file) {
+  await runTool(process.execPath, ["--check", file], {
+    timeoutMs: 10000,
+    maxOutputBytes: 1024 * 1024,
   });
 }
 
-function checkPythonSyntax(file) {
-  return new Promise((resolve, reject) => {
-    const source = "import pathlib,sys; compile(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'), sys.argv[1], 'exec')";
-    const child = spawn("python3", ["-c", source, file], { stdio: ["ignore", "pipe", "pipe"] });
-    let stderr = "";
-    child.stderr.on("data", (chunk) => { stderr += chunk; });
-    child.on("error", reject);
-    child.on("close", (code) => code === 0 ? resolve() : reject(new Error(`${file}\n${stderr.trim()}`)));
+async function checkPythonSyntax(file) {
+  const source = "import pathlib,sys; compile(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'), sys.argv[1], 'exec')";
+  const python = process.env.PYTHON
+    || (process.platform === "win32" ? "python" : "python3");
+  await runTool(python, ["-c", source, file], {
+    timeoutMs: 10000,
+    maxOutputBytes: 1024 * 1024,
   });
 }
 
-const files = await collectScripts(new URL(".", import.meta.url).pathname);
-files.push(new URL("../assets/web-viewer/app.js", import.meta.url).pathname);
+const files = await collectScripts(fileURLToPath(new URL(".", import.meta.url)));
+files.push(fileURLToPath(new URL("../assets/web-viewer/app.js", import.meta.url)));
 for (const file of files) {
   await checkSyntax(file);
 }
-await checkPythonSyntax(new URL("./blender/render_scene.py", import.meta.url).pathname);
+await checkPythonSyntax(fileURLToPath(new URL("./blender/render_scene.py", import.meta.url)));
 process.stdout.write(`Syntax OK: ${files.length} JavaScript files and 1 Blender Python script\n`);

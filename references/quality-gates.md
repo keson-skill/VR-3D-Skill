@@ -92,3 +92,22 @@ Use the gates that apply to the requested output. Record evidence, exclusions, a
 | Spatial setup | Spawn, floor height, standing or seated origin, handedness, reach, and boundaries |
 | Performance | Representative-device frame-time and memory capture during the busiest scene |
 | Failure handling | Missing dimension, provider timeout, invalid asset, denied permission, unsupported feature, and disconnected input |
+
+## Production operations and release
+
+- Production definitions pass `schemas/production-job.schema.json`, use only registered handlers, and provide every handler's required parameter.
+- Repeated requests bind an idempotency-key hash to one exact definition; conflicting reuse is rejected.
+- Successful stages have hash-verified checkpoints; retry attempts are bounded; approval and dependency gaps pause safely.
+- Job and checkpoint writes are atomic, concurrent execution uses ownership-token locks with handle-bound heartbeats, active cancellation is recorded, crash recovery is explicit, and event/checkpoint tampering is detectable.
+- Operational events contain only allowlisted, redacted fields and never include credentials, customer contact data or local source paths.
+- Inputs are bounded regular files; local tools run without a shell and have time/output limits; provider responses and public image downloads have size, format, timeout, retry and SSRF controls.
+- Every production output stays below the declared workspace and neither its parents nor an existing directory output may traverse symbolic links.
+- Delivery manifests include exact approval bindings, explicit artifact hashes, license state, limitations and no path outside the delivery root.
+- Linux, macOS and Windows evidence belongs to the exact release commit and records the actual workflow URL.
+- Desktop, mobile, XR and Blender qualification uses real non-synthetic captures on the declared hardware and meets `config/performance-budgets.json`.
+- At least one anonymized real project has a ready delivery manifest and interactive product-owner acceptance.
+- The qualification bundle embeds complete bounded platform, target/capture and project records, reproduces their hashes/budgets, stays below 32 KiB and reaches the tag workflow through a protected secret rather than a commit-changing repository file.
+- All workflow actions/reusable workflows use full commit pins; all locked packages have an approved license and valid SRI, with redistribution obligations reviewed separately.
+- The release package includes a lockfile-derived SBOM with unique component references and a dependency graph; SHA-256, npm SHA-1/SHA-512, SBOM identity, preflight, version and tag all verify.
+- Hashes prove integrity and commit binding, not physical-device or human-event authenticity; release owners retain and inspect the external raw captures.
+- Any missing item keeps `release_ready: false` and P10 out of `COMPLETED`.

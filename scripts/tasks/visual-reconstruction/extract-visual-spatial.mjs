@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { pathToFileURL } from "node:url";
-import { readFile } from "node:fs/promises";
 import {
   assertModelAvailable,
   generateSpatialJson,
@@ -12,7 +11,6 @@ import {
   printJson,
   readJson,
   requireProviderApproval,
-  sha256,
   writeJson,
 } from "../../lib/cli.mjs";
 import { validateSpatialJson } from "../../validation/validate-spatial-json.mjs";
@@ -154,22 +152,41 @@ export async function extractVisualSpatial(
     generate,
   },
 ) {
+  if (
+    typeof projectId !== "string"
+    || !projectId.trim()
+    || Buffer.byteLength(projectId, "utf8") > 128
+  ) {
+    throw new Error("Visual reconstruction project ID must be 1 to 128 UTF-8 bytes.");
+  }
+  if (!Array.isArray(imagePaths)) {
+    throw new Error("Visual reconstruction image paths must be an array.");
+  }
   const blockers = Array.isArray(evidence?.blockers) ? evidence.blockers : [];
   if (blockers.length > 0) {
     const first = blockers[0];
     const message = typeof first === "string" ? first : first?.message || JSON.stringify(first);
     throw new Error(`Visual reconstruction evidence is blocked: ${message}.`);
   }
-  if (!Array.isArray(evidence?.views) || imagePaths.length !== evidence.views.length) {
+  if (
+    !Array.isArray(evidence?.views)
+    || evidence.views.length > 20
+    || imagePaths.length !== evidence.views.length
+  ) {
     throw new Error("Provide exactly one image path for every visual evidence view.");
   }
-  const imageBytes = await Promise.all(imagePaths.map((imagePath) => readFile(imagePath)));
-  for (let index = 0; index < imageBytes.length; index += 1) {
-    if (sha256(imageBytes[index]) !== evidence.views[index].sha256) {
-      throw new Error(`Image ${index + 1} does not match visual evidence SHA-256.`);
+  const imageDataUrls = [];
+  let encodedBytes = 0;
+  for (const [index, imagePath] of imagePaths.entries()) {
+    const dataUrl = await imageFileToDataUrl(imagePath, {
+      expectedSha256: evidence.views[index].sha256,
+    });
+    encodedBytes += Buffer.byteLength(dataUrl, "utf8");
+    if (encodedBytes > 128 * 1024 * 1024) {
+      throw new Error("Visual reconstruction images exceed the 128 MiB encoded input limit.");
     }
+    imageDataUrls.push(dataUrl);
   }
-  const imageDataUrls = await Promise.all(imagePaths.map(imageFileToDataUrl));
   const providerResult = await generate(
     buildVisualReconstructionPrompt(evidence, projectId),
     imageDataUrls,
@@ -203,7 +220,11 @@ async function main() {
     return;
   }
   requireProviderApproval(options);
-  const evidence = await readJson(options.evidence, "visual reconstruction evidence");
+  const evidence = await readJson(
+    options.evidence,
+    "visual reconstruction evidence",
+    { maxBytes: 16 * 1024 * 1024 },
+  );
   const apiKey = process.env.REALMROUTER_SPATIAL_API_KEY || "";
   const baseUrl = process.env.REALMROUTER_BASE_URL;
   const model = process.env.REALMROUTER_SPATIAL_MODEL || "gpt-5.5";

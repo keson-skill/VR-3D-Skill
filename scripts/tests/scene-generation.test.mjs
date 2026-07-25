@@ -328,7 +328,7 @@ test("P4 embeds local texture assets, records fallback assets, and exports punct
           scale_meters: 1,
         },
         normal: {
-          uri: "materials/missing-normal.png",
+          uri: "../outside-normal.png",
           mime_type: "image/png",
           color_space: "linear",
           scale_meters: 1,
@@ -360,7 +360,9 @@ test("P4 embeds local texture assets, records fallback assets, and exports punct
       await readFile(join(directory, "texture-validation-report.json"), "utf8"),
     );
     assert.equal(textureReport.quality, "draft");
-    assert.equal(textureReport.assets.find((item) => item.slot === "normal").status, "fallback");
+    const normal = textureReport.assets.find((item) => item.slot === "normal");
+    assert.equal(normal.status, "fallback");
+    assert.match(normal.reason, /escapes the approved texture directory/u);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

@@ -1,13 +1,28 @@
-import { readFile, writeFile } from "node:fs/promises";
-import { basename, isAbsolute, resolve } from "node:path";
+import {
+  realpath,
+} from "node:fs/promises";
+import {
+  basename,
+  isAbsolute,
+  relative,
+  resolve,
+} from "node:path";
 import { createHash } from "node:crypto";
 import sharp from "sharp";
+import {
+  MiB,
+  readBoundedFile,
+} from "../ingest/file-safety.mjs";
+import { sanitizeError } from "../runtime/redaction.mjs";
+import { writeBytes } from "../lib/cli.mjs";
 
 export const P4_QUALITY_PROFILES = {
   draft: { maxTextureSize: 512, webpQuality: 68, lightMultiplier: 0.8 },
   standard: { maxTextureSize: 1024, webpQuality: 82, lightMultiplier: 1 },
   presentation: { maxTextureSize: 2048, webpQuality: 90, lightMultiplier: 1.15 },
 };
+const MAX_TEXTURE_BYTES = 64 * MiB;
+const MAX_TEXTURES = 512;
 
 function align4(value) {
   return (value + 3) & ~3;
@@ -57,7 +72,19 @@ async function makeFallbackTexture(material, slot, quality) {
 }
 
 async function packTexture(bytes, mimeType, quality) {
-  if (mimeType === "image/ktx2") return { bytes, mimeType };
+  if (bytes.length < 1 || bytes.length > MAX_TEXTURE_BYTES) {
+    throw new Error("Texture source is empty or exceeds the 64 MiB limit.");
+  }
+  if (mimeType === "image/ktx2") {
+    const signature = Buffer.from([
+      0xab, 0x4b, 0x54, 0x58, 0x20, 0x32,
+      0x30, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a,
+    ]);
+    if (bytes.length < signature.length || !bytes.subarray(0, 12).equals(signature)) {
+      throw new Error("KTX2 texture has an invalid signature.");
+    }
+    return { bytes, mimeType };
+  }
   const packed = await sharp(bytes, { failOn: "none" })
     .resize({
       width: quality.maxTextureSize,
@@ -68,6 +95,27 @@ async function packTexture(bytes, mimeType, quality) {
     .webp({ quality: quality.webpQuality })
     .toBuffer();
   return { bytes: packed, mimeType: "image/webp" };
+}
+
+function contained(root, candidate) {
+  const path = relative(root, candidate);
+  return path && !path.startsWith("..") && !isAbsolute(path);
+}
+
+async function readLocalTexture(textureDirectory, textureUri) {
+  const root = await realpath(resolve(textureDirectory));
+  const candidate = resolve(root, textureUri);
+  if (!contained(root, candidate)) {
+    throw new Error("Texture path escapes the approved texture directory.");
+  }
+  const canonical = await realpath(candidate);
+  if (!contained(root, canonical)) {
+    throw new Error("Texture path resolves outside the approved texture directory.");
+  }
+  return (await readBoundedFile(canonical, {
+    label: "Texture source",
+    maxBytes: MAX_TEXTURE_BYTES,
+  })).bytes;
 }
 
 /**
@@ -85,6 +133,17 @@ export async function prepareTextureAssets(
   const assets = [];
   const report = [];
   const requestedMaterialIds = allowedMaterialIds || new Set(Object.keys(document.materials || {}));
+  const requestedTextureCount = [...requestedMaterialIds]
+    .reduce((count, materialId) => {
+      const resolvedMaterialId =
+        document.material_overrides?.[materialId] || materialId;
+      return count + Object.keys(
+        document.materials?.[resolvedMaterialId]?.textures || {},
+      ).length;
+    }, 0);
+  if (requestedTextureCount > MAX_TEXTURES) {
+    throw new Error(`A scene may package at most ${MAX_TEXTURES} textures.`);
+  }
   for (const materialId of requestedMaterialIds) {
     const resolvedMaterialId = document.material_overrides?.[materialId] || materialId;
     const material = document.materials?.[resolvedMaterialId];
@@ -104,14 +163,14 @@ export async function prepareTextureAssets(
           !isAbsolute(texture.uri) &&
           !/^[a-z][a-z0-9+.-]*:/i.test(texture.uri)
         ) {
-          sourceBytes = await readFile(resolve(textureDirectory, texture.uri));
+          sourceBytes = await readLocalTexture(textureDirectory, texture.uri);
           packed = await packTexture(sourceBytes, texture.mime_type, profile);
         } else {
           throw new Error("texture URI must be a data URI or a relative local file");
         }
       } catch (error) {
         status = "fallback";
-        reason = error.message;
+        reason = sanitizeError(error).message;
         packed = await makeFallbackTexture(material, slot, profile);
       }
       const asset = {
@@ -679,6 +738,6 @@ export async function writeGlb(
     materialIds,
   });
   const glb = buildGlb(document, primitives, { textureAssets: textures.assets, quality });
-  await writeFile(filePath, glb);
+  await writeBytes(filePath, glb);
   return { bytes: glb.length, textureReport: textures.report, quality: textures.profile };
 }

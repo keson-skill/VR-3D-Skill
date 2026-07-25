@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, realpath } from "node:fs/promises";
+import { mkdir, realpath } from "node:fs/promises";
 import {
   dirname,
   extname,
@@ -17,6 +17,7 @@ import {
   writeJson,
 } from "../lib/cli.mjs";
 import { parseGlb } from "../validation/validate-glb.mjs";
+import { GiB, MiB, readBoundedFile } from "./file-safety.mjs";
 import { inspectTool, runTool } from "./tool-runner.mjs";
 
 function semanticKind(name) {
@@ -193,9 +194,12 @@ export function inspectObjText(
     handedness = null,
   } = {},
 ) {
-  const vertices = [];
-  const faces = [];
+  let vertexCount = 0;
+  let faceCount = 0;
+  const minimum = [Infinity, Infinity, Infinity];
+  const maximum = [-Infinity, -Infinity, -Infinity];
   const groups = [];
+  let omittedGroups = 0;
   let currentGroup = "default";
   for (const rawLine of text.split(/\r?\n/u)) {
     const line = rawLine.trim();
@@ -203,22 +207,30 @@ export function inspectObjText(
     const [keyword, ...tokens] = line.split(/\s+/u);
     if (keyword === "v") {
       const point = tokens.slice(0, 3).map(Number);
-      if (point.length === 3 && point.every(Number.isFinite)) vertices.push(point);
+      if (point.length === 3 && point.every(Number.isFinite)) {
+        vertexCount += 1;
+        for (let axis = 0; axis < 3; axis += 1) {
+          minimum[axis] = Math.min(minimum[axis], point[axis]);
+          maximum[axis] = Math.max(maximum[axis], point[axis]);
+        }
+      }
     } else if (keyword === "f") {
-      faces.push(tokens);
+      faceCount += 1;
     } else if (keyword === "o" || keyword === "g") {
       currentGroup = tokens.join(" ") || `group-${groups.length + 1}`;
-      groups.push(currentGroup);
+      if (groups.length < 10000) groups.push(currentGroup);
+      else omittedGroups += 1;
     }
   }
   const blockers = [];
-  if (vertices.length < 3 || faces.length < 1) blockers.push("OBJ requires vertices and at least one face.");
+  if (vertexCount < 3 || faceCount < 1) blockers.push("OBJ requires vertices and at least one face.");
   if (!Number.isFinite(unitScale) || unitScale <= 0) blockers.push("OBJ has no standard unit; provide a positive unit scale to meters.");
+  if (omittedGroups > 0) blockers.push("OBJ contains more than 10000 object or group declarations.");
   blockers.push(...validateObjAxes(upAxis, forwardAxis, handedness));
-  const bounds = Number.isFinite(unitScale) && unitScale > 0
+  const bounds = vertexCount > 0 && Number.isFinite(unitScale) && unitScale > 0
     ? combineBounds([{
-        min: [0, 1, 2].map((axis) => Math.min(...vertices.map((point) => point[axis]))),
-        max: [0, 1, 2].map((axis) => Math.max(...vertices.map((point) => point[axis]))),
+        min: minimum,
+        max: maximum,
       }], unitScale)
     : null;
   return {
@@ -230,7 +242,11 @@ export function inspectObjText(
       forward_axis: forwardAxis || "user_confirmation_required",
       handedness: handedness || "user_confirmation_required",
     },
-    counts: { vertices: vertices.length, faces: faces.length, groups: groups.length },
+    counts: {
+      vertices: vertexCount,
+      faces: faceCount,
+      groups: groups.length + omittedGroups,
+    },
     bounds_meters: bounds,
     semantic_candidates: groups.map((name, index) => ({
       id: stableSceneId(name, index),
@@ -345,13 +361,19 @@ export async function convertSceneToGlb(
   if (!converterApproved) throw new Error("Scene conversion requires explicit approval of the configured local converter.");
   const input = resolve(inputFile);
   const output = resolve(outputFile);
-  const sourceBytes = await readFile(input);
+  const { bytes: sourceBytes } = await readBoundedFile(input, {
+    label: "Scene conversion input",
+    maxBytes: GiB,
+  });
   if (extname(input).toLowerCase() === ".fbx") inspectFbxBytes(sourceBytes);
   const tool = await inspectTool(command, versionArgs, { run });
   if (!tool.available) throw new Error(`Configured scene converter is unavailable: ${tool.error}.`);
   await mkdir(dirname(output), { recursive: true });
   await run(command, expandArguments(argumentsTemplate, input, output), { timeoutMs: 300000 });
-  const bytes = await readFile(output);
+  const { bytes } = await readBoundedFile(output, {
+    label: "Converted GLB",
+    maxBytes: GiB,
+  });
   const parsed = parseGlb(bytes);
   if (!parsed.valid || !parsed.gltf) {
     throw new Error(`Scene converter produced invalid GLB: ${parsed.errors[0]?.message || "unknown error"}.`);
@@ -380,8 +402,11 @@ export async function inspectExistingScene(
     handedness = null,
   } = {},
 ) {
-  const bytes = await readFile(filePath);
   const extension = extname(filePath).toLowerCase();
+  const { bytes } = await readBoundedFile(filePath, {
+    label: "Existing 3D scene",
+    maxBytes: extension === ".glb" ? GiB : 256 * MiB,
+  });
   let inspection;
   let gltf = null;
   if (extension === ".glb") {
@@ -417,7 +442,12 @@ export async function inspectExistingScene(
   if (gltf) {
     result.external_resources = [];
     const baseDirectory = await realpath(dirname(resolve(filePath)));
-    for (const resource of localResourceEntries(gltf)) {
+    const resources = localResourceEntries(gltf);
+    if (resources.length > 1000) {
+      result.blockers.push("Scene references more than 1000 external resources.");
+    }
+    let externalBytes = 0;
+    for (const resource of resources.slice(0, 1000)) {
       if (resourceUriIssue(resource.uri)) continue;
       const decoded = decodedResourceUri(resource.uri);
       try {
@@ -428,7 +458,15 @@ export async function inspectExistingScene(
           );
           continue;
         }
-        const resourceBytes = await readFile(resourcePath);
+        const { bytes: resourceBytes } = await readBoundedFile(resourcePath, {
+          label: "Scene external resource",
+          maxBytes: 512 * MiB,
+        });
+        externalBytes += resourceBytes.length;
+        if (externalBytes > 2 * GiB) {
+          result.blockers.push("Scene external resources exceed the 2 GiB total limit.");
+          break;
+        }
         result.external_resources.push({
           ...resource,
           sha256: sha256(resourceBytes),

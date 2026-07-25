@@ -2,7 +2,6 @@
 
 import {
   mkdtemp,
-  readFile,
   readdir,
   rm,
 } from "node:fs/promises";
@@ -16,6 +15,7 @@ import {
   writeJson,
 } from "../lib/cli.mjs";
 import { buildAssetManifest } from "../processing/build-asset-manifest.mjs";
+import { MiB, readBoundedFile } from "./file-safety.mjs";
 import { inspectTool, runTool } from "./tool-runner.mjs";
 
 export function parseDelimited(text, delimiter = ",") {
@@ -57,6 +57,13 @@ function booleanValue(value, field, row) {
 
 export function catalogFromRows(rows) {
   if (!Array.isArray(rows) || rows.length < 2) throw new Error("Catalog requires a header and at least one asset row.");
+  if (rows.length > 10001) throw new Error("Catalog supports at most 10000 asset rows.");
+  if (rows.some((row) =>
+    !Array.isArray(row)
+    || row.length > 64
+    || row.some((cell) => String(cell).length > 16384))) {
+    throw new Error("Catalog rows support at most 64 columns and 16384 characters per cell.");
+  }
   const headers = rows[0].map((header) => header.trim().toLowerCase());
   const required = [
     "id", "kind", "uri", "format", "source", "license", "units",
@@ -113,8 +120,12 @@ async function spreadsheetToCsv(filePath, run) {
     );
     const files = (await readdir(directory)).filter((name) => extname(name).toLowerCase() === ".csv");
     if (files.length !== 1) throw new Error("LibreOffice did not produce exactly one CSV file.");
+    const { bytes } = await readBoundedFile(join(directory, files[0]), {
+      label: "Converted product catalog",
+      maxBytes: 64 * MiB,
+    });
     return {
-      text: await readFile(join(directory, files[0]), "utf8"),
+      text: bytes.toString("utf8"),
       converter: { command: "soffice", version: tool.version },
     };
   } finally {
@@ -123,7 +134,10 @@ async function spreadsheetToCsv(filePath, run) {
 }
 
 export async function importProductCatalog(filePath, { run = runTool } = {}) {
-  const bytes = await readFile(filePath);
+  const { bytes } = await readBoundedFile(filePath, {
+    label: "Product catalog",
+    maxBytes: 64 * MiB,
+  });
   const extension = extname(filePath).toLowerCase();
   let rows;
   let converter = null;

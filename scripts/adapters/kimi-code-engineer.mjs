@@ -1,20 +1,41 @@
 #!/usr/bin/env node
 
-import { readFile, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
+import {
+  readJson,
+  readText,
+  writeText,
+} from "../lib/cli.mjs";
+import { sanitizeError } from "../runtime/redaction.mjs";
 
 const DEFAULT_BASE_URL = "https://api.kimi.com/coding/v1";
 const DEFAULT_MODEL = "k3";
 const DEFAULT_EFFORT = "high";
 const DEFAULT_TIMEOUT_MS = 120000;
+const MAX_PROMPT_BYTES = 8 * 1024 * 1024;
+const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const ALLOWED_EFFORTS = new Set(["low", "high", "max"]);
 
 export function normalizeBaseUrl(value = DEFAULT_BASE_URL) {
-  const normalized = value.trim().replace(/\/+$/, "");
-  if (!normalized) {
+  const raw = value.trim();
+  if (!raw) {
     throw new Error("KIMI_CODE_BASE_URL must not be empty.");
   }
-  return normalized;
+  let parsed;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    throw new Error("KIMI_CODE_BASE_URL must be a valid absolute URL.");
+  }
+  const loopback = ["localhost", "127.0.0.1", "::1", "[::1]"]
+    .includes(parsed.hostname);
+  if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && loopback)) {
+    throw new Error("KIMI_CODE_BASE_URL must use HTTPS, except for explicit loopback development.");
+  }
+  if (parsed.username || parsed.password || parsed.search || parsed.hash) {
+    throw new Error("KIMI_CODE_BASE_URL must not contain credentials, query parameters, or fragments.");
+  }
+  return parsed.toString().replace(/\/+$/, "");
 }
 
 export function buildChatEndpoint(baseUrl = DEFAULT_BASE_URL) {
@@ -37,6 +58,15 @@ export function buildRequest({
   }
   if (!prompt || !prompt.trim()) {
     throw new Error("A non-empty engineering prompt is required.");
+  }
+  if (
+    Buffer.byteLength(prompt, "utf8") > MAX_PROMPT_BYTES
+    || Buffer.byteLength(system || "", "utf8") > 256 * 1024
+  ) {
+    throw new Error("Kimi engineering prompt or system instruction exceeds its size limit.");
+  }
+  if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/u.test(model || "")) {
+    throw new Error("Kimi model ID is invalid.");
   }
 
   const messages = [];
@@ -95,7 +125,43 @@ export function composeEngineeringPrompt({
       );
     }
   }
-  return sections.join("\n\n");
+  const prompt = sections.join("\n\n");
+  if (Buffer.byteLength(prompt, "utf8") > MAX_PROMPT_BYTES) {
+    throw new Error("Composed engineering prompt exceeds the 8 MiB limit.");
+  }
+  return prompt;
+}
+
+async function readBoundedResponse(response) {
+  const declaredLength = Number(response.headers?.get?.("content-length"));
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_RESPONSE_BYTES) {
+    throw new Error("Kimi Code response exceeds the 8 MiB limit.");
+  }
+  if (!response.body?.getReader) {
+    const bytes = Buffer.from(await response.arrayBuffer());
+    if (bytes.length > MAX_RESPONSE_BYTES) {
+      throw new Error("Kimi Code response exceeds the 8 MiB limit.");
+    }
+    return bytes.toString("utf8");
+  }
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_RESPONSE_BYTES) {
+        await reader.cancel("response_size_limit");
+        throw new Error("Kimi Code response exceeds the 8 MiB limit.");
+      }
+      chunks.push(Buffer.from(value));
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  return Buffer.concat(chunks, total).toString("utf8");
 }
 
 export async function callKimiCode({
@@ -114,6 +180,9 @@ export async function callKimiCode({
   if (typeof fetchImpl !== "function") {
     throw new Error("This adapter requires Node.js 18+ with global fetch support.");
   }
+  if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 10 * 60 * 1000) {
+    throw new Error("Kimi timeout must be an integer from 1 ms to 10 minutes.");
+  }
 
   const controller = new AbortController();
   let timeout;
@@ -130,6 +199,7 @@ export async function callKimiCode({
         buildRequest({ model, reasoningEffort, system, prompt }),
       ),
       signal: controller.signal,
+      redirect: "error",
     }));
     const timeoutPromise = new Promise((_, reject) => {
       timeout = setTimeout(() => {
@@ -143,7 +213,7 @@ export async function callKimiCode({
     });
     const response = await Promise.race([fetchPromise, timeoutPromise]);
 
-    const raw = await response.text();
+    const raw = await readBoundedResponse(response);
     let payload;
     try {
       payload = raw ? JSON.parse(raw) : {};
@@ -154,10 +224,12 @@ export async function callKimiCode({
     if (!response.ok) {
       const upstream =
         payload?.error?.message || payload?.message || response.statusText;
-      const safeMessage = String(upstream || "Unknown upstream error").replaceAll(
-        apiKey.trim(),
-        "[REDACTED]",
-      );
+      const safeMessage = sanitizeError(new Error(
+        String(upstream || "Unknown upstream error").replaceAll(
+          apiKey.trim(),
+          "[REDACTED]",
+        ),
+      )).message;
       throw new Error(
         `Kimi Code request failed (${response.status}): ${safeMessage}`,
       );
@@ -223,10 +295,19 @@ KIMI_CODE_TIMEOUT_MS from the environment. It never prints the API key.
 async function readPrompt(options) {
   let task;
   if (options.promptFile) {
-    task = await readFile(options.promptFile, "utf8");
+    task = await readText(
+      options.promptFile,
+      "Kimi engineering task",
+      { maxBytes: 256 * 1024 },
+    );
   } else if (!process.stdin.isTTY) {
     const chunks = [];
+    let total = 0;
     for await (const chunk of process.stdin) {
+      total += chunk.length;
+      if (total > 256 * 1024) {
+        throw new Error("Piped Kimi engineering task exceeds the 256 KiB limit.");
+      }
       chunks.push(chunk);
     }
     task = Buffer.concat(chunks).toString("utf8");
@@ -242,13 +323,9 @@ async function readPrompt(options) {
     if (!filePath) {
       continue;
     }
-    const raw = await readFile(filePath, "utf8");
-    let parsed;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      throw new Error(`${label} is not valid JSON: ${filePath}`);
-    }
+    const parsed = await readJson(filePath, label, {
+      maxBytes: 16 * 1024 * 1024,
+    });
     if (label === "Approved Spatial JSON") {
       attachments.spatialJson = parsed;
     } else {
@@ -307,7 +384,11 @@ async function main() {
 
   const prompt = await readPrompt(options);
   const system = options.systemFile
-    ? await readFile(options.systemFile, "utf8")
+    ? await readText(
+        options.systemFile,
+        "Kimi system instruction",
+        { maxBytes: 256 * 1024 },
+      )
     : "Act as the engineering-generation specialist for a VR interior-design pipeline. Consume only the approved Spatial JSON, constraints, asset manifest, and repository context provided. Preserve stable IDs, measured geometry, locked structural elements, and circulation constraints. Return reviewable implementation artifacts and explicit validation steps.";
 
   const result = await callKimiCode({
@@ -321,7 +402,7 @@ async function main() {
   });
 
   if (options.outputFile) {
-    await writeFile(options.outputFile, `${result.text}\n`, "utf8");
+    await writeText(options.outputFile, `${result.text}\n`);
     process.stdout.write(
       `${JSON.stringify({
         outputFile: options.outputFile,

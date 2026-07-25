@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import {
   parseArgs,
@@ -9,6 +8,7 @@ import {
   writeJson,
 } from "../lib/cli.mjs";
 import { orderRoomPolygon } from "../geometry/spatial-geometry.mjs";
+import { MiB, readBoundedFile } from "./file-safety.mjs";
 
 function splitStepArguments(value) {
   const values = [];
@@ -493,7 +493,10 @@ async function main() {
     process.stdout.write("Usage:\n  node scripts/ingest/extract-ifc-evidence.mjs --input model.ifc --output ifc-evidence.json [--spatial spatial-draft.json --project-id project-001]\n");
     return;
   }
-  const bytes = await readFile(options.input);
+  const { bytes } = await readBoundedFile(options.input, {
+    label: "IFC input",
+    maxBytes: 512 * MiB,
+  });
   const evidence = extractIfcEvidence(bytes.toString("utf8"), {
     path: options.input,
     fileSha256: sha256(bytes),

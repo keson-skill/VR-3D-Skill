@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { copyFile, mkdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { buildWebViewer } from "../../builders/build-web-viewer.mjs";
@@ -17,6 +17,10 @@ import {
 import { validateSpatialJson } from "../../validation/validate-spatial-json.mjs";
 import { validateGlbBytes } from "../../validation/validate-glb.mjs";
 import { buildRuntimeContract } from "../../runtime/build-runtime-contract.mjs";
+import {
+  MiB,
+  readBoundedFile,
+} from "../../ingest/file-safety.mjs";
 
 const MODES = new Map([
   ["shell", "毛坯房"],
@@ -89,7 +93,10 @@ export async function buildViewableScene(
     textureDirectory: sourcePath ? dirname(sourcePath) : outputDirectory,
     quality: effectiveQuality,
   });
-  const sceneBytes = await readFile(sceneFile);
+  const { bytes: sceneBytes } = await readBoundedFile(sceneFile, {
+    label: "Generated viewable scene",
+    maxBytes: 512 * MiB,
+  });
   const glbValidation = validateGlbBytes(sceneBytes, {
     expectedProject: spatialJson.project,
   });

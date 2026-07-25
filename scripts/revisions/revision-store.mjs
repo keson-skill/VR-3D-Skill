@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
+import { randomUUID } from "node:crypto";
 import {
   mkdir,
   open,
-  readFile,
   rename,
   unlink,
   writeFile,
@@ -31,7 +31,11 @@ function revisionFileName(revisionId, suffix = "") {
 
 async function readJsonIfPresent(filePath) {
   try {
-    return JSON.parse(await readFile(filePath, "utf8"));
+    return await readJson(
+      filePath,
+      "revision store JSON",
+      { maxBytes: 16 * 1024 * 1024 },
+    );
   } catch (error) {
     if (error.code === "ENOENT") return null;
     throw error;
@@ -40,8 +44,12 @@ async function readJsonIfPresent(filePath) {
 
 async function atomicWriteJson(filePath, value) {
   await mkdir(dirname(filePath), { recursive: true });
-  const temporary = `${filePath}.${process.pid}.tmp`;
-  await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+  const temporary = `${filePath}.${process.pid}.${randomUUID()}.tmp`;
+  await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, {
+    encoding: "utf8",
+    flag: "wx",
+    mode: 0o600,
+  });
   await rename(temporary, filePath);
 }
 

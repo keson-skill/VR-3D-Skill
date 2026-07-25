@@ -57,6 +57,7 @@ await writeFile(join(plan.output_directory, plan.checkpoint_file), JSON.stringif
     });
     assert.equal(first.resumed, false);
     assert.equal(first.manifest.blender_version, "Blender 4.3.2 fake");
+    assert.match(first.manifest.source_scene_sha256, /^[a-f0-9]{64}$/u);
     assert.equal(first.manifest.artifacts.length, first.plan.stills.length + 3);
     assert.ok(first.manifest.artifacts.every((artifact) => /^[a-f0-9]{64}$/u.test(artifact.sha256)));
 
@@ -68,6 +69,33 @@ await writeFile(join(plan.output_directory, plan.checkpoint_file), JSON.stringif
     });
     assert.equal(second.resumed, true);
     assert.deepEqual(second.manifest, first.manifest);
+
+    await writeFile(sceneFile, "changed fake glb");
+    await assert.rejects(
+      renderDeliverables(fixtureSuite.fixtures[0].spatial, {
+        sceneFile,
+        outputDirectory,
+        walkthrough: true,
+        run: async (_command, args) =>
+          args.includes("--version")
+            ? { stdout: "Blender 4.3.2 no-op\n", stderr: "", code: 0 }
+            : { stdout: "", stderr: "", code: 0 },
+      }),
+      /did not complete the current plan/u,
+    );
+
+    await writeFile(
+      join(outputDirectory, first.plan.panorama.file),
+      "tampered panorama",
+      "utf8",
+    );
+    const rerendered = await renderDeliverables(fixtureSuite.fixtures[0].spatial, {
+      sceneFile,
+      outputDirectory,
+      blender: fakeBlender,
+      walkthrough: true,
+    });
+    assert.equal(rerendered.resumed, false);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

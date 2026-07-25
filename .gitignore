@@ -4,3 +4,5 @@
 !.env-example
 runs/
 node_modules/
+dist/
+artifacts/

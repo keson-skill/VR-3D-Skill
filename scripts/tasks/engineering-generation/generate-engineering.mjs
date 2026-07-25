@@ -52,14 +52,14 @@ async function main() {
     approvalTrust,
     assetManifest,
   ] = await Promise.all([
-    readText(options.task, "engineering task"),
-    readJson(options["spatial-json"], "approved Spatial JSON"),
-    readJson(options["source-manifest"], "source manifest"),
-    readJson(options["spatial-validation"], "spatial validation report"),
-    readJson(options.approval, "spatial approval"),
-    readJson(options["approval-trust"], "spatial approval trust store"),
+    readText(options.task, "engineering task", { maxBytes: 256 * 1024 }),
+    readJson(options["spatial-json"], "approved Spatial JSON", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options["source-manifest"], "source manifest", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options["spatial-validation"], "spatial validation report", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options.approval, "spatial approval", { maxBytes: 16 * 1024 * 1024 }),
+    readJson(options["approval-trust"], "spatial approval trust store", { maxBytes: 16 * 1024 * 1024 }),
     options["asset-manifest"]
-      ? readJson(options["asset-manifest"], "asset manifest")
+      ? readJson(options["asset-manifest"], "asset manifest", { maxBytes: 16 * 1024 * 1024 })
       : Promise.resolve(null),
   ]);
   const readiness = checkStageReadiness("engineering", spatialJson, {
